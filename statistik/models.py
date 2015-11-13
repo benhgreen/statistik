@@ -28,7 +28,10 @@ class Chart(models.Model):
         (4, 'DPH'),
         (5, 'DPA')
     ])
-    difficulty = models.SmallIntegerField()
+    difficulty = models.SmallIntegerField(validators=[
+        MaxValueValidator(12),
+        MinValueValidator(1)
+    ])
     note_count = models.SmallIntegerField()
 
     class Meta:
