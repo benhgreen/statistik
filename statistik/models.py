@@ -70,7 +70,11 @@ class Review(models.Model):
         (6, 'Denim')
     ]))
     recommended_options = ArrayField(models.IntegerField(choices=[
-
+        (0, 'Regular'),
+        (1, 'Random'),
+        (2, 'S-Random'),
+        (3, 'R-Random'),
+        (4, 'Mirror')
     ]))
 
     class Meta:
