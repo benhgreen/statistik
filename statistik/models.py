@@ -44,6 +44,7 @@ class Chart(models.Model):
 class Review(models.Model):
     chart = models.ForeignKey(Chart)
     user = models.ForeignKey(User)
+    text = models.CharField(max_length=256, blank=True)
     clear_rating = models.SmallIntegerField(validators=[
         MaxValueValidator(MAX_RATING),
         MinValueValidator(MIN_RATING)
@@ -60,7 +61,7 @@ class Review(models.Model):
         MaxValueValidator(MAX_RATING),
         MinValueValidator(MIN_RATING)
     ])
-    characteristics = ArrayField(models.IntegerField(choices=[
+    characteristics = ArrayField(models.IntegerField(null=True, choices=[
         (0, 'Scratching'),
         (1, 'Jacks'),
         (2, 'Speed Changes'),
@@ -69,7 +70,7 @@ class Review(models.Model):
         (5, 'Chord Scales'),
         (6, 'Denim')
     ]))
-    recommended_options = ArrayField(models.IntegerField(choices=[
+    recommended_options = ArrayField(models.IntegerField(null=True, choices=[
         (0, 'Regular'),
         (1, 'Random'),
         (2, 'S-Random'),
