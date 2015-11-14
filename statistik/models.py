@@ -61,7 +61,7 @@ class Review(models.Model):
         MaxValueValidator(MAX_RATING),
         MinValueValidator(MIN_RATING)
     ])
-    characteristics = ArrayField(models.IntegerField(null=True, choices=[
+    characteristics = ArrayField(models.IntegerField(choices=[
         (0, 'Scratching'),
         (1, 'Jacks'),
         (2, 'Speed Changes'),
@@ -69,14 +69,14 @@ class Review(models.Model):
         (4, 'Scales'),
         (5, 'Chord Scales'),
         (6, 'Denim')
-    ]))
-    recommended_options = ArrayField(models.IntegerField(null=True, choices=[
+    ]), null=True)
+    recommended_options = ArrayField(models.IntegerField(choices=[
         (0, 'Regular'),
         (1, 'Random'),
         (2, 'S-Random'),
         (3, 'R-Random'),
         (4, 'Mirror')
-    ]))
+    ]), null=True)
 
     class Meta:
         unique_together = ('chart', 'user')
