@@ -78,6 +78,7 @@ WSGI_APPLICATION = 'statistik.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {'default': dj_database_url.config()}
+DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
 
 
 

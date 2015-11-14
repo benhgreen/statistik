@@ -3,6 +3,9 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+MAX_RATING = 129
+MIN_RATING = 10
+
 class Song(models.Model):
     music_id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=64, unique=True)
@@ -42,20 +45,20 @@ class Review(models.Model):
     chart = models.ForeignKey(Chart)
     user = models.ForeignKey(User)
     clear_rating = models.SmallIntegerField(validators=[
-        MaxValueValidator(99),
-        MinValueValidator(0)
+        MaxValueValidator(MAX_RATING),
+        MinValueValidator(MIN_RATING)
     ])
     hc_rating = models.SmallIntegerField(validators=[
-        MaxValueValidator(99),
-        MinValueValidator(0)
+        MaxValueValidator(MAX_RATING),
+        MinValueValidator(MIN_RATING)
     ])
     exhc_rating = models.SmallIntegerField(validators=[
-        MaxValueValidator(99),
-        MinValueValidator(0)
+        MaxValueValidator(MAX_RATING),
+        MinValueValidator(MIN_RATING)
     ])
     score_rating = models.SmallIntegerField(validators=[
-        MaxValueValidator(99),
-        MinValueValidator(0)
+        MaxValueValidator(MAX_RATING),
+        MinValueValidator(MIN_RATING)
     ])
     characteristics = ArrayField(models.IntegerField(choices=[
         (0, 'Scratching'),
@@ -65,6 +68,9 @@ class Review(models.Model):
         (4, 'Scales'),
         (5, 'Chord Scales'),
         (6, 'Denim')
+    ]))
+    recommended_options = ArrayField(models.IntegerField(choices=[
+
     ]))
 
     class Meta:
