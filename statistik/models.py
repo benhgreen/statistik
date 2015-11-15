@@ -8,6 +8,16 @@ from django.utils.functional import cached_property
 MAX_RATING = 129
 MIN_RATING = 10
 
+TECHNIQUE_CHOICES = [
+    (0, 'Scratching'),
+    (1, 'Jacks'),
+    (2, 'Speed Changes'),
+    (3, 'Charge Notes'),
+    (4, 'Scales'),
+    (5, 'Chord Scales'),
+    (6, 'Denim')
+]
+
 
 class Song(models.Model):
     music_id = models.IntegerField(primary_key=True)
@@ -53,8 +63,7 @@ class Chart(models.Model):
                        **matched_reviews.aggregate(Avg(rating_type))}
 
         for (k, v) in ratings.items():
-            ratings[k] = round(v/10, 2)
-        print(ratings)
+            ratings[k] = round(v / 10, 2)
         return ratings
 
     @property
@@ -94,15 +103,8 @@ class Review(models.Model):
         MaxValueValidator(MAX_RATING),
         MinValueValidator(MIN_RATING)
     ])
-    characteristics = ArrayField(models.IntegerField(choices=[
-        (0, 'Scratching'),
-        (1, 'Jacks'),
-        (2, 'Speed Changes'),
-        (3, 'Charge Notes'),
-        (4, 'Scales'),
-        (5, 'Chord Scales'),
-        (6, 'Denim')
-    ]), null=True)
+    characteristics = ArrayField(
+        models.IntegerField(choices=TECHNIQUE_CHOICES), null=True)
     recommended_options = ArrayField(models.IntegerField(choices=[
         (0, 'Regular'),
         (1, 'Random'),
@@ -113,3 +115,14 @@ class Review(models.Model):
 
     class Meta:
         unique_together = ('chart', 'user')
+
+    class UserProfile(models.Model):
+        user = models.OneToOneField(User)
+        dj_name = models.CharField(max_length=6)
+        location = models.CharField(max_length=64),
+        play_side = models.SmallIntegerField(choices=[
+            (0, '1P'),
+            (1, '2P')
+        ]),
+        best_techniques = ArrayField(
+            models.IntegerField(choices=TECHNIQUE_CHOICES), size=3)
