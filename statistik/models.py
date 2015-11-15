@@ -2,9 +2,12 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Avg
+from django.utils.functional import cached_property
 
 MAX_RATING = 129
 MIN_RATING = 10
+
 
 class Song(models.Model):
     music_id = models.IntegerField(primary_key=True)
@@ -39,6 +42,36 @@ class Chart(models.Model):
 
     class Meta:
         unique_together = ('song', 'type')
+
+    @cached_property
+    def avg_ratings(self):
+        matched_reviews = Review.objects.filter(chart=self)
+        ratings = {}
+        for rating_type in ['clear_rating', 'hc_rating', 'exhc_rating',
+                            'score_rating']:
+            ratings = {**ratings,
+                       **matched_reviews.aggregate(Avg(rating_type))}
+
+        for (k, v) in ratings.items():
+            ratings[k] = round(v/10, 2)
+        print(ratings)
+        return ratings
+
+    @property
+    def avg_clear_rating(self):
+        return self.avg_ratings.get('clear_rating__avg')
+
+    @property
+    def avg_hc_rating(self):
+        return self.avg_ratings.get('hc_rating__avg')
+
+    @property
+    def avg_exhc_rating(self):
+        return self.avg_ratings.get('exhc_rating__avg')
+
+    @property
+    def avg_score_rating(self):
+        return self.avg_ratings.get('score_rating__avg')
 
 
 class Review(models.Model):
