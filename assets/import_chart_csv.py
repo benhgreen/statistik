@@ -10,6 +10,8 @@ with open('chart.csv', encoding='utf-8') as csvfile:
         difficulty = int(row[4])
         note_count = int(row[5])
 
+        print('importing chart %d:%d' % (music_id, type))
+
         chart = Chart(
             song=Song.objects.get(music_id=music_id),
             type=type,

@@ -28,10 +28,7 @@ class Song(models.Model):
     genre = models.CharField(max_length=64)
     bpm_min = models.SmallIntegerField()
     bpm_max = models.SmallIntegerField()
-
-    @property
-    def game_version(self):
-        return self.music_id // 1000
+    game_version = models.SmallIntegerField()
 
 
 class Chart(models.Model):

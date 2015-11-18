@@ -1,6 +1,8 @@
+from django.contrib.auth import logout, authenticate, login
 from django.http import HttpResponse
 import datetime
 
+from django.shortcuts import redirect
 from django.views.generic import TemplateView, View
 from statistik.models import Chart
 
@@ -15,16 +17,31 @@ class MiscView(TemplateView):
     template_name = 'misc.html'
 
 
-class RatingsView(View):
-    def get(self, request):
-        query_params = {key: request.GET.get(key) for key in
-                        ['type', 'difficulty'] if key in request.GET}
-        print(query_params)
-        matched_charts = Chart.objects.filter(**query_params)
-        if request.GET.get('version'):
-            matched_charts = [chart for chart in matched_charts if
-                              chart.song.game_version == int(request.GET.get(
-                                  'version'))]
-        return HttpResponse('<br>'.join(
-            ["%s[%s]" % (chart.song.title, chart.get_type_display()) for chart
-             in matched_charts]))
+class RatingsView(TemplateView):
+    template_name = 'ratings.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RatingsView, self).get_context_data(**kwargs)
+        difficulty = self.request.GET.get('difficulty') or 12
+        context['charts'] = Chart.objects.filter(difficulty=difficulty,
+                                                 type__in=[0, 1, 2]).extra(order_by='')
+        context['difficulty'] = difficulty
+        return context
+
+
+def login_view(request):
+    print(request.POST)
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    user = authenticate(username=username, password=password)
+
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+
+    return redirect('ratings')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('ratings')

@@ -17,7 +17,7 @@ with open('music.csv', encoding='utf-8') as csvfile:
         genre=row[6]
         alt_artist = row[8]
 
-        if int(row[1]) >= 917505 or music_id > 21234:
+        if int(row[1]) >= 917505 or music_id > 21216:
             title = row[4]
             alt_title = row[7]
         else:
@@ -25,8 +25,10 @@ with open('music.csv', encoding='utf-8') as csvfile:
             alt_title = row[4]
 
         if title not in songs:
+            game_version = None
             songs.append(title)
         else:
+            game_version = Song.objects.get(title=title).game_version
             print('creating black another for song %s' % title)
             title += '†'
             alt_title += '†'
@@ -42,5 +44,6 @@ with open('music.csv', encoding='utf-8') as csvfile:
             alt_artist=alt_artist,
             genre=genre,
             alt_title=alt_title,
+            game_version=game_version or music_id//1000
         )
         new_song.save()
