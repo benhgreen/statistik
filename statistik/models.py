@@ -4,19 +4,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Avg
 from django.utils.functional import cached_property
-
-MAX_RATING = 129
-MIN_RATING = 10
-
-TECHNIQUE_CHOICES = [
-    (0, 'Scratching'),
-    (1, 'Jacks'),
-    (2, 'Speed Changes'),
-    (3, 'Charge Notes'),
-    (4, 'Scales'),
-    (5, 'Chord Scales'),
-    (6, 'Denim')
-]
+from statistik.constants import (MAX_RATING, CHART_TYPE_CHOICES,
+                                 TECHNIQUE_CHOICES, MIN_RATING,
+                                 VERSION_CHOICES)
 
 
 class Song(models.Model):
@@ -28,19 +18,12 @@ class Song(models.Model):
     genre = models.CharField(max_length=64)
     bpm_min = models.SmallIntegerField()
     bpm_max = models.SmallIntegerField()
-    game_version = models.SmallIntegerField()
+    game_version = models.SmallIntegerField(choices=VERSION_CHOICES)
 
 
 class Chart(models.Model):
     song = models.ForeignKey(Song)
-    type = models.SmallIntegerField(choices=[
-        (0, 'SPN'),
-        (1, 'SPH'),
-        (2, 'SPA'),
-        (3, 'DPN'),
-        (4, 'DPH'),
-        (5, 'DPA')
-    ])
+    type = models.SmallIntegerField(choices=CHART_TYPE_CHOICES)
     difficulty = models.SmallIntegerField(validators=[
         MaxValueValidator(12),
         MinValueValidator(1)

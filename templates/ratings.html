@@ -3,12 +3,88 @@
 {% load bootstrap3 %}
 
 {% block title %}
-    LV. {{ difficulty }}
+    {{ title }}
 {% endblock %}
 
 {% block content %}
-    {% for chart in charts %}
-        <p>{{ chart.song.title }} [{{ chart.get_type_display.lower }}]</p>
-    {% endfor %}
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
 
+    tr:nth-child(odd) {background: #e1e1e1;text-align: center}
+    tr:nth-child(even) {background: #FFF}
+
+    td {
+        padding: 10px;
+        text-align: center;
+    }
+
+    td:nth-child(1) {
+        width: 15px;
+    }
+
+    td:nth-child(2) {
+        width: 15px;
+    }
+
+    td:nth-child(3) {
+        width: 28em;
+    }
+
+    td:nth-child(n+4) {
+        width: 5em;
+    }
+
+    td:nth-child(4) {
+        background-color: #2df0ff;
+    }
+
+    td:nth-child(5) {
+        background-color: #ff99a1;
+    }
+
+    td:nth-child(6) {
+        background-color: #ffee90;
+    }
+
+    td:nth-child(7) {
+        background-color: #d7e1ff;
+    }
+
+
+</style>
+
+    <table border="1" align="center" style="width:80%">
+        <tr style="line-height: 15px;font-size: small;
+        color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
+            <td style="background-color: #3d393f">VER</td>
+            <td style="background-color: #3d393f">LVL</td>
+            <td style="background-color: #3d393f">SONG TITLE</td>
+            <td style="background-color: #3d393f">NC RATING</td>
+            <td style="background-color: #3d393f">HC RATING</td>
+            <td style="background-color: #3d393f">EXHC RATING</td>
+            <td style="background-color: #3d393f">SCORE RATING</td>
+        </tr>
+    {% for chart in charts %}
+        <tr>
+            <td>{{ chart.song.get_game_version_display }}</td>
+            {% if 'N' in chart.get_type_display %}
+                <td style="color: #1721b2;">
+            {% elif 'H' in chart.get_type_display%}
+                <td style="color: #79753e;">
+            {% else %}
+                <td style="color: #97263d;">
+            {% endif %}
+                    <b>{{ chart.difficulty }}☆</b>
+                </td>
+            <td>{{ chart.song.title }}</td>
+            <td>{{ chart.avg_clear_rating | default:"12.55" }}</td>
+            <td>{{ chart.avg_hc_rating | default:"12.55" }}</td>
+            <td>{{ chart.avg_exhc_rating | default:"12.55" }}</td>
+            <td>{{ chart.avg_score_rating | default:"12.55" }}</td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock %}

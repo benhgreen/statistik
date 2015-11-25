@@ -1,27 +1,38 @@
 {% extends 'bootstrap.html' %}
 
-{% load url from future %}
-
 {% load bootstrap3 %}
 
 {% block bootstrap3_content %}
-    <div class="container" xmlns="http://www.w3.org/1999/html">
-        <h1>{% block title %}Ratings{% endblock %}</h1>
+    <div style="clear: both" class="container" xmlns="http://www.w3.org/1999/html">
+        <h1 style="float: left">{% block title %}No title{% endblock %}</h1>
 
-        {% if user.is_authenticated %}
-            <p>welcome, {{ user.username }} <a href="{% url 'logout' %}">logout</a></p>
-        {% else %}
-            <form action="{% url 'login' %}" method="post">
-                {% csrf_token %}
-                <input name="username" type="text" placeholder="username">
-                <input name="password" type="password" placeholder="password">
-                <input type="submit" value="login">
-            </form>
-        {% endif %}
 
-        {% bootstrap_messages %}
+        <div id="userinfo">
+            <br>
+            <h5 style="float: right;">
+            {% if user.is_authenticated %}
+                welcome, {{ user.username }} | <a href="{% url 'logout' %}">logout</a>
+            {% else %}
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    <input name="username" type="text" placeholder="username">
+                    <input name="password" type="password" placeholder="password">
+                    <input type="submit" value="login">
+                </form>
+            {% endif %}
+            </h5>
+        </div>
 
-        {% block content %}(no content){% endblock %}
+    </div>
+
+    <div class="container">
+
+    {% bootstrap_messages %}
+
+    <br>
+
+    {% block content %}(no content){% endblock %}
+
     </div>
 
 {% endblock %}

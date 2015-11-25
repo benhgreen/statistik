@@ -21,7 +21,6 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index),
     url(r'^ratings$', views.RatingsView.as_view(), name='ratings'),
-    url(r'^misc$', views.MiscView.as_view(), name='misc'),
     url(r'^login$', views.login_view, name='login'),
     url(r'^logout$', views.logout_view, name='logout')
 ]
