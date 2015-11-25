@@ -37,19 +37,23 @@
         width: 5em;
     }
 
-    td:nth-child(4) {
-        background-color: #2df0ff;
+    td:nth-child(n+5) {
+        font-weight: 600;
     }
 
     td:nth-child(5) {
-        background-color: #ff99a1;
+        background-color: #2df0ff;
     }
 
     td:nth-child(6) {
-        background-color: #ffee90;
+        background-color: #ff99a1;
     }
 
     td:nth-child(7) {
+        background-color: #ffee90;
+    }
+
+    td:nth-child(8) {
         background-color: #d7e1ff;
     }
 
@@ -60,8 +64,9 @@
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
             <td style="background-color: #3d393f">VER</td>
-            <td style="background-color: #3d393f">LVL</td>
+            <td style="background-color: #3d393f">LV</td>
             <td style="background-color: #3d393f">SONG TITLE</td>
+            <td style="background-color: #3d393f">NOTE COUNT</td>
             <td style="background-color: #3d393f">NC RATING</td>
             <td style="background-color: #3d393f">HC RATING</td>
             <td style="background-color: #3d393f">EXHC RATING</td>
@@ -80,6 +85,7 @@
                     <b>{{ chart.difficulty }}☆</b>
                 </td>
             <td>{{ chart.song.title }}</td>
+            <td>{{ chart.note_count }}</td>
             <td>{{ chart.avg_clear_rating | default:"12.55" }}</td>
             <td>{{ chart.avg_hc_rating | default:"12.55" }}</td>
             <td>{{ chart.avg_exhc_rating | default:"12.55" }}</td>
