@@ -64,6 +64,26 @@
 
 </style>
 
+    <div align="center" style="word-spacing: .5em">
+    {% for version in versions %}
+        <a style="color: #000;" href="{{ version.1 }}"><b>{{ version.0 }}</b></a>
+    {% endfor %}
+    </div>
+
+    <div align="center" style="word-spacing: .5em">
+    SP |
+    {% for level in levels %}
+        <a style="color: #000;" href="{{ level.1 }}"><b>{{ level.0 }}</b></a>
+    {% endfor %}
+     &nbsp; DP |
+    {% for level in levels %}
+        <a style="color: #000;" href="{{ level.1 }}&style=DP"><b>{{ level.0 }}</b></a>
+    {% endfor %}
+    </div>
+
+    <br>
+
+
     <table class="sortable" border="1" align="center" style="width:80%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
@@ -78,17 +98,17 @@
         </tr>
     {% for chart in charts %}
         <tr>
-            <td>{{ chart.song.get_game_version_display }}</td>
+            <td>{{ chart.game_version_display }}</td>
             {% if 'N' in chart.get_type_display %}
                 <td style="color: #1721b2;">
-            {% elif 'H' in chart.get_type_display%}
+            {% elif 'H' in chart.type_display%}
                 <td style="color: #79753e;">
             {% else %}
                 <td style="color: #97263d;">
             {% endif %}
                     <b>{{ chart.difficulty }}☆</b>
                 </td>
-            <td><a style="color: #000;" href="{% url 'chart' %}?id={{ chart.id }}"> {{ chart.song.title }}</a></td>
+            <td><a style="color: #000;" href="{% url 'chart' %}?id={{ chart.id }}"> {{ chart.title }}</a></td>
             <td>{{ chart.note_count }}</td>
             <td>{{ chart.avg_clear_rating | default:"12.55" }}</td>
             <td>{{ chart.avg_hc_rating | default:"12.55" }}</td>

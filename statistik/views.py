@@ -1,7 +1,8 @@
 from django.contrib.auth import logout, authenticate, login
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
-from statistik.constants import FULL_VERSION_NAMES, SORT_STYLES
+from statistik.constants import FULL_VERSION_NAMES, \
+    generate_version_urls, generate_level_urls
 from statistik.models import Chart
 
 
@@ -18,8 +19,6 @@ class RatingsView(TemplateView):
         difficulty = self.request.GET.get('difficulty')
         version = self.request.GET.get('version')
         play_style = self.request.GET.get('style', 'SP')
-        sort_style = SORT_STYLES.get(self.request.GET.get('sort'),
-                                     'song__title')
 
 
         if version:
@@ -34,8 +33,19 @@ class RatingsView(TemplateView):
             'DP': [3, 4, 5]
         }[play_style]
 
-        matched_charts = Chart.objects.filter(**filters).order_by(sort_style)
-        context['charts'] = matched_charts
+        matched_charts = Chart.objects.filter(**filters).prefetch_related('song')
+        context['charts'] = [{
+            'id': chart.id,
+            'title': chart.song.title,
+            'note_count': chart.note_count,
+            'difficulty': chart.difficulty,
+            'avg_clear_rating': chart.avg_clear_rating,
+            'avg_hc_rating': chart.avg_hc_rating,
+            'avg_exhc_rating': chart.avg_exhc_rating,
+            'avg_score_rating': chart.avg_score_rating,
+            'game_version_display': chart.song.get_game_version_display(),
+            'type_display': chart.get_type_display()
+        } for chart in matched_charts]
 
         title_elements = []
         if version:
@@ -43,8 +53,11 @@ class RatingsView(TemplateView):
         if difficulty:
             title_elements.append('LV. ' + str(difficulty))
         title_elements.append(play_style)
-
         context['title'] = ' // '.join(title_elements)
+
+        context['versions'] = generate_version_urls()
+        context['levels'] = generate_level_urls()
+
         return context
 
 

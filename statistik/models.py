@@ -35,16 +35,7 @@ class Chart(models.Model):
 
     @cached_property
     def avg_ratings(self):
-        matched_reviews = Review.objects.filter(chart=self)
-        ratings = {}
-        for rating_type in ['clear_rating', 'hc_rating', 'exhc_rating',
-                            'score_rating']:
-            ratings = {**ratings,
-                       **matched_reviews.aggregate(Avg(rating_type))}
-
-        for (k, v) in ratings.items():
-            ratings[k] = round(v / 10, 2)
-        return ratings
+        return {}
 
     @property
     def avg_clear_rating(self):

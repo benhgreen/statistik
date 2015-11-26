@@ -1,3 +1,5 @@
+from django.core.urlresolvers import reverse
+
 MAX_RATING = 129
 MIN_RATING = 10
 
@@ -72,8 +74,11 @@ FULL_VERSION_NAMES = {
     23: 'Copula'
 }
 
-SORT_STYLES = {
-    'title': 'song__title',
-    'version': 'song__game_version',
+def generate_version_urls():
+    return [(version[1], reverse('ratings') + "?version=%d" % version[0])
+            for version in VERSION_CHOICES]
 
-}
+
+def generate_level_urls():
+    return [(level, reverse('ratings') + "?difficulty=%d" % level)
+            for level in range(1,13)]
