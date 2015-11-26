@@ -1,8 +1,7 @@
 from django.contrib.auth import logout, authenticate, login
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
-from statistik.constants import FULL_VERSION_NAMES, SORT_STYLES, \
-    CHART_TYPE_CHOICES
+from statistik.constants import FULL_VERSION_NAMES, SORT_STYLES
 from statistik.models import Chart
 
 
@@ -47,6 +46,13 @@ class RatingsView(TemplateView):
 
         context['title'] = ' // '.join(title_elements)
         return context
+
+
+class ChartView(TemplateView):
+    template_name = 'chart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ChartView, self).get_context_data(**kwargs)
 
 
 def login_view(request):

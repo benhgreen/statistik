@@ -15,12 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from statistik import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index),
     url(r'^ratings$', views.RatingsView.as_view(), name='ratings'),
+    url(r'^chart$', views.ChartView.as_view(), name='chart'),
     url(r'^login$', views.login_view, name='login'),
     url(r'^logout$', views.logout_view, name='logout')
 ]
+
+urlpatterns += staticfiles_urlpatterns()

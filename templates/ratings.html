@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 
 {% load bootstrap3 %}
+{% load static %}
 
 {% block title %}
     {{ title }}
+{% endblock %}
+
+{% block bootstrap3_extra_head %}
+    <script src="{% static "js/sorttable.js" %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -57,14 +62,13 @@
         background-color: #d7e1ff;
     }
 
-
 </style>
 
-    <table border="1" align="center" style="width:80%">
+    <table class="sortable" border="1" align="center" style="width:80%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td style="background-color: #3d393f">VER</td>
-            <td style="background-color: #3d393f">LV</td>
+            <td class="sorttable_nosort" style="background-color: #3d393f">VER</td>
+            <td class="sorttable_numeric" style="background-color: #3d393f">LV</td>
             <td style="background-color: #3d393f">SONG TITLE</td>
             <td style="background-color: #3d393f">NOTE COUNT</td>
             <td style="background-color: #3d393f">NC RATING</td>
@@ -84,7 +88,7 @@
             {% endif %}
                     <b>{{ chart.difficulty }}☆</b>
                 </td>
-            <td>{{ chart.song.title }}</td>
+            <td><a style="color: #000;" href="{% url 'chart' %}?id={{ chart.id }}"> {{ chart.song.title }}</a></td>
             <td>{{ chart.note_count }}</td>
             <td>{{ chart.avg_clear_rating | default:"12.55" }}</td>
             <td>{{ chart.avg_hc_rating | default:"12.55" }}</td>
