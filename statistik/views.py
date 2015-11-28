@@ -37,6 +37,7 @@ class RatingsView(TemplateView):
         context['charts'] = [{
             'id': chart.id,
             'title': chart.song.title,
+            'alt_title': chart.song.alt_title if chart.song.alt_title else chart.song.title,
             'note_count': chart.note_count,
             'difficulty': chart.difficulty,
             'avg_clear_rating': chart.avg_clear_rating,

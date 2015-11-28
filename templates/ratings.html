@@ -108,7 +108,7 @@
             {% endif %}
                     <b>{{ chart.difficulty }}☆</b>
                 </td>
-            <td><a style="color: #000;" href="{% url 'chart' %}?id={{ chart.id }}"> {{ chart.title }}</a></td>
+            <td sorttable_customkey="{{ chart.alt_title }}"><a style="color: #000;" href="{% url 'chart' %}?id={{ chart.id }}"> {{ chart.title }}</a></td>
             <td>{{ chart.note_count }}</td>
             <td>{{ chart.avg_clear_rating | default:"12.55" }}</td>
             <td>{{ chart.avg_hc_rating | default:"12.55" }}</td>
