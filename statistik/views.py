@@ -1,10 +1,10 @@
 from django.contrib.auth import logout, authenticate, login
-from django.db.models.functions import Coalesce
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from statistik.constants import FULL_VERSION_NAMES, \
     generate_version_urls, generate_level_urls
-from statistik.models import Chart
+from statistik.forms import ReviewForm
+from statistik.models import Chart, Review, UserProfile
 
 
 def index(request):
@@ -21,7 +21,6 @@ class RatingsView(TemplateView):
         version = self.request.GET.get('version')
         play_style = self.request.GET.get('style', 'SP')
 
-
         if version:
             filters['song__game_version'] = int(version)
         if difficulty:
@@ -34,21 +33,22 @@ class RatingsView(TemplateView):
             'DP': [3, 4, 5]
         }[play_style]
 
-        matched_charts = Chart.objects.filter(**filters).prefetch_related('song').order_by('song__game_version')
+        matched_charts = Chart.objects.filter(**filters).prefetch_related(
+            'song').order_by('song__game_version')
         context['charts'] = [{
-            'id': chart.id,
-            'title': chart.song.title,
-            'alt_title': chart.song.alt_title if chart.song.alt_title else chart.song.title,
-            'note_count': chart.note_count,
-            'difficulty': chart.difficulty,
-            'avg_clear_rating': chart.avg_clear_rating,
-            'avg_hc_rating': chart.avg_hc_rating,
-            'avg_exhc_rating': chart.avg_exhc_rating,
-            'avg_score_rating': chart.avg_score_rating,
-            'game_version': chart.song.game_version,
-            'game_version_display': chart.song.get_game_version_display(),
-            'type_display': chart.get_type_display()
-        } for chart in matched_charts]
+                                 'id': chart.id,
+                                 'title': chart.song.title,
+                                 'alt_title': chart.song.alt_title if chart.song.alt_title else chart.song.title,
+                                 'note_count': chart.note_count,
+                                 'difficulty': chart.difficulty,
+                                 'avg_clear_rating': chart.avg_clear_rating,
+                                 'avg_hc_rating': chart.avg_hc_rating,
+                                 'avg_exhc_rating': chart.avg_exhc_rating,
+                                 'avg_score_rating': chart.avg_score_rating,
+                                 'game_version': chart.song.game_version,
+                                 'game_version_display': chart.song.get_game_version_display(),
+                                 'type_display': chart.get_type_display()
+                             } for chart in matched_charts]
 
         title_elements = []
         if version:
@@ -71,11 +71,24 @@ class ChartView(TemplateView):
         context = super(ChartView, self).get_context_data(**kwargs)
         chart = Chart.objects.get(pk=self.request.GET.get('id'))
 
-        song_title = chart.song.title if len(chart.song.title) < 30 else chart.song.title[:20] + '...'
+        song_title = chart.song.title if len(
+            chart.song.title) < 30 else chart.song.title[:20] + '...'
         title = ' // '.join([song_title, chart.get_type_display()])
         context['title'] = title
+        if self.request.user.is_authenticated():
+            if UserProfile.objects.get(
+                    user=self.request.user).max_reviewable >= chart.difficulty:
+                context['title'] = 'yey'
+                if self.request.method == 'POST':
+                    form = ReviewForm(self.request.POST)
+                    if form.is_valid():
+                        pass
+                else:
+                    form = ReviewForm()
+                    matched_review = Review.filter(user=self.request.user)
 
         return context
+
 
 def login_view(request):
     print(request.POST)
