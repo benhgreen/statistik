@@ -84,7 +84,7 @@
     <br>
 
 
-    <table class="sortable" border="1" align="center" style="width:80%">
+    <table class="sortable" border="1" align="center" style="width:85%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
             <td style="background-color: #3d393f">VER</td>
@@ -99,7 +99,7 @@
     {% for chart in charts %}
         <tr>
             <td sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
-            {% if 'N' in chart.get_type_display %}
+            {% if 'N' in chart.type_display %}
                 <td style="color: #1721b2;">
             {% elif 'H' in chart.type_display%}
                 <td style="color: #79753e;">

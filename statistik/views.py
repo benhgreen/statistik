@@ -71,7 +71,8 @@ class ChartView(TemplateView):
         context = super(ChartView, self).get_context_data(**kwargs)
         chart = Chart.objects.get(pk=self.request.GET.get('id'))
 
-        title = ' // '.join([chart.song.title, chart.get_type_display()])
+        song_title = chart.song.title if len(chart.song.title) < 30 else chart.song.title[:20] + '...'
+        title = ' // '.join([song_title, chart.get_type_display()])
         context['title'] = title
 
         return context
