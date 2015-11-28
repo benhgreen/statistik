@@ -1,4 +1,5 @@
 from django.contrib.auth import logout, authenticate, login
+from django.db.models.functions import Coalesce
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from statistik.constants import FULL_VERSION_NAMES, \
@@ -33,7 +34,7 @@ class RatingsView(TemplateView):
             'DP': [3, 4, 5]
         }[play_style]
 
-        matched_charts = Chart.objects.filter(**filters).prefetch_related('song')
+        matched_charts = Chart.objects.filter(**filters).prefetch_related('song').order_by('song__game_version')
         context['charts'] = [{
             'id': chart.id,
             'title': chart.song.title,
@@ -44,6 +45,7 @@ class RatingsView(TemplateView):
             'avg_hc_rating': chart.avg_hc_rating,
             'avg_exhc_rating': chart.avg_exhc_rating,
             'avg_score_rating': chart.avg_score_rating,
+            'game_version': chart.song.game_version,
             'game_version_display': chart.song.get_game_version_display(),
             'type_display': chart.get_type_display()
         } for chart in matched_charts]
@@ -67,7 +69,12 @@ class ChartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ChartView, self).get_context_data(**kwargs)
+        chart = Chart.objects.get(pk=self.request.GET.get('id'))
 
+        title = ' // '.join([chart.song.title, chart.get_type_display()])
+        context['title'] = title
+
+        return context
 
 def login_view(request):
     print(request.POST)

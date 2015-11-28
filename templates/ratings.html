@@ -71,11 +71,11 @@
     </div>
 
     <div align="center" style="word-spacing: .5em">
-    SP |
+    SP |&nbsp;
     {% for level in levels %}
         <a style="color: #000;" href="{{ level.1 }}"><b>{{ level.0 }}</b></a>
     {% endfor %}
-     &nbsp; DP |
+     &nbsp; DP |&nbsp;
     {% for level in levels %}
         <a style="color: #000;" href="{{ level.1 }}&style=DP"><b>{{ level.0 }}</b></a>
     {% endfor %}
@@ -87,7 +87,7 @@
     <table class="sortable" border="1" align="center" style="width:80%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td class="sorttable_nosort" style="background-color: #3d393f">VER</td>
+            <td style="background-color: #3d393f">VER</td>
             <td class="sorttable_numeric" style="background-color: #3d393f">LV</td>
             <td style="background-color: #3d393f">SONG TITLE</td>
             <td style="background-color: #3d393f">NOTE COUNT</td>
@@ -98,7 +98,7 @@
         </tr>
     {% for chart in charts %}
         <tr>
-            <td>{{ chart.game_version_display }}</td>
+            <td sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
             {% if 'N' in chart.get_type_display %}
                 <td style="color: #1721b2;">
             {% elif 'H' in chart.type_display%}
