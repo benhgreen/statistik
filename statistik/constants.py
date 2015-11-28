@@ -74,6 +74,11 @@ FULL_VERSION_NAMES = {
     23: 'Copula'
 }
 
+PLAYSIDE_CHOICES = [
+    (0, '1P'),
+    (1, '2P')
+]
+
 def generate_version_urls():
     return [(version[1], reverse('ratings') + "?version=%d" % version[0])
             for version in VERSION_CHOICES]

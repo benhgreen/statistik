@@ -1,9 +1,9 @@
 from django.contrib.auth import logout, authenticate, login
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from statistik.constants import FULL_VERSION_NAMES, \
     generate_version_urls, generate_level_urls
-from statistik.forms import ReviewForm
+from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile
 
 
@@ -89,9 +89,19 @@ class ChartView(TemplateView):
 
         return context
 
+def register_view(request):
+    context = {}
+    context['title'] = 'STATISTIK // REGISTRATION'
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        context['title'] = 'shit'
+    else:
+        form = RegisterForm()
+    context['form'] = form
+    return render(request, 'register.html', context)
+
 
 def login_view(request):
-    print(request.POST)
     username = request.POST.get('username')
     password = request.POST.get('password')
     user = authenticate(username=username, password=password)

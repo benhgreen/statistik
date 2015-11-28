@@ -24,7 +24,8 @@ urlpatterns = [
     url(r'^ratings$', views.RatingsView.as_view(), name='ratings'),
     url(r'^chart$', views.ChartView.as_view(), name='chart'),
     url(r'^login$', views.login_view, name='login'),
-    url(r'^logout$', views.logout_view, name='logout')
+    url(r'^logout$', views.logout_view, name='logout'),
+    url(r'^register$', views.register_view, name='register')
 ]
 
 urlpatterns += staticfiles_urlpatterns()

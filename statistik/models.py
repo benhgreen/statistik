@@ -6,7 +6,7 @@ from django.db.models import Avg
 from django.utils.functional import cached_property
 from statistik.constants import (MAX_RATING, CHART_TYPE_CHOICES,
                                  TECHNIQUE_CHOICES, MIN_RATING,
-                                 VERSION_CHOICES)
+                                 VERSION_CHOICES, PLAYSIDE_CHOICES)
 
 
 class Song(models.Model):
@@ -91,10 +91,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     dj_name = models.CharField(max_length=6)
     location = models.CharField(max_length=64),
-    play_side = models.SmallIntegerField(choices=[
-        (0, '1P'),
-        (1, '2P')
-    ]),
+    play_side = models.SmallIntegerField(choices=PLAYSIDE_CHOICES),
     best_techniques = ArrayField(
         models.IntegerField(choices=TECHNIQUE_CHOICES), size=3)
     max_reviewable = models.SmallIntegerField(validators=[
