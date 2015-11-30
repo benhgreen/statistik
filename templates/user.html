@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% load bootstrap3 %}
+{% load static %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block bootstrap3_extra_head %}
+    <script src="{% static "js/sorttable.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<table class="sortable" border="1" align="center" style="width:95%">
+        <tr style="line-height: 15px;font-size: small;
+        color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
+            <td style="background-color: #3d393f">SONG</td>
+            <td style="background-color: #3d393f">LV</td>
+            <td style="background-color: #3d393f">REVIEW TEXT</td>
+            <td style="background-color: #3d393f">RECOMMENDED OPTIONS</td>
+            <td style="background-color: #3d393f">NC RATING</td>
+            <td style="background-color: #3d393f">HC RATING</td>
+            <td style="background-color: #3d393f">EXHC RATING</td>
+            <td style="background-color: #3d393f">SCORE RATING</td>
+        </tr>
+    {% for review in reviews %}
+        <tr style="line-height: 50px">
+            <td style="width: 14em"><a style="color: #000" href="{% url 'chart' %}?id={{ review.chart_id }}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
+
+            {% if 'N' in chart.type_display %}
+                <td class="lv_col" style="color: #1822d6;">
+            {% elif 'H' in chart.type_display%}
+                <td class="lv_col" style="color: #a69b43;">
+            {% else %}
+                <td class="lv_col" style="color: #c62c4a;">
+            {% endif %}
+            <b>{{ review.difficulty }}☆</b>
+                </td>
+            <td class="reviewtext_col">
+                {{ review.text }}
+                    {% if review.characteristics %}
+                        <b>({{ review.characteristics }})</b>
+                    {% endif %}
+            </td>
+            <td class="options_col">{{ review.recommended_options }}</td>
+            <td class="nc_col">{{ review.clear_rating | default:"--" }}</td>
+            <td class="hc_col">{{ review.hc_rating | default:"--" }}</td>
+            <td class="exhc_col">{{ review.exhc_rating | default:"--" }}</td>
+            <td class="score_col">{{ review.score_rating | default:"--" }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

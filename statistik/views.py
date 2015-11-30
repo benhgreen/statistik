@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from statistik.constants import FULL_VERSION_NAMES, \
     generate_version_urls, generate_level_urls, TECHNIQUE_CHOICES, \
     RECOMMENDED_OPTIONS_CHOICES
-from statistik.forms import ReviewForm, RegisterForm
+from statistik.forms import ReviewForm, RegisterForm, UserUpdateForm
 from statistik.models import Chart, Review, UserProfile
 
 
@@ -165,7 +165,29 @@ def chart_view(request):
     return render(request, 'chart.html', context)
 
 def user_view(request):
-    return None
+    context = {}
+    user = User.objects.filter(pk=request.GET.get('id')).first()
+    matched_reviews = Review.objects.filter(user=user).prefetch_related('chart__song')
+    context['reviews'] = [{
+                              'title': review.chart.song.title,
+                              'chart_id': review.chart.id,
+                              'type_display': review.chart.get_type_display(),
+                              'difficulty': review.chart.difficulty,
+                              'clear_rating': review.clear_rating,
+                              'hc_rating': review.hc_rating,
+                              'exhc_rating': review.exhc_rating,
+                              'score_rating': review.score_rating,
+                              'characteristics': ', '.join([
+                                  TECHNIQUE_CHOICES[x][1] for x in
+                                  review.characteristics]),
+                              'recommended_options': ', '.join([
+                                  RECOMMENDED_OPTIONS_CHOICES[x][1] for x in
+                                  review.recommended_options])
+                          } for review in matched_reviews]
+    context['title'] = ' // '.join([user.username.upper(), 'REVIEWS'])
+
+    return render(request, 'user.html', context)
+
 
 
 def register_view(request):
@@ -183,7 +205,7 @@ def register_view(request):
                                        dj_name=data.get('dj_name').upper(),
                                        location=data.get('location'),
                                        play_side=data.get('playside'),
-                                       best_techniques=data.get('best_stats'),
+                                       best_techniques=data.get('best_techniques'),
                                        max_reviewable=0)
             user_profile.save()
 
