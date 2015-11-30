@@ -1,14 +1,29 @@
 {% extends 'base.html' %}
 
 {% load bootstrap3 %}
+{% load static %}
 
 {% block title %}
     {{ title }}
 {% endblock %}
 
+{% block bootstrap3_extra_head %}
+    <script src="{% static "js/sorttable.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+{% endblock %}
+
 {% block content %}
 
-
-
+{% if form %}
+<form style="width: 40%;margin: auto;padding-top: 2em" action="{{ request.get_full_path }}" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "record" %} Submit
+        </button>
+    {% endbuttons %}
+</form>
+{% endif %}
 
 {% endblock %}

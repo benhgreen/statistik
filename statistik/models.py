@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import Avg
 from django.utils.functional import cached_property
 from statistik.constants import (MAX_RATING, CHART_TYPE_CHOICES,
                                  TECHNIQUE_CHOICES, MIN_RATING,

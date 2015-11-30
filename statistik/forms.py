@@ -1,5 +1,6 @@
 from django import forms
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES
+from statistik.models import Review
 
 
 class RegisterForm(forms.Form):
@@ -33,4 +34,15 @@ class RegisterForm(forms.Form):
 
 
 class ReviewForm(forms.Form):
-    pass
+    text = forms.CharField(label="REVIEW TEXT", help_text="Optional, limit 256 characters.", widget=forms.Textarea(attrs={'rows':4, 'cols':15}), required=False)
+    clear_rating = forms.FloatField(label="NC RATING", help_text="Example: 11.5")
+    hc_rating = forms.FloatField(label="HC RATING", help_text="Example: 11.5")
+    exhc_rating = forms.FloatField(label="EXHC RATING", help_text="Example: 11.5")
+    score_rating = forms.FloatField(label="SCORE RATING", help_text="Example: 11.5")
+    characteristics = forms.MultipleChoiceField(label="CHARACTERISTICS",
+                                           choices=TECHNIQUE_CHOICES,
+                                           widget=forms.CheckboxSelectMultiple(),
+                                           required=False)
+
+    def is_valid(self):
+        return super(ReviewForm, self).is_valid()

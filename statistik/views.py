@@ -65,30 +65,37 @@ class RatingsView(TemplateView):
         return context
 
 
-class ChartView(TemplateView):
-    template_name = 'chart.html'
+def chart_view(request):
+    context = {}
 
-    def get_context_data(self, **kwargs):
-        context = super(ChartView, self).get_context_data(**kwargs)
-        chart = Chart.objects.get(pk=self.request.GET.get('id'))
+    chart = Chart.objects.get(pk=request.GET.get('id'))
 
-        song_title = chart.song.title if len(
-            chart.song.title) < 30 else chart.song.title[:20] + '...'
-        title = ' // '.join([song_title, chart.get_type_display()])
-        context['title'] = title
-        if self.request.user.is_authenticated():
-            if UserProfile.objects.get(
-                    user=self.request.user).max_reviewable >= chart.difficulty:
-                context['title'] = 'yey'
-                if self.request.method == 'POST':
-                    form = ReviewForm(self.request.POST)
-                    if form.is_valid():
-                        pass
+    song_title = chart.song.title if len(
+        chart.song.title) < 30 else chart.song.title[:20] + '...'
+    title = ' // '.join([song_title, chart.get_type_display()])
+    context['title'] = title
+    if request.user.is_authenticated():
+        if UserProfile.objects.get(
+                user=request.user).max_reviewable >= chart.difficulty:
+            if request.method == 'POST':
+                form = ReviewForm(request.POST)
+                if form.is_valid():
+                    pass
+            else:
+                matched_review = Review.objects.filter(
+                    user=request.user).first()
+                if matched_review:
+                    data = {key: getattr(matched_review, key) for key in
+                            ['text', 'clear_rating', 'hc_rating',
+                             'exhc_rating', 'score_rating',
+                             'characteristics']}
+                    form = ReviewForm(data)
                 else:
                     form = ReviewForm()
-                    matched_review = Review.filter(user=self.request.user)
+            context['form'] = form
 
-        return context
+    return render(request, 'chart.html', context)
+
 
 def register_view(request):
     context = {}
