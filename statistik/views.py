@@ -15,26 +15,26 @@ def index(request):
     return redirect('ratings')
 
 
-def organize_reviews(matched_reviews, user):
+def organize_reviews(matched_reviews, user_id):
     review_dict = {}
-    user_reviewed = set([review.chart_id for review in matched_reviews])
+    user_reviewed = set([review.chart_id for review in matched_reviews if review.user_id == user_id])
     for review in matched_reviews:
-        if review.id in review_dict:
-            review_dict[review.chart_id].push(review)
+        if review.chart_id in review_dict:
+            review_dict[review.chart_id].append(review)
         else:
             review_dict[review.chart_id] = [review]
     return review_dict, user_reviewed
 
 
-def get_avg_ratings(chart_ids, user=None):
+def get_avg_ratings(chart_ids, user_id=None):
     matched_reviews = Review.objects.filter(chart__in=chart_ids)
     organized_reviews, reviewed_charts = organize_reviews(matched_reviews,
-                                                          user=user)
+                                                          user_id=user_id)
     ret = {}
 
     for chart in chart_ids:
         specific_reviews = organized_reviews.get(chart)
-        if specific_reviews:
+ix        if specific_reviews:
             ret[chart] = {
                 rating_type: statistics.mean(
                     [getattr(review, rating_type) for review in
@@ -75,7 +75,8 @@ class RatingsView(TemplateView):
             'song').order_by('song__game_version')
 
         matched_chart_ids = [chart.id for chart in matched_charts]
-        avg_ratings = get_avg_ratings(matched_chart_ids, self.request.user)
+        avg_ratings = get_avg_ratings(matched_chart_ids, self.request.user.id)
+        print(avg_ratings.get(84492))
         context['charts'] = [{
                                  'id': chart.id,
                                  'title': chart.song.title,
