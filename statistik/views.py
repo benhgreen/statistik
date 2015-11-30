@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from statistik.constants import FULL_VERSION_NAMES, \
     generate_version_urls, generate_level_urls, TECHNIQUE_CHOICES, \
     RECOMMENDED_OPTIONS_CHOICES
-from statistik.forms import ReviewForm, RegisterForm, UserUpdateForm
+from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile
 
 
