@@ -28,10 +28,13 @@
         </tr>
     {% for review in reviews %}
         <tr style="line-height: 50px">
-            <td class="username_col">{{ review.user }}</td>
+            <td class="username_col"><a style="color: #000;" href="{% url 'users' %}?id={{ review.user_id }}">{{ review.user }}</a></td>
             <td class="playside_col">{{ review.playside }}</td>
             <td class="reviewtext_col">
-                <div style="text-align: left;vertical-align: top">{{ review.characteristics }}</div>
+                {{ review.text }}
+                    {% if review.characteristics %}
+                        <b>({{ review.characteristics }})</b>
+                    {% endif %}
             </td>
             <td class="options_col">{{ review.recommended_options }}</td>
             <td class="nc_col">{{ review.clear_rating | default:"--" }}</td>

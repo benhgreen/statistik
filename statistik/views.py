@@ -147,6 +147,7 @@ def chart_view(request):
     chart_reviews = Review.objects.filter(chart=chart).prefetch_related('user__userprofile')
     context['reviews'] = [{
                               'user': review.user.get_username(),
+                              'user_id': review.user.id,
                               'playside': review.user.userprofile.get_play_side_display(),
                               'text': review.text,
                               'clear_rating': review.clear_rating,
@@ -162,6 +163,9 @@ def chart_view(request):
                           } for review in chart_reviews]
 
     return render(request, 'chart.html', context)
+
+def user_view(request):
+    return None
 
 
 def register_view(request):
