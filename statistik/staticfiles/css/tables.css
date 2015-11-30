@@ -29,24 +29,24 @@ table, th, td {
 
     .nc_col {
         background-color: #2df0ff;
-        width: 5em;
+        width: 3em;
         font-weight: 600;
     }
 
     .hc_col {
         background-color: #ff99a1;
-        width: 5em;
+        width: 3em;
         font-weight: 600;
     }
 
     .exhc_col {
         background-color: #ffee90;
-        width: 5em;
+        width: 3em;
         font-weight: 600;
     }
 
     .score_col {
         background-color: #d7e1ff;
-        width: 5em;
+        width: 3em;
         font-weight: 600;
     }

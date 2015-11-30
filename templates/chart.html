@@ -14,6 +14,10 @@
 
 {% block content %}
 
+{% for review in reviews %}
+    lol
+{% endfor %}
+
 {% if form %}
 <form style="width: 40%;margin: auto;padding-top: 2em" action="{{ request.get_full_path }}" method="post">
     {% csrf_token %}

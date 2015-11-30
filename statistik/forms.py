@@ -59,5 +59,11 @@ class ReviewForm(forms.Form):
         required=False,
         )
 
+    def clean(self):
+        cleaned_data = super(ReviewForm, self).clean()
+        for attr in ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']:
+            cleaned_data[attr] = round(cleaned_data[attr], 1)
+        return cleaned_data
+
     def is_valid(self):
         return super(ReviewForm, self).is_valid()

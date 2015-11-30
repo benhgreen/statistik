@@ -1,7 +1,10 @@
+import statistics
+
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Avg
 from django.utils.functional import cached_property
 from statistik.constants import (MAX_RATING, CHART_TYPE_CHOICES,
                                  TECHNIQUE_CHOICES, MIN_RATING,
@@ -35,42 +38,50 @@ class Chart(models.Model):
 
     @cached_property
     def avg_ratings(self):
-        return {}
+        matched_reviews = Review.objects.filter(chart=self)
+        if matched_reviews:
+            return {
+                rating_type: statistics.mean([getattr(review, rating_type) for review in matched_reviews])
+                for rating_type in
+                ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']
+                }
+        else:
+            return {}
 
     @property
     def avg_clear_rating(self):
-        return self.avg_ratings.get('clear_rating__avg')
+        return self.avg_ratings.get('clear_rating')
 
     @property
     def avg_hc_rating(self):
-        return self.avg_ratings.get('hc_rating__avg')
+        return self.avg_ratings.get('hc_rating')
 
     @property
     def avg_exhc_rating(self):
-        return self.avg_ratings.get('exhc_rating__avg')
+        return self.avg_ratings.get('exhc_rating')
 
     @property
     def avg_score_rating(self):
-        return self.avg_ratings.get('score_rating__avg')
+        return self.avg_ratings.get('score_rating')
 
 
 class Review(models.Model):
     chart = models.ForeignKey(Chart)
     user = models.ForeignKey(User)
     text = models.CharField(max_length=256, blank=True)
-    clear_rating = models.SmallIntegerField(validators=[
+    clear_rating = models.FloatField(validators=[
         MaxValueValidator(MAX_RATING),
         MinValueValidator(MIN_RATING)
     ])
-    hc_rating = models.SmallIntegerField(validators=[
+    hc_rating = models.FloatField(validators=[
         MaxValueValidator(MAX_RATING),
         MinValueValidator(MIN_RATING)
     ])
-    exhc_rating = models.SmallIntegerField(validators=[
+    exhc_rating = models.FloatField(validators=[
         MaxValueValidator(MAX_RATING),
         MinValueValidator(MIN_RATING)
     ])
-    score_rating = models.SmallIntegerField(validators=[
+    score_rating = models.FloatField(validators=[
         MaxValueValidator(MAX_RATING),
         MinValueValidator(MIN_RATING)
     ])
@@ -81,6 +92,7 @@ class Review(models.Model):
 
     class Meta:
         unique_together = ('chart', 'user')
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
