@@ -34,7 +34,7 @@ def get_avg_ratings(chart_ids, user_id=None):
 
     for chart in chart_ids:
         specific_reviews = organized_reviews.get(chart)
-ix        if specific_reviews:
+        if specific_reviews:
             ret[chart] = {
                 rating_type: statistics.mean(
                     [getattr(review, rating_type) for review in
