@@ -14,12 +14,13 @@
 
 {% block content %}
 
-<table class="sortable" border="1" align="center" style="width:85%">
+<table class="sortable" border="1" align="center" style="width:95%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
             <td style="background-color: #3d393f">USER</td>
             <td style="background-color: #3d393f">PLAYSIDE</td>
             <td style="background-color: #3d393f">REVIEW TEXT</td>
+            <td style="background-color: #3d393f">RECOMMENDED OPTIONS</td>
             <td style="background-color: #3d393f">NC RATING</td>
             <td style="background-color: #3d393f">HC RATING</td>
             <td style="background-color: #3d393f">EXHC RATING</td>
@@ -29,7 +30,10 @@
         <tr style="line-height: 50px">
             <td class="username_col">{{ review.user }}</td>
             <td class="playside_col">{{ review.playside }}</td>
-            <td class="reviewtext_col">{{ review.recommended_options }}</td>
+            <td class="reviewtext_col">
+                <div style="text-align: left;vertical-align: top">{{ review.characteristics }}</div>
+            </td>
+            <td class="options_col">{{ review.recommended_options }}</td>
             <td class="nc_col">{{ review.clear_rating | default:"--" }}</td>
             <td class="hc_col">{{ review.hc_rating | default:"--" }}</td>
             <td class="exhc_col">{{ review.exhc_rating | default:"--" }}</td>
@@ -44,7 +48,7 @@
     {% bootstrap_form form %}
     {% buttons %}
         <button type="submit" class="btn btn-primary">
-            {% bootstrap_icon "record" %} Submit
+            Submit
         </button>
     {% endbuttons %}
 </form>

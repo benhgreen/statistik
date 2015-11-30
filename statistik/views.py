@@ -153,9 +153,9 @@ def chart_view(request):
                               'hc_rating': review.hc_rating,
                               'exhc_rating': review.exhc_rating,
                               'score_rating': review.score_rating,
-                              'characteristics': [
+                              'characteristics': ', '.join([
                                   TECHNIQUE_CHOICES[x][1] for x in
-                                  review.characteristics],
+                                  review.characteristics]),
                               'recommended_options': ', '.join([
                                   RECOMMENDED_OPTIONS_CHOICES[x][1] for x in
                                   review.recommended_options])

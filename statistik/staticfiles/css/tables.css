@@ -12,11 +12,19 @@ table, th, td {
     }
 
     .username_col {
-        width: 15em;
+        width: 10em;
     }
 
     .playside_col {
         width: 5em;
+    }
+
+    .reviewtext_col {
+        width: 20em;
+    }
+
+    .options_col {
+        width: 14em;
     }
 
     .ver_col {
