@@ -69,11 +69,11 @@
                     <b>{{ chart.difficulty }}☆</b>
                 </td>
             <td class="title_col" sorttable_customkey="{{ chart.alt_title }}"><a style="color: #000;" href="{% url 'chart' %}?id={{ chart.id }}"> {{ chart.title }}</a></td>
-            <td>{{ chart.note_count }}</td>
-            <td class="nc_col">{{ chart.avg_clear_rating | default:"12.55" }}</td>
-            <td class="hc_col">{{ chart.avg_hc_rating | default:"12.55" }}</td>
-            <td class="exhc_col">{{ chart.avg_exhc_rating | default:"12.55" }}</td>
-            <td class="score_col">{{ chart.avg_score_rating | default:"12.55" }}</td>
+            <td class="notecount_col">{{ chart.note_count }}</td>
+            <td class="nc_col">{{ chart.avg_clear_rating | default:"--" }}</td>
+            <td class="hc_col">{{ chart.avg_hc_rating | default:"--" }}</td>
+            <td class="exhc_col">{{ chart.avg_exhc_rating | default:"--" }}</td>
+            <td class="score_col">{{ chart.avg_score_rating | default:"--" }}</td>
         </tr>
     {% endfor %}
     </table>

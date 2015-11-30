@@ -1,11 +1,13 @@
 from django import forms
-from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES
+from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
+    RECOMMENDED_OPTIONS_CHOICES
 from statistik.models import Review
 
 
 class RegisterForm(forms.Form):
     username = forms.CharField(label="USERNAME", )
-    email = forms.EmailField(label="EMAIL", required=False, help_text='Optional.')
+    email = forms.EmailField(label="EMAIL", required=False,
+                             help_text='Optional.')
     password = forms.CharField(label="PASSWORD", widget=forms.PasswordInput)
     reenter_password = forms.CharField(label="RE-ENTER PASSWORD",
                                        widget=forms.PasswordInput)
@@ -34,15 +36,28 @@ class RegisterForm(forms.Form):
 
 
 class ReviewForm(forms.Form):
-    text = forms.CharField(label="REVIEW TEXT", help_text="Optional, limit 256 characters.", widget=forms.Textarea(attrs={'rows':4, 'cols':15}), required=False)
-    clear_rating = forms.FloatField(label="NC RATING", help_text="Example: 11.5")
+    text = forms.CharField(label="REVIEW TEXT",
+                           help_text="Optional, limit 256 characters.",
+                           widget=forms.Textarea(
+                               attrs={'rows': 4, 'cols': 15}), required=False)
+    clear_rating = forms.FloatField(label="NC RATING",
+                                    help_text="Example: 11.5")
     hc_rating = forms.FloatField(label="HC RATING", help_text="Example: 11.5")
-    exhc_rating = forms.FloatField(label="EXHC RATING", help_text="Example: 11.5")
-    score_rating = forms.FloatField(label="SCORE RATING", help_text="Example: 11.5")
+    exhc_rating = forms.FloatField(label="EXHC RATING",
+                                   help_text="Example: 11.5")
+    score_rating = forms.FloatField(label="SCORE RATING",
+                                    help_text="Example: 11.5")
     characteristics = forms.MultipleChoiceField(label="CHARACTERISTICS",
-                                           choices=TECHNIQUE_CHOICES,
-                                           widget=forms.CheckboxSelectMultiple(),
-                                           required=False)
+                                                choices=TECHNIQUE_CHOICES,
+                                                widget=forms.CheckboxSelectMultiple(),
+                                                required=False)
+
+    recommended_options = forms.MultipleChoiceField(
+        label="RECOMMENDED OPTIONS (FOR YOUR PLAY SIDE)",
+        choices=RECOMMENDED_OPTIONS_CHOICES,
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+        )
 
     def is_valid(self):
         return super(ReviewForm, self).is_valid()

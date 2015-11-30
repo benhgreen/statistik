@@ -36,7 +36,7 @@ VERSION_CHOICES = [
     (11, 'RED'),
     (12, 'HS'),
     (13, 'DD'),
-    (14, 'GOLD'),
+    (14, 'GO'),
     (15, 'DJT'),
     (16, 'EMP'),
     (17, 'SIR'),
@@ -77,6 +77,14 @@ FULL_VERSION_NAMES = {
 PLAYSIDE_CHOICES = [
     (0, '1P'),
     (1, '2P')
+]
+
+RECOMMENDED_OPTIONS_CHOICES = [
+    (0, 'Regular'),
+    (1, 'Random'),
+    (2, 'S-Random'),
+    (3, 'R-Random'),
+    (4, 'Mirror')
 ]
 
 def generate_version_urls():

@@ -71,7 +71,7 @@ def chart_view(request):
     chart = Chart.objects.get(pk=request.GET.get('id'))
 
     song_title = chart.song.title if len(
-        chart.song.title) < 30 else chart.song.title[:20] + '...'
+        chart.song.title) < 30 else chart.song.title[:30] + '...'
     title = ' // '.join([song_title, chart.get_type_display()])
     context['title'] = title
     if request.user.is_authenticated():
@@ -80,7 +80,9 @@ def chart_view(request):
             if request.method == 'POST':
                 form = ReviewForm(request.POST)
                 if form.is_valid():
-                    pass
+                    Review.objects.update_or_create(chart=chart,
+                                                    user=request.user,
+                                                    defaults=form.cleaned_data)
             else:
                 matched_review = Review.objects.filter(
                     user=request.user).first()

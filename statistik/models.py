@@ -5,7 +5,8 @@ from django.db import models
 from django.utils.functional import cached_property
 from statistik.constants import (MAX_RATING, CHART_TYPE_CHOICES,
                                  TECHNIQUE_CHOICES, MIN_RATING,
-                                 VERSION_CHOICES, PLAYSIDE_CHOICES)
+                                 VERSION_CHOICES, PLAYSIDE_CHOICES,
+                                 RECOMMENDED_OPTIONS_CHOICES)
 
 
 class Song(models.Model):
@@ -75,13 +76,8 @@ class Review(models.Model):
     ])
     characteristics = ArrayField(
         models.IntegerField(choices=TECHNIQUE_CHOICES), null=True)
-    recommended_options = ArrayField(models.IntegerField(choices=[
-        (0, 'Regular'),
-        (1, 'Random'),
-        (2, 'S-Random'),
-        (3, 'R-Random'),
-        (4, 'Mirror')
-    ]), null=True)
+    recommended_options = ArrayField(models.IntegerField(
+        choices=RECOMMENDED_OPTIONS_CHOICES), null=True)
 
     class Meta:
         unique_together = ('chart', 'user')
