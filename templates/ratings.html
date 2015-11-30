@@ -9,60 +9,12 @@
 
 {% block bootstrap3_extra_head %}
     <script src="{% static "js/sorttable.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
 {% endblock %}
 
 {% block content %}
-<style>
-    table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
 
-    tr:nth-child(odd) {background: #e1e1e1;text-align: center}
-    tr:nth-child(even) {background: #FFF}
-
-    td {
-        padding: 10px;
-        text-align: center;
-    }
-
-    td:nth-child(1) {
-        width: 15px;
-    }
-
-    td:nth-child(2) {
-        width: 15px;
-    }
-
-    td:nth-child(3) {
-        width: 28em;
-    }
-
-    td:nth-child(n+4) {
-        width: 5em;
-    }
-
-    td:nth-child(n+5) {
-        font-weight: 600;
-    }
-
-    td:nth-child(5) {
-        background-color: #2df0ff;
-    }
-
-    td:nth-child(6) {
-        background-color: #ff99a1;
-    }
-
-    td:nth-child(7) {
-        background-color: #ffee90;
-    }
-
-    td:nth-child(8) {
-        background-color: #d7e1ff;
-    }
-
-</style>
+    {{ STATIC_URL }}css/tables.css
 
     <div align="center" style="word-spacing: .5em">
         SP |&nbsp;
@@ -108,22 +60,22 @@
         </tr>
     {% for chart in charts %}
         <tr>
-            <td sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
+            <td class="ver_col" sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
             {% if 'N' in chart.type_display %}
-                <td style="color: #1721b2;">
+                <td class="lv_col" style="color: #1721b2;">
             {% elif 'H' in chart.type_display%}
-                <td style="color: #79753e;">
+                <td class="lv_col" style="color: #79753e;">
             {% else %}
-                <td style="color: #97263d;">
+                <td class="lv_col" style="color: #97263d;">
             {% endif %}
                     <b>{{ chart.difficulty }}☆</b>
                 </td>
-            <td sorttable_customkey="{{ chart.alt_title }}"><a style="color: #000;" href="{% url 'chart' %}?id={{ chart.id }}"> {{ chart.title }}</a></td>
+            <td class="title_col" sorttable_customkey="{{ chart.alt_title }}"><a style="color: #000;" href="{% url 'chart' %}?id={{ chart.id }}"> {{ chart.title }}</a></td>
             <td>{{ chart.note_count }}</td>
-            <td>{{ chart.avg_clear_rating | default:"12.55" }}</td>
-            <td>{{ chart.avg_hc_rating | default:"12.55" }}</td>
-            <td>{{ chart.avg_exhc_rating | default:"12.55" }}</td>
-            <td>{{ chart.avg_score_rating | default:"12.55" }}</td>
+            <td class="nc_col">{{ chart.avg_clear_rating | default:"12.55" }}</td>
+            <td class="hc_col">{{ chart.avg_hc_rating | default:"12.55" }}</td>
+            <td class="exhc_col">{{ chart.avg_exhc_rating | default:"12.55" }}</td>
+            <td class="score_col">{{ chart.avg_score_rating | default:"12.55" }}</td>
         </tr>
     {% endfor %}
     </table>

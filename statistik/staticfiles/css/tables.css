@@ -1,0 +1,52 @@
+table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    tr:nth-child(odd) {background: #e1e1e1;text-align: center}
+    tr:nth-child(even) {background: #FFF}
+
+    td {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .ver_col {
+        width: 15px;
+    }
+
+    .lv_col {
+        width: 15px;
+    }
+
+    .title_col {
+        width: 28em;
+    }
+
+    .notecount_col {
+
+    }
+
+    .nc_col {
+        background-color: #2df0ff;
+        width: 5em;
+        font-weight: 600;
+    }
+
+    .hc_col {
+        background-color: #ff99a1;
+        width: 5em;
+        font-weight: 600;
+    }
+
+    .exhc_col {
+        background-color: #ffee90;
+        width: 5em;
+        font-weight: 600;
+    }
+
+    .score_col {
+        background-color: #d7e1ff;
+        width: 5em;
+        font-weight: 600;
+    }
