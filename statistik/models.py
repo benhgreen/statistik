@@ -90,11 +90,11 @@ class Review(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     dj_name = models.CharField(max_length=6)
-    location = models.CharField(max_length=64),
-    play_side = models.SmallIntegerField(choices=PLAYSIDE_CHOICES),
+    location = models.CharField(max_length=64)
+    play_side = models.SmallIntegerField(choices=PLAYSIDE_CHOICES)
     best_techniques = ArrayField(
         models.IntegerField(choices=TECHNIQUE_CHOICES), size=3)
     max_reviewable = models.SmallIntegerField(validators=[
         MaxValueValidator(12),
-        MinValueValidator(1)
+        MinValueValidator(0)
     ])

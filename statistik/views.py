@@ -1,4 +1,5 @@
 from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from statistik.constants import FULL_VERSION_NAMES, \
@@ -91,10 +92,27 @@ class ChartView(TemplateView):
 
 def register_view(request):
     context = {}
-    context['title'] = 'STATISTIK // REGISTRATION'
+    context['title'] = 'REGISTRATION'
     if request.method == 'POST':
         form = RegisterForm(request.POST)
-        context['title'] = 'shit'
+        if form.is_valid():
+            data = form.cleaned_data
+            user = User.objects.create_user(username=data.get('username'),
+                                            password=data.get('password'),
+                                            email=data.get('email'))
+            user.save()
+            user_profile = UserProfile(user_id=user.id,
+                                       dj_name=data.get('dj_name').upper(),
+                                       location=data.get('location'),
+                                       play_side=data.get('playside'),
+                                       best_techniques=data.get('best_stats'),
+                                       max_reviewable=0)
+            user_profile.save()
+
+            user = authenticate(username=data.get('username'),
+                                password=data.get('password'))
+            login(request, user)
+            return redirect('ratings')
     else:
         form = RegisterForm()
     context['form'] = form

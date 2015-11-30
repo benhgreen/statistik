@@ -65,10 +65,20 @@
 </style>
 
     <div align="center" style="word-spacing: .5em">
+        SP |&nbsp;
     {% for version in versions %}
         <a style="color: #000;" href="{{ version.1 }}"><b>{{ version.0 }}</b></a>
     {% endfor %}
     </div>
+
+    <div align="center" style="word-spacing: .5em">
+        DP |&nbsp;
+    {% for version in versions %}
+        <a style="color: #000;" href="{{ version.1 }}&style=DP"><b>{{ version.0 }}</b></a>
+    {% endfor %}
+    </div>
+
+    <br>
 
     <div align="center" style="word-spacing: .5em">
     SP |&nbsp;
