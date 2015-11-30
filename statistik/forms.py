@@ -41,12 +41,12 @@ class ReviewForm(forms.Form):
                            widget=forms.Textarea(
                                attrs={'rows': 4, 'cols': 15}), required=False)
     clear_rating = forms.FloatField(label="NC RATING",
-                                    help_text="Example: 11.5")
-    hc_rating = forms.FloatField(label="HC RATING", help_text="Example: 11.5")
+                                    help_text="Example: 11.5.")
+    hc_rating = forms.FloatField(label="HC RATING", help_text="Example: 11.5.")
     exhc_rating = forms.FloatField(label="EXHC RATING",
-                                   help_text="Example: 11.5")
+                                   help_text="Example: 11.5.")
     score_rating = forms.FloatField(label="SCORE RATING",
-                                    help_text="Example: 11.5")
+                                    help_text="Example: 11.5.")
     characteristics = forms.MultipleChoiceField(label="CHARACTERISTICS",
                                                 choices=TECHNIQUE_CHOICES,
                                                 widget=forms.CheckboxSelectMultiple(),
@@ -62,7 +62,8 @@ class ReviewForm(forms.Form):
     def clean(self):
         cleaned_data = super(ReviewForm, self).clean()
         for attr in ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']:
-            cleaned_data[attr] = round(cleaned_data[attr], 1)
+            if attr in cleaned_data:
+                cleaned_data[attr] = round(cleaned_data[attr], 1)
         return cleaned_data
 
     def is_valid(self):

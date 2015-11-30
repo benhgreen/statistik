@@ -116,7 +116,7 @@ def chart_view(request):
                                                     defaults=form.cleaned_data)
             else:
                 user_review = Review.objects.filter(
-                    user=request.user).first()
+                    user=request.user, chart=chart).first()
                 if user_review:
                     data = {key: getattr(user_review, key) for key in
                             ['text', 'clear_rating', 'hc_rating',
