@@ -14,9 +14,29 @@
 
 {% block content %}
 
-{% for review in reviews %}
-    lol
-{% endfor %}
+<table class="sortable" border="1" align="center" style="width:85%">
+        <tr style="line-height: 15px;font-size: small;
+        color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
+            <td style="background-color: #3d393f">USER</td>
+            <td style="background-color: #3d393f">PLAYSIDE</td>
+            <td style="background-color: #3d393f">REVIEW TEXT</td>
+            <td style="background-color: #3d393f">NC RATING</td>
+            <td style="background-color: #3d393f">HC RATING</td>
+            <td style="background-color: #3d393f">EXHC RATING</td>
+            <td style="background-color: #3d393f">SCORE RATING</td>
+        </tr>
+    {% for review in reviews %}
+        <tr style="line-height: 50px">
+            <td class="username_col">{{ review.user }}</td>
+            <td class="playside_col">{{ review.playside }}</td>
+            <td class="reviewtext_col">{{ review.recommended_options }}</td>
+            <td class="nc_col">{{ review.clear_rating | default:"--" }}</td>
+            <td class="hc_col">{{ review.hc_rating | default:"--" }}</td>
+            <td class="exhc_col">{{ review.exhc_rating | default:"--" }}</td>
+            <td class="score_col">{{ review.score_rating | default:"--" }}</td>
+        </tr>
+    {% endfor %}
+</table>
 
 {% if form %}
 <form style="width: 40%;margin: auto;padding-top: 2em" action="{{ request.get_full_path }}" method="post">

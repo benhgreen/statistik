@@ -28,7 +28,8 @@ def organize_reviews(matched_reviews, user):
 
 def get_avg_ratings(chart_ids, user=None):
     matched_reviews = Review.objects.filter(chart__in=chart_ids)
-    organized_reviews, reviewed_charts = organize_reviews(matched_reviews, user=user)
+    organized_reviews, reviewed_charts = organize_reviews(matched_reviews,
+                                                          user=user)
     ret = {}
 
     for chart in chart_ids:
@@ -136,15 +137,16 @@ def chart_view(request):
                     data = {key: getattr(user_review, key) for key in
                             ['text', 'clear_rating', 'hc_rating',
                              'exhc_rating', 'score_rating',
-                             'characteristics']}
+                             'characteristics', 'recommended_options']}
                     form = ReviewForm(data)
                 else:
                     form = ReviewForm()
             context['form'] = form
 
-    chart_reviews = Review.objects.filter(chart=chart)
+    chart_reviews = Review.objects.filter(chart=chart).prefetch_related('user__userprofile')
     context['reviews'] = [{
-                              'user': review.user_id,
+                              'user': review.user.get_username(),
+                              'playside': review.user.userprofile.get_play_side_display(),
                               'text': review.text,
                               'clear_rating': review.clear_rating,
                               'hc_rating': review.hc_rating,
@@ -153,9 +155,9 @@ def chart_view(request):
                               'characteristics': [
                                   TECHNIQUE_CHOICES[x][1] for x in
                                   review.characteristics],
-                              'recommended_options': [
+                              'recommended_options': ', '.join([
                                   RECOMMENDED_OPTIONS_CHOICES[x][1] for x in
-                                  review.recommended_options]
+                                  review.recommended_options])
                           } for review in chart_reviews]
 
     return render(request, 'chart.html', context)

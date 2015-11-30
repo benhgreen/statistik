@@ -11,6 +11,14 @@ table, th, td {
         text-align: center;
     }
 
+    .username_col {
+        width: 15em;
+    }
+
+    .playside_col {
+        width: 5em;
+    }
+
     .ver_col {
         width: 15px;
     }

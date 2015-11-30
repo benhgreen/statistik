@@ -41,12 +41,12 @@ class ReviewForm(forms.Form):
                            widget=forms.Textarea(
                                attrs={'rows': 4, 'cols': 15}), required=False)
     clear_rating = forms.FloatField(label="NC RATING",
-                                    help_text="Example: 11.5.")
-    hc_rating = forms.FloatField(label="HC RATING", help_text="Example: 11.5.")
+                                    help_text="Example: 1.0-12.9.")
+    hc_rating = forms.FloatField(label="HC RATING", help_text="Example: 1.0-12.9.")
     exhc_rating = forms.FloatField(label="EXHC RATING",
-                                   help_text="Example: 11.5.")
+                                   help_text="Example: 1.0-12.9.")
     score_rating = forms.FloatField(label="SCORE RATING",
-                                    help_text="Example: 11.5.")
+                                    help_text="Example: 1.0-12.9.")
     characteristics = forms.MultipleChoiceField(label="CHARACTERISTICS",
                                                 choices=TECHNIQUE_CHOICES,
                                                 widget=forms.CheckboxSelectMultiple(),
