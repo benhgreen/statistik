@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from statistik.constants import FULL_VERSION_NAMES, \
-    generate_version_urls, generate_level_urls
+    generate_version_urls, generate_level_urls, TECHNIQUE_CHOICES, \
+    RECOMMENDED_OPTIONS_CHOICES
 from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile
 
@@ -84,10 +85,10 @@ def chart_view(request):
                                                     user=request.user,
                                                     defaults=form.cleaned_data)
             else:
-                matched_review = Review.objects.filter(
+                user_review = Review.objects.filter(
                     user=request.user).first()
-                if matched_review:
-                    data = {key: getattr(matched_review, key) for key in
+                if user_review:
+                    data = {key: getattr(user_review, key) for key in
                             ['text', 'clear_rating', 'hc_rating',
                              'exhc_rating', 'score_rating',
                              'characteristics']}
@@ -95,6 +96,20 @@ def chart_view(request):
                 else:
                     form = ReviewForm()
             context['form'] = form
+
+    chart_reviews = Review.objects.filter(chart=chart)
+    context['reviews'] = [{
+                              'user': review.user_id,
+                              'text': review.text,
+                              'clear_rating': review.clear_rating,
+                              'hc_rating': review.hc_rating,
+                              'exhc_rating': review.exhc_rating,
+                              'score_rating': review.score_rating,
+                              'characteristics': [
+                                  TECHNIQUE_CHOICES[x][1] for x in review.characteristics],
+                              'recommended_options': [
+                                  RECOMMENDED_OPTIONS_CHOICES[x][1] for x in review.recommended_options]
+                          } for review in chart_reviews]
 
     return render(request, 'chart.html', context)
 
