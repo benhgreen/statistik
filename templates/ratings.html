@@ -60,13 +60,17 @@
         <tr>
             <td class="ver_col" sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
             {% if 'N' in chart.type_display %}
-                <td class="lv_col" style="color: #1721b2;">
+                <td class="lv_col" style="color: #1822d6;">
             {% elif 'H' in chart.type_display%}
-                <td class="lv_col" style="color: #79753e;">
+                <td class="lv_col" style="color: #a69b43;">
             {% else %}
-                <td class="lv_col" style="color: #97263d;">
+                <td class="lv_col" style="color: #c62c4a;">
             {% endif %}
+            {% if chart.has_reviewed %}
+                    <b>{{ chart.difficulty }}★</b>
+            {% else %}
                     <b>{{ chart.difficulty }}☆</b>
+            {% endif %}
                 </td>
             <td class="title_col" sorttable_customkey="{{ chart.alt_title }}"><a style="color: #000;" href="{% url 'chart' %}?id={{ chart.id }}"> {{ chart.title }}</a></td>
             <td class="notecount_col">{{ chart.note_count }}</td>

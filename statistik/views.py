@@ -15,21 +15,33 @@ def index(request):
     return redirect('ratings')
 
 
-def get_avg_ratings(chart_ids):
+def organize_reviews(matched_reviews, user):
+    review_dict = {}
+    user_reviewed = set([review.chart_id for review in matched_reviews])
+    for review in matched_reviews:
+        if review.id in review_dict:
+            review_dict[review.chart_id].push(review)
+        else:
+            review_dict[review.chart_id] = [review]
+    return review_dict, user_reviewed
+
+
+def get_avg_ratings(chart_ids, user=None):
     matched_reviews = Review.objects.filter(chart__in=chart_ids)
+    organized_reviews, reviewed_charts = organize_reviews(matched_reviews, user=user)
     ret = {}
 
     for chart in chart_ids:
-        # TODO this is terrible and needs to be fixed
-        specific_reviews = [review for review in matched_reviews if review.chart.id == chart]
+        specific_reviews = organized_reviews.get(chart)
         if specific_reviews:
             ret[chart] = {
                 rating_type: statistics.mean(
                     [getattr(review, rating_type) for review in
-                     matched_reviews])
+                     specific_reviews])
                 for rating_type in
                 ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']
                 }
+            ret[chart]['has_reviewed'] = (chart in reviewed_charts)
         else:
             ret[chart] = {}
 
@@ -62,7 +74,7 @@ class RatingsView(TemplateView):
             'song').order_by('song__game_version')
 
         matched_chart_ids = [chart.id for chart in matched_charts]
-        avg_ratings = get_avg_ratings(matched_chart_ids)
+        avg_ratings = get_avg_ratings(matched_chart_ids, self.request.user)
         context['charts'] = [{
                                  'id': chart.id,
                                  'title': chart.song.title,
@@ -79,7 +91,10 @@ class RatingsView(TemplateView):
                                      'score_rating'),
                                  'game_version': chart.song.game_version,
                                  'game_version_display': chart.song.get_game_version_display(),
-                                 'type_display': chart.get_type_display()
+                                 'type_display': chart.get_type_display(),
+                                 'has_reviewed': avg_ratings[chart.id].get(
+                                     'has_reviewed'
+                                 )
                              } for chart in matched_charts]
 
         title_elements = []
