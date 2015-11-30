@@ -76,7 +76,6 @@ class RatingsView(TemplateView):
 
         matched_chart_ids = [chart.id for chart in matched_charts]
         avg_ratings = get_avg_ratings(matched_chart_ids, self.request.user.id)
-        print(avg_ratings.get(84492))
         context['charts'] = [{
                                  'id': chart.id,
                                  'title': chart.song.title,
