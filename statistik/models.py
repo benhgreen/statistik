@@ -36,34 +36,6 @@ class Chart(models.Model):
     class Meta:
         unique_together = ('song', 'type')
 
-    @cached_property
-    def avg_ratings(self):
-        matched_reviews = Review.objects.filter(chart=self)
-        if matched_reviews:
-            return {
-                rating_type: statistics.mean([getattr(review, rating_type) for review in matched_reviews])
-                for rating_type in
-                ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']
-                }
-        else:
-            return {}
-
-    @property
-    def avg_clear_rating(self):
-        return self.avg_ratings.get('clear_rating')
-
-    @property
-    def avg_hc_rating(self):
-        return self.avg_ratings.get('hc_rating')
-
-    @property
-    def avg_exhc_rating(self):
-        return self.avg_ratings.get('exhc_rating')
-
-    @property
-    def avg_score_rating(self):
-        return self.avg_ratings.get('score_rating')
-
 
 class Review(models.Model):
     chart = models.ForeignKey(Chart)

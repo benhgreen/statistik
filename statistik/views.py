@@ -1,3 +1,5 @@
+import statistics
+
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
@@ -11,6 +13,27 @@ from statistik.models import Chart, Review, UserProfile
 
 def index(request):
     return redirect('ratings')
+
+
+def get_avg_ratings(chart_ids):
+    matched_reviews = Review.objects.filter(chart__in=chart_ids)
+    ret = {}
+
+    for chart in chart_ids:
+        # TODO this is terrible and needs to be fixed
+        specific_reviews = [review for review in matched_reviews if review.chart.id == chart]
+        if specific_reviews:
+            ret[chart] = {
+                rating_type: statistics.mean(
+                    [getattr(review, rating_type) for review in
+                     matched_reviews])
+                for rating_type in
+                ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']
+                }
+        else:
+            ret[chart] = {}
+
+    return ret
 
 
 class RatingsView(TemplateView):
@@ -37,16 +60,23 @@ class RatingsView(TemplateView):
 
         matched_charts = Chart.objects.filter(**filters).prefetch_related(
             'song').order_by('song__game_version')
+
+        matched_chart_ids = [chart.id for chart in matched_charts]
+        avg_ratings = get_avg_ratings(matched_chart_ids)
         context['charts'] = [{
                                  'id': chart.id,
                                  'title': chart.song.title,
                                  'alt_title': chart.song.alt_title if chart.song.alt_title else chart.song.title,
                                  'note_count': chart.note_count,
                                  'difficulty': chart.difficulty,
-                                 'avg_clear_rating': chart.avg_clear_rating,
-                                 'avg_hc_rating': chart.avg_hc_rating,
-                                 'avg_exhc_rating': chart.avg_exhc_rating,
-                                 'avg_score_rating': chart.avg_score_rating,
+                                 'avg_clear_rating': avg_ratings[chart.id].get(
+                                     'clear_rating'),
+                                 'avg_hc_rating': avg_ratings[chart.id].get(
+                                     'hc_rating'),
+                                 'avg_exhc_rating': avg_ratings[chart.id].get(
+                                     'exhc_rating'),
+                                 'avg_score_rating': avg_ratings[chart.id].get(
+                                     'score_rating'),
                                  'game_version': chart.song.game_version,
                                  'game_version_display': chart.song.get_game_version_display(),
                                  'type_display': chart.get_type_display()
@@ -106,9 +136,11 @@ def chart_view(request):
                               'exhc_rating': review.exhc_rating,
                               'score_rating': review.score_rating,
                               'characteristics': [
-                                  TECHNIQUE_CHOICES[x][1] for x in review.characteristics],
+                                  TECHNIQUE_CHOICES[x][1] for x in
+                                  review.characteristics],
                               'recommended_options': [
-                                  RECOMMENDED_OPTIONS_CHOICES[x][1] for x in review.recommended_options]
+                                  RECOMMENDED_OPTIONS_CHOICES[x][1] for x in
+                                  review.recommended_options]
                           } for review in chart_reviews]
 
     return render(request, 'chart.html', context)
