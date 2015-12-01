@@ -1,6 +1,6 @@
 from django import forms
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
-    RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS
+    RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING
 
 
 class RegisterForm(forms.Form):
@@ -76,5 +76,14 @@ class ReviewForm(forms.Form):
                 cleaned_data[attr] = round(cleaned_data[attr], 1)
         return cleaned_data
 
-    def is_valid(self):
-        return super(ReviewForm, self).is_valid()
+    def is_valid(self, difficulty=None):
+        if not super(ReviewForm, self).is_valid():
+            return False
+        max_rating = min(difficulty+2, MAX_RATING)
+        min_rating = max(difficulty-2, MIN_RATING)
+        for field in ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']:
+            rating = self.cleaned_data.get(field)
+            if rating is not None and not min_rating <= rating <= max_rating:
+                self.add_error(field, 'Please stay within 2.0 of the actual difficulty.')
+                return False
+        return True

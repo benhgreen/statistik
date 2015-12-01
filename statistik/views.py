@@ -126,7 +126,7 @@ def chart_view(request):
                 user=request.user).max_reviewable >= chart.difficulty:
             if request.method == 'POST':
                 form = ReviewForm(request.POST)
-                if form.is_valid():
+                if form.is_valid(difficulty=chart.difficulty):
                     Review.objects.update_or_create(chart=chart,
                                                     user=request.user,
                                                     defaults=form.cleaned_data)
