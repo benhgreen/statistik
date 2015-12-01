@@ -27,7 +27,7 @@
             <td style="background-color: #3d393f">SCORE RATING</td>
         </tr>
     {% for review in reviews %}
-        <tr style="line-height: 50px">
+        <tr style="line-height: 150%">
             <td style="width: 14em"><a style="color: #000" href="{% url 'chart' %}?id={{ review.chart_id }}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
 
             {% if 'N' in chart.type_display %}
