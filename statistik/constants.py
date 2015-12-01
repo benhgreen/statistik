@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 
-MAX_RATING = 12.9
+MAX_RATING = 13.0
 MIN_RATING = 1.0
 
 TECHNIQUE_CHOICES = [

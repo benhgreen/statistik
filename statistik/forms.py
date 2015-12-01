@@ -40,14 +40,14 @@ class ReviewForm(forms.Form):
                            widget=forms.Textarea(
                                attrs={'rows': 4, 'cols': 15}), required=False)
     clear_rating = forms.FloatField(label="NC RATING",
-                                    help_text="Example: 1.0-12.9.",
+                                    help_text="Range: 1.0-13.0.",
                                     required=False)
-    hc_rating = forms.FloatField(label="HC RATING", help_text="Example: 1.0-12.9.", required=False)
+    hc_rating = forms.FloatField(label="HC RATING", help_text="Range: 1.0-13.0.", required=False)
     exhc_rating = forms.FloatField(label="EXHC RATING",
-                                   help_text="Example: 1.0-12.9.",
+                                   help_text="Range: 1.0-13.0.",
                                    required=False)
     score_rating = forms.FloatField(label="SCORE RATING",
-                                    help_text="Example: 1.0-12.9.",
+                                    help_text="Range: 1.0-13.0.",
                                     required=False)
     characteristics = forms.MultipleChoiceField(label="CHARACTERISTICS",
                                                 choices=TECHNIQUE_CHOICES,
