@@ -35,24 +35,26 @@ class RegisterForm(forms.Form):
 
 
 class ReviewForm(forms.Form):
+    RANGE_HELP_TEXT = "Range: 1.0-14.0."
+
     text = forms.CharField(label="REVIEW TEXT",
                            help_text="Optional, limit 256 characters.",
                            widget=forms.Textarea(
                                attrs={'rows': 4, 'cols': 15}), required=False)
     clear_rating = forms.FloatField(label="NC RATING",
-                                    help_text="Range: 1.0-13.0.",
+                                    help_text=RANGE_HELP_TEXT,
                                     required=False,
                                     validators=RATING_VALIDATORS)
     hc_rating = forms.FloatField(label="HC RATING",
-                                 help_text="Range: 1.0-13.0.",
+                                 help_text=RANGE_HELP_TEXT,
                                  required=False,
                                  validators=RATING_VALIDATORS)
     exhc_rating = forms.FloatField(label="EXHC RATING",
-                                   help_text="Range: 1.0-13.0.",
+                                   help_text=RANGE_HELP_TEXT,
                                    required=False,
                                    validators=RATING_VALIDATORS)
     score_rating = forms.FloatField(label="SCORE RATING",
-                                    help_text="Range: 1.0-13.0.",
+                                    help_text=RANGE_HELP_TEXT,
                                     required=False,
                                     validators=RATING_VALIDATORS)
     characteristics = forms.MultipleChoiceField(label="CHARACTERISTICS",
