@@ -166,28 +166,43 @@ def chart_view(request):
 def user_view(request):
     context = {}
     user = User.objects.filter(pk=request.GET.get('id')).first()
-    matched_reviews = Review.objects.filter(user=user).prefetch_related('chart__song')
-    context['reviews'] = [{
-                              'title': review.chart.song.title,
-                              'text': review.text,
-                              'chart_id': review.chart.id,
-                              'type_display': review.chart.get_type_display(),
-                              'difficulty': review.chart.difficulty,
-                              'clear_rating': review.clear_rating,
-                              'hc_rating': review.hc_rating,
-                              'exhc_rating': review.exhc_rating,
-                              'score_rating': review.score_rating,
-                              'characteristics': ', '.join([
-                                  TECHNIQUE_CHOICES[x][1] for x in
-                                  review.characteristics]),
-                              'recommended_options': ', '.join([
-                                  RECOMMENDED_OPTIONS_CHOICES[x][1] for x in
-                                  review.recommended_options])
-                          } for review in matched_reviews]
-    context['title'] = ' // '.join([user.username.upper(), 'REVIEWS'])
-    context['page_title'] = 'STATISTIK // ' + context['title']
+    if user:
+        matched_reviews = Review.objects.filter(user=user).prefetch_related('chart__song')
+        context['reviews'] = [{
+            'title': review.chart.song.title,
+            'text': review.text,
+            'chart_id': review.chart.id,
+            'type_display': review.chart.get_type_display(),
+            'difficulty': review.chart.difficulty,
+            'clear_rating': review.clear_rating,
+            'hc_rating': review.hc_rating,
+            'exhc_rating': review.exhc_rating,
+            'score_rating': review.score_rating,
+            'characteristics': ', '.join([
+              TECHNIQUE_CHOICES[x][1] for x in
+              review.characteristics]),
+            'recommended_options': ', '.join([
+              RECOMMENDED_OPTIONS_CHOICES[x][1] for x in
+              review.recommended_options])
+            } for review in matched_reviews]
+        context['title'] = ' // '.join([user.username.upper(), 'REVIEWS'])
+        context['page_title'] = 'STATISTIK // ' + context['title']
+        return render(request, 'user.html', context)
 
-    return render(request, 'user.html', context)
+    else:
+        users = User.objects.filter(is_superuser=False).prefetch_related('userprofile')
+        context['users'] = [{
+            'user_id': user.id,
+            'username': user.username,
+            'dj_name': user.userprofile.dj_name,
+            'playside': user.userprofile.get_play_side_display(),
+            'best_techniques': ', '.join([TECHNIQUE_CHOICES[x][1] for x in user.userprofile.best_techniques]),
+            'max_reviewable': user.userprofile.max_reviewable,
+            'location': user.userprofile.location
+        } for user in users]
+        context['title'] = 'USERS'
+        context['page_title'] = 'STATISTIK // ' + context['title']
+        return render(request, 'userlist.html', context)
 
 
 

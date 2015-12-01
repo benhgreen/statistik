@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load bootstrap3 %}
+{% load static %}
+
+{% block title %}
+    <a style="color: #000;" href="{% url 'ratings' %}">{{ title }}</a>
+{% endblock %}
+
+{% block bootstrap3_extra_head %}
+    <script src="{% static "js/sorttable.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<table class="sortable" border="1" align="center" style="width:75%">
+        <tr style="line-height: 15px;font-size: small;
+        color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
+            <td style="width: 10em;background-color: #3d393f">USERNAME</td>
+            <td style="width: 4em;background-color: #3d393f">DJ NAME</td>
+            <td style="width: 2em;background-color: #3d393f">PLAYSIDE</td>
+            <td style="background-color: #3d393f">MOST INSANE TECHNIQUES</td>
+            <td style="width: 2em;background-color: #3d393f">REVIEW MAX</td>
+            <td style="background-color: #3d393f">LOCATION</td>
+        </tr>
+    {% for user_item in users %}
+        <tr style="line-height: 150%">
+            <td><a style="color: #000;" href="{% url 'users' %}?id={{ user_item.user_id }}">{{ user_item.username }}</a></td>
+            <td>{{ user_item.dj_name }}</td>
+            <td>{{ user_item.playside }}</td>
+            <td>{{ user_item.best_techniques }}</td>
+            <td>{{ user_item.max_reviewable }}</td>
+            <td>{{ user_item.location }}</td>
+
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
