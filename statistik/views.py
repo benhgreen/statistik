@@ -33,15 +33,14 @@ def get_avg_ratings(chart_ids, user_id=None):
     ret = {}
 
     for chart in chart_ids:
+        ret[chart] = {}
         specific_reviews = organized_reviews.get(chart)
         if specific_reviews:
-            ret[chart] = {
-                rating_type: round(statistics.mean(
-                    [getattr(review, rating_type) for review in
-                     specific_reviews if getattr(review, rating_type) != None] or [0]), 2)
-                for rating_type in
-                ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']
-                }
+            for rating_type in ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']:
+                avg_rating = "%.2f" % round(statistics.mean(
+                        [getattr(review, rating_type) for review in specific_reviews
+                         if getattr(review, rating_type) != None] or [0]), 2)
+                ret[chart][rating_type] = avg_rating if avg_rating != "0.00" else 0
             ret[chart]['has_reviewed'] = (chart in reviewed_charts)
         else:
             ret[chart] = {}
