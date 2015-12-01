@@ -64,7 +64,7 @@ class ReviewForm(forms.Form):
     def clean(self):
         cleaned_data = super(ReviewForm, self).clean()
         for attr in ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']:
-            if attr in cleaned_data:
+            if cleaned_data.get(attr):
                 cleaned_data[attr] = round(cleaned_data[attr], 1)
         return cleaned_data
 

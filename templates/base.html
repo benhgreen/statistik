@@ -11,7 +11,7 @@
             <br>
             <h5 style="float: right;">
             {% if user.is_authenticated %}
-                welcome, {{ user.username }} | <a href="{% url 'logout' %}">logout</a>
+                welcome, <a style="color: #000" href="{% url 'users' %}?id={{ user.id }}"> {{ user.username }}</a> | <a href="{% url 'logout' %}">logout</a>
             {% else %}
                 <form action="{% url 'login' %}" method="post">
                     {% csrf_token %}

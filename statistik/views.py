@@ -38,7 +38,7 @@ def get_avg_ratings(chart_ids, user_id=None):
             ret[chart] = {
                 rating_type: statistics.mean(
                     [getattr(review, rating_type) for review in
-                     specific_reviews if getattr(review, rating_type) != None])
+                     specific_reviews if getattr(review, rating_type) != None] or [0])
                 for rating_type in
                 ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']
                 }
@@ -169,6 +169,7 @@ def user_view(request):
     matched_reviews = Review.objects.filter(user=user).prefetch_related('chart__song')
     context['reviews'] = [{
                               'title': review.chart.song.title,
+                              'text': review.text,
                               'chart_id': review.chart.id,
                               'type_display': review.chart.get_type_display(),
                               'difficulty': review.chart.difficulty,
