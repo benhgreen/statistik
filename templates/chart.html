@@ -27,7 +27,7 @@
             <td style="background-color: #3d393f">SCORE RATING</td>
         </tr>
     {% for review in reviews %}
-        <tr style="line-height: 50px">
+        <tr style="line-height: 150%">
             <td class="username_col"><a style="color: #000;" href="{% url 'users' %}?id={{ review.user_id }}">{{ review.user }}</a></td>
             <td class="playside_col">{{ review.playside }}</td>
             <td class="reviewtext_col">
