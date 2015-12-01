@@ -8,7 +8,8 @@ from django.utils.functional import cached_property
 from statistik.constants import (MAX_RATING, CHART_TYPE_CHOICES,
                                  TECHNIQUE_CHOICES, MIN_RATING,
                                  VERSION_CHOICES, PLAYSIDE_CHOICES,
-                                 RECOMMENDED_OPTIONS_CHOICES)
+                                 RECOMMENDED_OPTIONS_CHOICES,
+                                 RATING_VALIDATORS)
 
 
 class Song(models.Model):
@@ -41,25 +42,13 @@ class Review(models.Model):
     user = models.ForeignKey(User)
     text = models.CharField(max_length=256, blank=True)
     clear_rating = models.FloatField(null=True,
-                                     validators=[
-                                         MaxValueValidator(MAX_RATING),
-                                         MinValueValidator(MIN_RATING)
-                                     ])
+                                     validators=RATING_VALIDATORS)
     hc_rating = models.FloatField(null=True,
-                                  validators=[
-                                      MaxValueValidator(MAX_RATING),
-                                      MinValueValidator(MIN_RATING)
-                                  ])
+                                  validators=RATING_VALIDATORS)
     exhc_rating = models.FloatField(null=True,
-                                    validators=[
-                                        MaxValueValidator(MAX_RATING),
-                                        MinValueValidator(MIN_RATING)
-                                    ])
+                                    validators=RATING_VALIDATORS)
     score_rating = models.FloatField(null=True,
-                                     validators=[
-                                         MaxValueValidator(MAX_RATING),
-                                         MinValueValidator(MIN_RATING)
-                                     ])
+                                     validators=RATING_VALIDATORS)
     characteristics = ArrayField(
         models.IntegerField(choices=TECHNIQUE_CHOICES), null=True)
     recommended_options = ArrayField(models.IntegerField(

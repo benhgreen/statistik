@@ -1,6 +1,6 @@
 from django import forms
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
-    RECOMMENDED_OPTIONS_CHOICES
+    RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS
 
 
 class RegisterForm(forms.Form):
@@ -41,14 +41,20 @@ class ReviewForm(forms.Form):
                                attrs={'rows': 4, 'cols': 15}), required=False)
     clear_rating = forms.FloatField(label="NC RATING",
                                     help_text="Range: 1.0-13.0.",
-                                    required=False)
-    hc_rating = forms.FloatField(label="HC RATING", help_text="Range: 1.0-13.0.", required=False)
+                                    required=False,
+                                    validators=RATING_VALIDATORS)
+    hc_rating = forms.FloatField(label="HC RATING",
+                                 help_text="Range: 1.0-13.0.",
+                                 required=False,
+                                 validators=RATING_VALIDATORS)
     exhc_rating = forms.FloatField(label="EXHC RATING",
                                    help_text="Range: 1.0-13.0.",
-                                   required=False)
+                                   required=False,
+                                   validators=RATING_VALIDATORS)
     score_rating = forms.FloatField(label="SCORE RATING",
                                     help_text="Range: 1.0-13.0.",
-                                    required=False)
+                                    required=False,
+                                    validators=RATING_VALIDATORS)
     characteristics = forms.MultipleChoiceField(label="CHARACTERISTICS",
                                                 choices=TECHNIQUE_CHOICES,
                                                 widget=forms.CheckboxSelectMultiple(),

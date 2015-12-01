@@ -1,7 +1,11 @@
 from django.core.urlresolvers import reverse
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 MAX_RATING = 13.0
 MIN_RATING = 1.0
+
+RATING_VALIDATORS = [MaxValueValidator(MAX_RATING),
+                     MinValueValidator(MIN_RATING)]
 
 TECHNIQUE_CHOICES = [
     (0, 'Scratching'),
