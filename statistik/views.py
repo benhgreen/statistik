@@ -38,7 +38,7 @@ def get_avg_ratings(chart_ids, user_id=None):
             ret[chart] = {
                 rating_type: statistics.mean(
                     [getattr(review, rating_type) for review in
-                     specific_reviews])
+                     specific_reviews if getattr(review, rating_type) != None])
                 for rating_type in
                 ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']
                 }

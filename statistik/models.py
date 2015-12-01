@@ -1,5 +1,4 @@
 import statistics
-
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -41,22 +40,26 @@ class Review(models.Model):
     chart = models.ForeignKey(Chart)
     user = models.ForeignKey(User)
     text = models.CharField(max_length=256, blank=True)
-    clear_rating = models.FloatField(validators=[
-        MaxValueValidator(MAX_RATING),
-        MinValueValidator(MIN_RATING)
-    ])
-    hc_rating = models.FloatField(validators=[
-        MaxValueValidator(MAX_RATING),
-        MinValueValidator(MIN_RATING)
-    ])
-    exhc_rating = models.FloatField(validators=[
-        MaxValueValidator(MAX_RATING),
-        MinValueValidator(MIN_RATING)
-    ])
-    score_rating = models.FloatField(validators=[
-        MaxValueValidator(MAX_RATING),
-        MinValueValidator(MIN_RATING)
-    ])
+    clear_rating = models.FloatField(null=True,
+                                     validators=[
+                                         MaxValueValidator(MAX_RATING),
+                                         MinValueValidator(MIN_RATING)
+                                     ])
+    hc_rating = models.FloatField(null=True,
+                                  validators=[
+                                      MaxValueValidator(MAX_RATING),
+                                      MinValueValidator(MIN_RATING)
+                                  ])
+    exhc_rating = models.FloatField(null=True,
+                                    validators=[
+                                        MaxValueValidator(MAX_RATING),
+                                        MinValueValidator(MIN_RATING)
+                                    ])
+    score_rating = models.FloatField(null=True,
+                                     validators=[
+                                         MaxValueValidator(MAX_RATING),
+                                         MinValueValidator(MIN_RATING)
+                                     ])
     characteristics = ArrayField(
         models.IntegerField(choices=TECHNIQUE_CHOICES), null=True)
     recommended_options = ArrayField(models.IntegerField(
