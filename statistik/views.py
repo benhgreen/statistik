@@ -38,7 +38,7 @@ def get_avg_ratings(chart_ids, user_id=None):
             ret[chart] = {
                 rating_type: round(statistics.mean(
                     [getattr(review, rating_type) for review in
-                     specific_reviews if getattr(review, rating_type) != None] or [0]), 1)
+                     specific_reviews if getattr(review, rating_type) != None] or [0]), 2)
                 for rating_type in
                 ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']
                 }
@@ -105,6 +105,7 @@ class RatingsView(TemplateView):
             title_elements.append('LV. ' + str(difficulty))
         title_elements.append(play_style)
         context['title'] = ' // '.join(title_elements)
+        context['page_title'] = 'STATISTIK // ' + context['title']
 
         context['versions'] = generate_version_urls()
         context['levels'] = generate_level_urls()
@@ -160,7 +161,7 @@ def chart_view(request):
                                   RECOMMENDED_OPTIONS_CHOICES[x][1] for x in
                                   review.recommended_options])
                           } for review in chart_reviews]
-
+    context['page_title'] = 'STATISTIK // ' + context['title']
     return render(request, 'chart.html', context)
 
 def user_view(request):
@@ -185,6 +186,7 @@ def user_view(request):
                                   review.recommended_options])
                           } for review in matched_reviews]
     context['title'] = ' // '.join([user.username.upper(), 'REVIEWS'])
+    context['page_title'] = 'STATISTIK // ' + context['title']
 
     return render(request, 'user.html', context)
 
@@ -216,6 +218,7 @@ def register_view(request):
     else:
         form = RegisterForm()
     context['form'] = form
+    context['page_title'] = 'STATISTIK // ' + context['title']
     return render(request, 'register.html', context)
 
 
