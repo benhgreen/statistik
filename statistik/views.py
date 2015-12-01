@@ -121,6 +121,7 @@ def chart_view(request):
         chart.song.title) < 30 else chart.song.title[:30] + '...'
     title = ' // '.join([song_title, chart.get_type_display()])
     context['title'] = title
+    context['difficulty'] = chart.difficulty
     if request.user.is_authenticated():
         if UserProfile.objects.get(
                 user=request.user).max_reviewable >= chart.difficulty:
