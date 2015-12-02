@@ -17,7 +17,7 @@
 
 {% block content %}
     {% if chart_list %}
-        <div align="center" style="font-size: large">click title to return to rating</div>
+        <div align="center" style="font-size: large">click the title above to return to rating</div>
         <br>
         <table border="1" align="center" style="width:65%">
         <tr style="line-height: 15px;font-size: small;
@@ -41,10 +41,11 @@
         <div align="center" style="font-size: large">select the more difficult chart or 'draw'. view the current rankings by clicking the title above.</div>
         <br>
         <br>
-        <table border="1" align="center" style="width:75%">
+        <table border="1" align="center" style="width:80%">
             <tr style="line-height: 4em">
                 <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}">{{ chart1.title }} [{{ chart1.type }}]</a></td>
                 <td style="width:5%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true">DRAW</a></td>
+                <td style="width:5%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}">PASS</a></td>
                 <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart2.id }}&lose={{ chart1.id }}">{{ chart2.title }} [{{ chart2.type }}]</a></td>
             </tr>
         </table>
