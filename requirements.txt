@@ -4,6 +4,7 @@ Django==1.8.6
 django-bootstrap3==6.2.2
 django-debug-toolbar==1.4
 django-toolbelt==0.0.1
+elo==0.1
 gunicorn==19.3.0
 psycopg2==2.6.1
 sqlparse==0.1.18
