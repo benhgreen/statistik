@@ -1,13 +1,9 @@
-import statistics
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import Avg
-from django.utils.functional import cached_property
-from statistik.constants import (MAX_RATING, CHART_TYPE_CHOICES,
-                                 TECHNIQUE_CHOICES, MIN_RATING,
-                                 VERSION_CHOICES, PLAYSIDE_CHOICES,
+from statistik.constants import (CHART_TYPE_CHOICES,
+                                 TECHNIQUE_CHOICES, VERSION_CHOICES, PLAYSIDE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
                                  RATING_VALIDATORS)
 
@@ -32,9 +28,17 @@ class Chart(models.Model):
         MinValueValidator(1)
     ])
     note_count = models.SmallIntegerField()
+    elo_rating = models.FloatField()
 
     class Meta:
         unique_together = ('song', 'type')
+
+
+class EloReview(models.Model):
+    first = models.ForeignKey(Chart, related_name='eloreview_win_set')
+    second = models.ForeignKey(Chart, related_name='eloreview_lose_set')
+    drawn = models.BooleanField()
+    created_at = models.DateTimeField(auto_now=True)
 
 
 class Review(models.Model):

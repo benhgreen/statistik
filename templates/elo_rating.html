@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% load bootstrap3 %}
+{% load static %}
+
+{% block title %}
+    <a style="color: #000;" href="{% url 'ratings' %}">{{ title }}</a>
+{% endblock %}
+
+{% block content %}
+
+<br>
+<div style="font-size: 200%;font-weight: 500;line-height: 3em" align="center">
+<a style="color: #000;;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}">{{ chart1.title }} [{{ chart1.type }}]</a>
+<br>
+//&nbsp;
+<a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true">DRAW</a>
+&nbsp;//
+<br>
+<a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart2.id }}&lose={{ chart1.id }}">{{ chart2.title }} [{{ chart2.type }}]</a>
+
+</div>
+
+{% endblock %}

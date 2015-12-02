@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^ratings$', views.RatingsView.as_view(), name='ratings'),
     url(r'^user$', views.user_view, name='users'),
     url(r'^chart$', views.chart_view, name='chart'),
+    url(r'^elo$', views.elo_view, name='elo'),
     url(r'^login$', views.login_view, name='login'),
     url(r'^logout$', views.logout_view, name='logout'),
     url(r'^register$', views.register_view, name='register')

@@ -1,14 +1,20 @@
+import random
 import statistics
+
+import elo
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.db import transaction
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from statistik.constants import FULL_VERSION_NAMES, \
     generate_version_urls, generate_level_urls, TECHNIQUE_CHOICES, \
     RECOMMENDED_OPTIONS_CHOICES
 from statistik.forms import ReviewForm, RegisterForm
-from statistik.models import Chart, Review, UserProfile
+from statistik.models import Chart, Review, UserProfile, EloReview
 
 
 def index(request):
@@ -163,6 +169,63 @@ def chart_view(request):
                           } for review in chart_reviews]
     context['page_title'] = 'STATISTIK // ' + context['title']
     return render(request, 'chart.html', context)
+
+
+def elo_view(request):
+    win = request.GET.get('win')
+    lose = request.GET.get('lose')
+    level = request.GET.get('level')
+
+    if not level:
+        return HttpResponseBadRequest()
+
+    if win and lose:
+        with transaction.atomic():
+            win_chart = Chart.objects.get(pk=int(win))
+            lose_chart = Chart.objects.get(pk=int(lose))
+            drawn = bool(request.GET.get('drawn'))
+
+            win_rating, lose_rating = elo.rate_1vs1(win_chart.elo_rating,
+                                                    lose_chart.elo_rating,
+                                                    drawn=drawn)
+
+            win_chart.elo_rating = win_rating
+            lose_chart.elo_rating = lose_rating
+
+            win_chart.save()
+            lose_chart.save()
+
+            EloReview.objects.create(first=win_chart,
+                                     second=lose_chart,
+                                     drawn=drawn)
+        print('redirecting')
+        return HttpResponseRedirect(reverse('elo') + '?level=%s' % level)
+    else:
+        level = request.GET.get('level')
+        if not level:
+            return HttpResponseBadRequest()
+
+        display_list = bool(request.GET.get('list'))
+        if display_list:
+            pass
+        else:
+            elo_diff = 9001
+            chart1 = chart2 = None
+            while elo_diff > 750:
+                charts = list(Chart.objects.filter(difficulty=int(level), type__lt=3))
+                [chart1, chart2] = random.sample(charts, 2)
+                elo_diff = abs(chart1.elo_rating-chart2.elo_rating)
+            context = {title: {
+                'title': chart.song.title,
+                'type': chart.get_type_display(),
+                'id': chart.id
+            } for [title, chart] in [['chart1', chart1], ['chart2', chart2]]}
+
+    context['level'] = level
+    context['title'] = ' // '.join(['ELO', level+'☆'])
+    context['page_title'] = 'STATISTIK // ' + context['title']
+    return render(request, 'elo_rating.html', context)
+
 
 def user_view(request):
     context = {}
