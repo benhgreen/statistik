@@ -183,7 +183,7 @@ def elo_view(request):
         with transaction.atomic():
             win_chart = Chart.objects.get(pk=int(win))
             lose_chart = Chart.objects.get(pk=int(lose))
-            drawn = bool(request.GET.get('drawn'))
+            drawn = bool(request.GET.get('draw'))
 
             win_rating, lose_rating = elo.rate_1vs1(win_chart.elo_rating,
                                                     lose_chart.elo_rating,
@@ -205,14 +205,26 @@ def elo_view(request):
         if not level:
             return HttpResponseBadRequest()
 
+        # display list ranked by elo
         display_list = bool(request.GET.get('list'))
         if display_list:
-            pass
+            matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3).prefetch_related('song').order_by('-elo_rating')
+            context = {'chart_list': [{
+                                          'index': ind + 1,
+                                          'id': chart.id,
+                                          'title': chart.song.title,
+                                          'type': chart.get_type_display(),
+                                          'rating': round(chart.elo_rating, 3)
+
+                                      } for ind, chart in
+                                      enumerate(matched_charts)],
+                       'title': ' // '.join(['ELO', level + '☆', 'NC LIST'])}
         else:
+            # display two songs to rank
             elo_diff = 9001
             chart1 = chart2 = None
-            while elo_diff > 750:
-                charts = list(Chart.objects.filter(difficulty=int(level), type__lt=3))
+            charts = list(Chart.objects.filter(difficulty=int(level), type__lt=3))
+            while elo_diff > 50:
                 [chart1, chart2] = random.sample(charts, 2)
                 elo_diff = abs(chart1.elo_rating-chart2.elo_rating)
             context = {title: {
@@ -221,9 +233,9 @@ def elo_view(request):
                 'id': chart.id
             } for [title, chart] in [['chart1', chart1], ['chart2', chart2]]}
 
-    context['level'] = level
-    context['title'] = ' // '.join(['ELO', level+'☆'])
+            context['title'] = ' // '.join(['ELO', level+'☆', 'NC RATE'])
     context['page_title'] = 'STATISTIK // ' + context['title']
+    context['level'] = level
     return render(request, 'elo_rating.html', context)
 
 

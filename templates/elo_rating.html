@@ -3,22 +3,51 @@
 {% load bootstrap3 %}
 {% load static %}
 
+{% block bootstrap3_extra_head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+{% endblock %}
+
 {% block title %}
-    <a style="color: #000;" href="{% url 'ratings' %}">{{ title }}</a>
+    {% if chart_list %}
+        <a style="color: #000;" href="{% url 'elo' %}?level={{ level }}">{{ title }}</a>
+    {% else %}
+        <a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&list=true">{{ title }}</a>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-
-<br>
-<div style="font-size: 200%;font-weight: 500;line-height: 3em" align="center">
-<a style="color: #000;;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}">{{ chart1.title }} [{{ chart1.type }}]</a>
-<br>
-//&nbsp;
-<a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true">DRAW</a>
-&nbsp;//
-<br>
-<a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart2.id }}&lose={{ chart1.id }}">{{ chart2.title }} [{{ chart2.type }}]</a>
-
-</div>
+    {% if chart_list %}
+        <div align="center" style="font-size: large">click title to return to rating</div>
+        <br>
+        <table border="1" align="center" style="width:65%">
+        <tr style="line-height: 15px;font-size: small;
+        color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
+            <td style="background-color: #3d393f">RANK</td>
+            <td style="background-color: #3d393f">TITLE</td>
+            <td style="background-color: #3d393f">RATING</td>
+        </tr>
+            {% for chart in chart_list %}
+                <tr style="line-height: 150%">
+                    <td>{{ chart.index }}</td>
+                    <td>{{ chart.title }} [{{ chart.type }}]</td>
+                    <td>{{ chart.rating }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <br>
+        <br>
+        <br>
+        <div align="center" style="font-size: large">select the more difficult chart or 'draw'. view the current rankings by clicking the title above.</div>
+        <br>
+        <br>
+        <table border="1" align="center" style="width:75%">
+            <tr style="line-height: 4em">
+                <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}">{{ chart1.title }} [{{ chart1.type }}]</a></td>
+                <td style="width:5%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true">DRAW</a></td>
+                <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart2.id }}&lose={{ chart1.id }}">{{ chart2.title }} [{{ chart2.type }}]</a></td>
+            </tr>
+        </table>
+    {% endif %}
 
 {% endblock %}
