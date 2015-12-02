@@ -198,7 +198,6 @@ def elo_view(request):
             EloReview.objects.create(first=win_chart,
                                      second=lose_chart,
                                      drawn=drawn)
-        print('redirecting')
         return HttpResponseRedirect(reverse('elo') + '?level=%s' % level)
     else:
         level = request.GET.get('level')
@@ -224,7 +223,7 @@ def elo_view(request):
             elo_diff = 9001
             chart1 = chart2 = None
             charts = list(Chart.objects.filter(difficulty=int(level), type__lt=3))
-            while elo_diff > 50:
+            while elo_diff > 75:
                 [chart1, chart2] = random.sample(charts, 2)
                 elo_diff = abs(chart1.elo_rating-chart2.elo_rating)
             context = {title: {
