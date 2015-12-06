@@ -1,6 +1,11 @@
 from django.conf import settings
-from statistik.models import EloReview
+from statistik.models import EloReview, Chart
 import elo
+
+for chart in Chart.objects.all():
+    chart.elo_rating = 1000
+    chart.elo_rating_hc = 1000
+    chart.save()
 
 for review in EloReview.objects.all():
     song1 = review.first
