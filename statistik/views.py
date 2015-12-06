@@ -176,6 +176,11 @@ def elo_view(request):
     lose = request.GET.get('lose')
     level = request.GET.get('level')
 
+    is_hc = int(request.GET.get('hc', 0))
+    type = 1 if is_hc else 0
+    elo_type = 'elo_rating_hc' if is_hc else 'elo_rating'
+    type_display = 'HC' if is_hc else 'NC'
+
     if not level:
         return HttpResponseBadRequest()
 
@@ -185,20 +190,24 @@ def elo_view(request):
             lose_chart = Chart.objects.get(pk=int(lose))
             drawn = bool(request.GET.get('draw'))
 
-            win_rating, lose_rating = elo.rate_1vs1(win_chart.elo_rating,
-                                                    lose_chart.elo_rating,
-                                                    drawn=drawn)
+            elo_env = elo.Elo(k_factor=20)
+            win_chart_elo = getattr(win_chart, elo_type)
+            lose_chart_elo = getattr(lose_chart, elo_type)
+            win_rating, lose_rating = elo_env.rate_1vs1(win_chart_elo,
+                                                        lose_chart_elo,
+                                                        drawn=drawn)
 
-            win_chart.elo_rating = win_rating
-            lose_chart.elo_rating = lose_rating
+            setattr(win_chart, elo_type, win_rating)
+            setattr(lose_chart, elo_type, lose_rating)
 
             win_chart.save()
             lose_chart.save()
 
             EloReview.objects.create(first=win_chart,
                                      second=lose_chart,
-                                     drawn=drawn)
-        return HttpResponseRedirect(reverse('elo') + '?level=%s' % level)
+                                     drawn=drawn,
+                                     type=type)
+        return HttpResponseRedirect(reverse('elo') + '?level=%s&hc=%s' % (level, type))
     else:
         level = request.GET.get('level')
         if not level:
@@ -207,23 +216,23 @@ def elo_view(request):
         # display list ranked by elo
         display_list = bool(request.GET.get('list'))
         if display_list:
-            matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3).prefetch_related('song').order_by('-elo_rating')
+            matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3).prefetch_related('song').order_by('-' + elo_type)
             context = {'chart_list': [{
                                           'index': ind + 1,
                                           'id': chart.id,
                                           'title': chart.song.title,
                                           'type': chart.get_type_display(),
-                                          'rating': round(chart.elo_rating, 3)
+                                          'rating': round(getattr(chart, elo_type), 3)
 
                                       } for ind, chart in
                                       enumerate(matched_charts)],
-                       'title': ' // '.join(['ELO', level + '☆', 'NC LIST'])}
+                       'title': ' // '.join(['ELO', level + '☆', type_display + ' LIST'])}
         else:
             # display two songs to rank
             elo_diff = 9001
             chart1 = chart2 = None
             charts = list(Chart.objects.filter(difficulty=int(level), type__lt=3))
-            while elo_diff > 75:
+            while elo_diff > 50:
                 [chart1, chart2] = random.sample(charts, 2)
                 elo_diff = abs(chart1.elo_rating-chart2.elo_rating)
             context = {title: {
@@ -232,9 +241,11 @@ def elo_view(request):
                 'id': chart.id
             } for [title, chart] in [['chart1', chart1], ['chart2', chart2]]}
 
-            context['title'] = ' // '.join(['ELO', level+'☆', 'NC RATE'])
+            context['title'] = ' // '.join(['ELO', level+'☆', type_display + ' RATE'])
     context['page_title'] = 'STATISTIK // ' + context['title']
     context['level'] = level
+    context['is_hc'] = type
+    context['is_hc_display'] = type_display
     return render(request, 'elo_rating.html', context)
 
 

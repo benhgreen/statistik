@@ -17,6 +17,13 @@ TECHNIQUE_CHOICES = [
     (6, 'Denim')
 ]
 
+SCORE_CATEGORY_CHOICES = [
+    (0, 'NC'),
+    (1, 'HC'),
+    (2, 'EXHC'),
+    (3, 'SCORE')
+]
+
 CHART_TYPE_CHOICES = [
     (0, 'SPN'),
     (1, 'SPH'),

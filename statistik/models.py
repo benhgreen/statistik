@@ -5,7 +5,7 @@ from django.db import models
 from statistik.constants import (CHART_TYPE_CHOICES,
                                  TECHNIQUE_CHOICES, VERSION_CHOICES, PLAYSIDE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
-                                 RATING_VALIDATORS)
+                                 RATING_VALIDATORS, SCORE_CATEGORY_CHOICES)
 
 
 class Song(models.Model):
@@ -29,6 +29,7 @@ class Chart(models.Model):
     ])
     note_count = models.SmallIntegerField()
     elo_rating = models.FloatField()
+    elo_rating_hc = models.FloatField()
 
     class Meta:
         unique_together = ('song', 'type')
@@ -39,6 +40,7 @@ class EloReview(models.Model):
     second = models.ForeignKey(Chart, related_name='eloreview_lose_set')
     drawn = models.BooleanField()
     created_at = models.DateTimeField(auto_now=True)
+    type = models.SmallIntegerField(choices=SCORE_CATEGORY_CHOICES)
 
 
 class Review(models.Model):
