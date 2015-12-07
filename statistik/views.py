@@ -282,6 +282,7 @@ def elo_view(request):
             matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3).prefetch_related('song').order_by('-' + elo_type)
 
             # assemble displayed elo info for matched charts
+            # TODO add link to 'normal' chart reviews
             context = {
                 'chart_list': [{
                                   'index': ind + 1,
