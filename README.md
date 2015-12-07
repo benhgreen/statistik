@@ -2,9 +2,10 @@
 
 ##Description
 
-Review tracker for beatmania IIDX chart difficulties. Supports traditional
-[ClickAgain-style reviews](http://clickagain.sakura.ne.jp/cgi-bin/sort11/data.cgi?level12=1) as well as Elo-based, [Textage-style reviews](http://textage.cc/banner/sortrank.html?3).
+Review tracker for [beatmania IIDX](https://en.wikipedia.org/wiki/Beatmania_IIDX) chart difficulties. Supports traditional [ClickAgain-style reviews](http://clickagain.sakura.ne.jp/cgi-bin/sort11/data.cgi?level12=1) as well as Elo-based, [Textage-style reviews](http://textage.cc/banner/sortrank.html?3).
 
+Deployed to my DO droplet at http://statistik.benhgreen.com.
+Elo reviews can be found at http://statistik.benhgreen.com/elo?level=12.
 
 ## Setup
 Uses Python 3.5, Django 1.8, Postgres, as well as whatever else is in `requirements.txt`.
