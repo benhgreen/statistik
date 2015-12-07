@@ -4,7 +4,7 @@ from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
 
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(label="USERNAME", )
+    username = forms.CharField(label="USERNAME")
     email = forms.EmailField(label="EMAIL", required=False,
                              help_text='Optional.')
     password = forms.CharField(label="PASSWORD", widget=forms.PasswordInput)
@@ -14,10 +14,10 @@ class RegisterForm(forms.Form):
     location = forms.CharField(label="LOCATION", max_length=64)
     playside = forms.ChoiceField(label="PLAYSIDE", choices=PLAYSIDE_CHOICES)
     best_techniques = forms.MultipleChoiceField(label="MOST INSANE TECHNIQUES",
-                                           help_text="Limit 3.",
-                                           choices=TECHNIQUE_CHOICES,
-                                           widget=forms.CheckboxSelectMultiple(),
-                                           required=False)
+                                                help_text="Limit 3.",
+                                                choices=TECHNIQUE_CHOICES,
+                                                widget=forms.CheckboxSelectMultiple(),
+                                                required=False)
 
     def is_valid(self):
         super(RegisterForm, self).is_valid()
@@ -67,11 +67,12 @@ class ReviewForm(forms.Form):
         choices=RECOMMENDED_OPTIONS_CHOICES,
         widget=forms.CheckboxSelectMultiple(),
         required=False,
-        )
+    )
 
     def clean(self):
         cleaned_data = super(ReviewForm, self).clean()
-        for attr in ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']:
+        for attr in ['clear_rating', 'hc_rating', 'exhc_rating',
+                     'score_rating']:
             if cleaned_data.get(attr):
                 cleaned_data[attr] = round(cleaned_data[attr], 1)
         return cleaned_data
@@ -79,11 +80,13 @@ class ReviewForm(forms.Form):
     def is_valid(self, difficulty=None):
         if not super(ReviewForm, self).is_valid():
             return False
-        max_rating = min(difficulty+2, MAX_RATING)
-        min_rating = max(difficulty-2, MIN_RATING)
-        for field in ['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']:
+        max_rating = min(difficulty + 2, MAX_RATING)
+        min_rating = max(difficulty - 2, MIN_RATING)
+        for field in ['clear_rating', 'hc_rating', 'exhc_rating',
+                      'score_rating']:
             rating = self.cleaned_data.get(field)
             if rating is not None and not min_rating <= rating <= max_rating:
-                self.add_error(field, 'Please stay within 2.0 of the actual difficulty.')
+                self.add_error(field,
+                               'Please rate within 2.0 of actual difficulty.')
                 return False
         return True

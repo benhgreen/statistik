@@ -24,6 +24,13 @@ SCORE_CATEGORY_CHOICES = [
     (3, 'SCORE')
 ]
 
+SCORE_CATEGORY_NAMES = [
+    'clear_rating',
+    'hc_rating',
+    'exhc_rating',
+    'score_rating'
+]
+
 CHART_TYPE_CHOICES = [
     (0, 'SPN'),
     (1, 'SPH'),
