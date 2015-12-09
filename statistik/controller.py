@@ -392,7 +392,7 @@ def make_elo_matchup(level):
     :param int level:   Level of songs to match (1-12)
     :rtype list:        List of dicts of chart info
     """
-    elo_diff = 9001doc
+    elo_diff = 9001
     chart1 = chart2 = None
     charts = list(Chart.objects.filter(difficulty=int(level), type__lt=3))
 
