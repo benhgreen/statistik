@@ -161,6 +161,7 @@ def register_view(request):
     context = {}
     if request.method == 'POST':
         # handle submitted registrations
+        # TODO refactor RegisterForm creation to somewhere else
         form = RegisterForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
