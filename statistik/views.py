@@ -11,8 +11,9 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from statistik.constants import (FULL_VERSION_NAMES,
-    generate_version_urls, generate_level_urls, TECHNIQUE_CHOICES,
-    RECOMMENDED_OPTIONS_CHOICES, SCORE_CATEGORY_NAMES)
+                                 generate_version_urls, generate_level_urls,
+                                 TECHNIQUE_CHOICES, SCORE_CATEGORY_NAMES,
+                                 RECOMMENDED_OPTIONS_CHOICES)
 from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile, EloReview
 
@@ -115,28 +116,35 @@ class RatingsView(TemplateView):
         avg_ratings = get_avg_ratings(matched_chart_ids, self.request.user.id)
 
         # assemble displayed info for each of the charts
-        # TODO fix line length
-        context['charts'] = [{
-                                 'id': chart.id,
-                                 'title': chart.song.title,
-                                 'alt_title': chart.song.alt_title if chart.song.alt_title else chart.song.title,
-                                 'note_count': chart.note_count,
-                                 'difficulty': chart.difficulty,
-                                 'avg_clear_rating': avg_ratings[chart.id].get(
-                                     'clear_rating'),
-                                 'avg_hc_rating': avg_ratings[chart.id].get(
-                                     'hc_rating'),
-                                 'avg_exhc_rating': avg_ratings[chart.id].get(
-                                     'exhc_rating'),
-                                 'avg_score_rating': avg_ratings[chart.id].get(
-                                     'score_rating'),
-                                 'game_version': chart.song.game_version,
-                                 'game_version_display': chart.song.get_game_version_display(),
-                                 'type_display': chart.get_type_display(),
-                                 'has_reviewed': avg_ratings[chart.id].get(
-                                     'has_reviewed'
-                                 )
-                             } for chart in matched_charts]
+        context['charts'] = []
+        for chart in matched_charts:
+            context['charts'].append({
+                 'id': chart.id,
+
+                 'title': chart.song.title,
+                 'alt_title': chart.song.alt_title
+                 if chart.song.alt_title else chart.song.title,
+
+                 'note_count': chart.note_count,
+                 'difficulty': chart.difficulty,
+
+                 'avg_clear_rating': avg_ratings[chart.id].get(
+                     'clear_rating'),
+                 'avg_hc_rating': avg_ratings[chart.id].get(
+                     'hc_rating'),
+                 'avg_exhc_rating': avg_ratings[chart.id].get(
+                     'exhc_rating'),
+                 'avg_score_rating': avg_ratings[chart.id].get(
+                     'score_rating'),
+
+                 'game_version': chart.song.game_version,
+                 'game_version_display': chart.song.get_game_version_display(),
+                 'type_display': chart.get_type_display(),
+
+                 'has_reviewed': avg_ratings[chart.id].get(
+                     'has_reviewed'
+                 )
+             })
 
         # assemble page title
         # TODO uniform page title assembly which allows for links in title
@@ -172,8 +180,8 @@ def chart_view(request):
 
     # if user is authenticated and can review this chart, display review form
     if request.user.is_authenticated():
-        if UserProfile.objects.get(
-                user=request.user).max_reviewable >= chart.difficulty:
+        user_profile = UserProfile.objects.filter(user=request.user).first()
+        if user_profile and user_profile.max_reviewable >= chart.difficulty:
 
             # handle incoming reviews
             if request.method == 'POST':
@@ -204,25 +212,32 @@ def chart_view(request):
                     form = ReviewForm()
             context['form'] = form
 
-    # get reviews for this chart and assemble display info for said reviews
-    # TODO fix line length
-    chart_reviews = Review.objects.filter(chart=chart).prefetch_related('user__userprofile')
-    context['reviews'] = [{
-                              'user': review.user.get_username(),
-                              'user_id': review.user.id,
-                              'playside': review.user.userprofile.get_play_side_display(),
-                              'text': review.text,
-                              'clear_rating': review.clear_rating,
-                              'hc_rating': review.hc_rating,
-                              'exhc_rating': review.exhc_rating,
-                              'score_rating': review.score_rating,
-                              'characteristics': ', '.join([
-                                  TECHNIQUE_CHOICES[x][1] for x in
-                                  review.characteristics]),
-                              'recommended_options': ', '.join([
-                                  RECOMMENDED_OPTIONS_CHOICES[x][1] for x in
-                                  review.recommended_options])
-                          } for review in chart_reviews]
+    # get reviews for this chart, cache users for username and playside lookup
+    pr_set = 'user__userprofile'
+    chart_reviews = Review.objects.filter(chart=chart).prefetch_related(pr_set)
+
+    # collect info to display for each review
+    context['reviews'] = []
+    for review in chart_reviews:
+        context['reviews'].append({
+            'user': review.user.get_username(),
+            'user_id': review.user.id,
+            'playside': review.user.userprofile.get_play_side_display(),
+
+            'text': review.text,
+            'clear_rating': review.clear_rating,
+            'hc_rating': review.hc_rating,
+            'exhc_rating': review.exhc_rating,
+            'score_rating': review.score_rating,
+
+            'characteristics': ', '.join([
+                TECHNIQUE_CHOICES[x][1]
+                for x in review.characteristics]),
+
+            'recommended_options': ', '.join([
+                RECOMMENDED_OPTIONS_CHOICES[x][1]
+                for x in review.recommended_options])
+        })
 
     # assemble page title
     context['page_title'] = 'STATISTIK // ' + context['title']
@@ -279,7 +294,9 @@ def elo_view(request):
         if display_list:
             # display list of charts ranked by elo
             # TODO fix line length
-            matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3).prefetch_related('song').order_by('-' + elo_type)
+            matched_charts = Chart.objects.filter(difficulty=int(level),
+                                                  type__lt=3)
+            matched_charts.prefetch_related('song').order_by('-' + elo_type)
 
             # assemble displayed elo info for matched charts
             # TODO add link to 'normal' chart reviews
@@ -329,7 +346,8 @@ def user_view(request):
     user = User.objects.filter(pk=request.GET.get('id')).first()
     if user:
         # get all reviews created by this user
-        matched_reviews = Review.objects.filter(user=user).prefetch_related('chart__song')
+        PR = 'chart__song'
+        matched_reviews = Review.objects.filter(user=user).prefetch_related(PR)
         # assemble display info for these reviews
         # TODO fix line length
         context['reviews'] = [{
