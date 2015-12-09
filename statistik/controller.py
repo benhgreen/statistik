@@ -1,6 +1,7 @@
 """
 Helper methods with which views.py can interact with models.py
 """
+import random
 import statistics
 
 import elo
@@ -327,29 +328,30 @@ def create_new_user(user_data):
     user_profile.save()
 
 
-def elo_rate_charts(chart1_id, chart2_id, draw=False, rate_type='elo_rating'):
+def elo_rate_charts(chart1_id, chart2_id, draw=False, rate_type=0):
     """
     Add new Elo rating for two charts
     :param int chart1_id:   ID of winning chart
     :param int chart2_id:   ID of losing chart
     :param bool draw:       True if match was a draw
-    :param str rate_type:   Rating type (refer to Chart model for options)
+    :param int rate_type:   Rating type (refer to Chart model for options)
     """
+    rate_type_display = 'elo_rating_hc' if rate_type else 'elo_rating'
     with transaction.atomic():
             win_chart = Chart.objects.get(pk=chart1_id)
             lose_chart = Chart.objects.get(pk=chart2_id)
 
             # elo magic happens here
             elo_env = elo.Elo(k_factor=20)
-            win_chart_elo = getattr(win_chart, rate_type)
-            lose_chart_elo = getattr(lose_chart, rate_type)
+            win_chart_elo = getattr(win_chart, rate_type_display)
+            lose_chart_elo = getattr(lose_chart, rate_type_display)
             win_rating, lose_rating = elo_env.rate_1vs1(win_chart_elo,
                                                         lose_chart_elo,
                                                         drawn=draw)
 
             # update charts with new elo ratings
-            setattr(win_chart, rate_type, win_rating)
-            setattr(lose_chart, rate_type, lose_rating)
+            setattr(win_chart, rate_type_display, win_rating)
+            setattr(lose_chart, rate_type_display, lose_rating)
             win_chart.save()
             lose_chart.save()
 
@@ -358,3 +360,45 @@ def elo_rate_charts(chart1_id, chart2_id, draw=False, rate_type='elo_rating'):
                                      second=lose_chart,
                                      drawn=draw,
                                      type=rate_type)
+
+
+def get_elo_rankings(level, rate_type):
+    """
+    Get songs ranked by Elo ranking, formatted for template usage
+    :param int level:       Level to sort by (1-12)
+    :param str rate_type:   Rating type (refer to Chart model for options)
+    :rtype list:            List of dicts containing chart/ranking data
+    """
+    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3)
+    matched_charts.prefetch_related('song').order_by('-' + rate_type)
+
+    # assemble displayed elo info for matched charts
+    # TODO add link to 'normal' chart reviews
+    chart_data = []
+    for rank, chart in enumerate(matched_charts):
+        chart_data.append({
+            'index': rank + 1,
+            'id': chart.id,
+            'title': chart.song.title,
+            'type': chart.get_type_display(),
+            'rating': round(getattr(chart, rate_type), 3)
+        })
+    return chart_data
+
+
+def make_elo_matchup(level):
+    elo_diff = 9001
+    chart1 = chart2 = None
+    charts = list(Chart.objects.filter(difficulty=int(level), type__lt=3))
+
+    # only return closely-matched charts for better rankings
+    while elo_diff > 50:
+        [chart1, chart2] = random.sample(charts, 2)
+        elo_diff = abs(chart1.elo_rating-chart2.elo_rating)
+
+    # assemble display info for these two charts
+    return [{
+        'title': chart.song.title,
+        'type': chart.get_type_display(),
+        'id': chart.id
+    } for chart in [chart1, chart2]]

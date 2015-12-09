@@ -1,10 +1,6 @@
-import elo
-import random
-
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.db import transaction
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
@@ -14,7 +10,8 @@ from statistik.constants import (FULL_VERSION_NAMES, generate_version_urls,
 from statistik.controller import (get_chart_data, generate_review_form,
                                   get_charts_by_ids, get_reviews_for_chart,
                                   get_reviews_for_user, get_user_list,
-                                  create_new_user, elo_rate_charts)
+                                  create_new_user, elo_rate_charts,
+                                  get_elo_rankings, make_elo_matchup)
 from statistik.forms import RegisterForm
 
 
@@ -93,7 +90,7 @@ def elo_view(request):
     is_hc = int(request.GET.get('hc', 0))
     # TODO extend to accommodate exhc and score types
     rate_type = 1 if is_hc else 0
-    elo_type = 'elo_rating_hc' if is_hc else 'elo_rating'
+    rate_type_display = 'elo_rating_hc' if is_hc else 'elo_rating'
     type_display = 'HC' if is_hc else 'NC'
 
     if not level:
@@ -103,51 +100,23 @@ def elo_view(request):
     # TODO don't use GET for this
     if win and lose:
         draw = bool(request.GET.get('draw'))
-        elo_rate_charts(int(win), int(lose), draw, elo_type)
+        elo_rate_charts(int(win), int(lose), draw, rate_type)
         return HttpResponseRedirect(reverse('elo') + '?level=%s&hc=%s' %
                                     (level, rate_type))
 
     # handle regular requests
     else:
+        context = {}
         display_list = bool(request.GET.get('list'))
         if display_list:
             # display list of charts ranked by elo
             # TODO fix line length
-            matched_charts = Chart.objects.filter(difficulty=int(level),
-                                                  type__lt=3)
-            matched_charts.prefetch_related('song').order_by('-' + elo_type)
-
-            # assemble displayed elo info for matched charts
-            # TODO add link to 'normal' chart reviews
-            context = {
-                'chart_list': [{
-                                  'index': ind + 1,
-                                  'id': chart.id,
-                                  'title': chart.song.title,
-                                  'type': chart.get_type_display(),
-                                  'rating': round(getattr(chart, elo_type), 3)
-                               } for ind, chart in enumerate(matched_charts)],
-                'title': ' // '.join(
-                    ['ELO', level + '☆', type_display + ' LIST'])
-            }
+            context['chart_list'] = get_elo_rankings(level, rate_type_display)
+            context['title'] = ' // '.join(
+                ['ELO', level + '☆', type_display + ' LIST'])
         else:
             # display two songs to rank
-            elo_diff = 9001
-            chart1 = chart2 = None
-            charts = list(Chart.objects.filter(difficulty=int(level),
-                                               type__lt=3))
-
-            # only return closely-matched charts for better rankings
-            while elo_diff > 50:
-                [chart1, chart2] = random.sample(charts, 2)
-                elo_diff = abs(chart1.elo_rating-chart2.elo_rating)
-
-            # assemble display info for these two charts
-            context = {title: {
-                'title': chart.song.title,
-                'type': chart.get_type_display(),
-                'id': chart.id
-            } for [title, chart] in [['chart1', chart1], ['chart2', chart2]]}
+            [context['chart1'], context['chart2']] = make_elo_matchup(level)
 
             # add page title
             context['title'] = ' // '.join(
@@ -155,7 +124,7 @@ def elo_view(request):
 
     context['page_title'] = 'STATISTIK // ' + context['title']
     context['level'] = level
-    context['is_hc'] = rating_type
+    context['is_hc'] = rate_type
     context['is_hc_display'] = type_display
     return render(request, 'elo_rating.html', context)
 
