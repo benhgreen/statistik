@@ -19,6 +19,9 @@ class Song(models.Model):
     bpm_max = models.SmallIntegerField()
     game_version = models.SmallIntegerField(choices=VERSION_CHOICES)
 
+    def __str__(self):
+        return self.title
+
 
 class Chart(models.Model):
     song = models.ForeignKey(Song)
@@ -30,6 +33,9 @@ class Chart(models.Model):
     note_count = models.SmallIntegerField()
     elo_rating = models.FloatField()
     elo_rating_hc = models.FloatField()
+
+    def __str__(self):
+        return "%s [%s]" % (self.song_id, self.get_type_display())
 
     class Meta:
         unique_together = ('song', 'type')
@@ -60,6 +66,9 @@ class Review(models.Model):
     recommended_options = ArrayField(models.IntegerField(
         choices=RECOMMENDED_OPTIONS_CHOICES), null=True)
 
+    def __str__(self):
+        return 'Review %s:%s' % (self.user_id, self.chart_id)
+
     class Meta:
         unique_together = ('chart', 'user')
 
@@ -75,3 +84,6 @@ class UserProfile(models.Model):
         MaxValueValidator(12),
         MinValueValidator(0)
     ])
+
+    def __str__(self):
+        return 'DJ %s\'s UserProfile' % self.dj_name
