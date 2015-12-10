@@ -408,3 +408,19 @@ def make_elo_matchup(level):
         'type': chart.get_type_display(),
         'id': chart.id
     } for chart in [chart1, chart2]]
+
+
+def add_page_titles(context, title_elements, page_link=None):
+    """
+
+    :param dict context:
+    :param listtitle_elements:
+    :param str page_link:
+    :return:
+    """
+
+    context['title'] = ' // '.join(title_elements)
+    context['page_title'] = ' // '.join(['STATISTIK', context['title']])
+    if page_link:
+        context['page_link'] = page_link
+

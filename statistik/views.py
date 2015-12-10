@@ -14,7 +14,8 @@ from statistik.controller import (get_chart_data, generate_review_form,
                                   get_charts_by_ids, get_reviews_for_chart,
                                   get_reviews_for_user, get_user_list,
                                   create_new_user, elo_rate_charts,
-                                  get_elo_rankings, make_elo_matchup)
+                                  get_elo_rankings, make_elo_matchup,
+                                  add_page_titles)
 from statistik.forms import RegisterForm
 
 
@@ -82,11 +83,16 @@ def chart_view(request):
 
     # truncate long song title
     song_title = chart.song.title if len(
-        chart.song.title) < 30 else chart.song.title[:30] + '...'
+        chart.song.title) < 15 else chart.song.title[:15] + '...'
 
     # assemble page title
-    title = ' // '.join([song_title, chart.get_type_display()])
-    context['title'] = title
+    title_elements = [song_title,
+                      chart.get_type_display(),
+                      str(chart.difficulty) + '☆']
+    page_link = reverse('ratings')
+    add_page_titles(context, title_elements, page_link)
+
+
     context['difficulty'] = chart.difficulty
 
     form_data = request.POST if request.method == 'POST' else None
@@ -96,8 +102,6 @@ def chart_view(request):
     # get reviews for this chart, cache users for username and playside lookup
     context['reviews'] = get_reviews_for_chart(chart_id)
 
-    # assemble page title
-    context['page_title'] = 'STATISTIK // ' + context['title']
     return render(request, 'chart.html', context)
 
 
