@@ -370,8 +370,7 @@ def get_elo_rankings(level, rate_type):
     :param str rate_type:   Rating type (refer to Chart model for options)
     :rtype list:            List of dicts containing chart/ranking data
     """
-    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3)
-    matched_charts.prefetch_related('song').order_by('-' + rate_type)
+    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3).prefetch_related('song').order_by('-' + rate_type)
 
     # assemble displayed elo info for matched charts
     # TODO add link to 'normal' chart reviews
@@ -423,4 +422,3 @@ def add_page_titles(context, title_elements, page_link=None):
     context['page_title'] = ' // '.join(['STATISTIK', context['title']])
     if page_link:
         context['page_link'] = page_link
-
