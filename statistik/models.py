@@ -31,8 +31,8 @@ class Chart(models.Model):
         MinValueValidator(1)
     ])
     note_count = models.SmallIntegerField()
-    elo_rating = models.FloatField()
-    elo_rating_hc = models.FloatField()
+    elo_rating = models.FloatField(default=1000)
+    elo_rating_hc = models.FloatField(default=1000)
 
     def __str__(self):
         return "%s [%s]" % (self.song_id, self.get_type_display())
