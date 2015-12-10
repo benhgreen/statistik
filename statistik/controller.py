@@ -92,7 +92,7 @@ def get_charts_by_ids(ids):
     return Chart.objects.filter(pk__in=ids)
 
 
-def get_charts_by_query(version=None, difficulty=None, play_style=None):
+def get_charts_by_query(version=None, difficulty=None, play_style='SP'):
     """
     Chart lookup by game-related parameters
     :param version:         Game version to filter by (from VERSION_CHOICES)
@@ -326,6 +326,7 @@ def create_new_user(user_data):
                                    'best_techniques'),
                                max_reviewable=0)
     user_profile.save()
+    return user
 
 
 def elo_rate_charts(chart1_id, chart2_id, draw=False, rate_type=0):
