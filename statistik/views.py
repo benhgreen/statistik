@@ -1,10 +1,13 @@
+"""
+Main view controller for Statistik
+"""
+
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
-
 from statistik.constants import (FULL_VERSION_NAMES, generate_version_urls,
                                  generate_level_urls)
 from statistik.controller import (get_chart_data, generate_review_form,
@@ -16,14 +19,26 @@ from statistik.forms import RegisterForm
 
 
 def index(request):
+    """
+    Redirect requests to base URL to ratings page for SP level 12s
+    :param request: Request to handle
+    :rtype HTTPResponse:
+    """
     return redirect('ratings')
 
 
 class RatingsView(TemplateView):
+    """
+    Handles requests for rating chart pages
+    """
     template_name = 'ratings.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(RatingsView, self).get_context_data(**kwargs)
+    def get_context_data(self):
+        """
+        Assemble ratings page. Possible filters include difficulty and version.
+        :rtype dict: Context including chart data
+        """
+        context = super(RatingsView, self).get_context_data()
         difficulty = self.request.GET.get('difficulty')
         version = self.request.GET.get('version')
         play_style = self.request.GET.get('style', 'SP')
@@ -38,8 +53,8 @@ class RatingsView(TemplateView):
         title_elements = []
         if version:
             title_elements.append(FULL_VERSION_NAMES[int(version)].upper())
-        if difficulty:
-            title_elements.append('LV. ' + str(difficulty))
+        if difficulty or not (difficulty and version):
+            title_elements.append('LV. ' + str(difficulty or 12))
         title_elements.append(play_style)
         context['title'] = ' // '.join(title_elements)
         context['page_title'] = 'STATISTIK // ' + context['title']
@@ -52,6 +67,10 @@ class RatingsView(TemplateView):
 
 
 def chart_view(request):
+    """
+    Handle requests for individual chart pages (mostly collections of reviews)
+    :param request: Request to handle
+    """
     context = {}
 
     chart_id = request.GET.get('id')
@@ -61,7 +80,7 @@ def chart_view(request):
     # TODO remove all direct interaction with chart
     chart = get_charts_by_ids([chart_id])[0]
 
-   # truncate long song title
+    # truncate long song title
     song_title = chart.song.title if len(
         chart.song.title) < 30 else chart.song.title[:30] + '...'
 
@@ -83,6 +102,10 @@ def chart_view(request):
 
 
 def elo_view(request):
+    """
+    Handle requests for Elo views (lists as well as individual matchups)
+    :param request: Request to handle
+    """
     win = request.GET.get('win')
     lose = request.GET.get('lose')
     level = request.GET.get('level')
@@ -120,7 +143,7 @@ def elo_view(request):
 
             # add page title
             context['title'] = ' // '.join(
-                ['ELO', level+'☆', type_display + ' RATE'])
+                ['ELO', level + '☆', type_display + ' RATE'])
 
     context['page_title'] = 'STATISTIK // ' + context['title']
     context['level'] = level
@@ -130,6 +153,10 @@ def elo_view(request):
 
 
 def user_view(request):
+    """
+    Handle requests for both individual user pages as well as the userlist
+    :param request: Request to handle
+    """
     context = {}
     user_id = request.GET.get('id')
     if user_id:
@@ -158,9 +185,13 @@ def user_view(request):
 
 
 def register_view(request):
+    """
+    Handle user registration
+    :param request: Request to handle
+    """
     context = {}
     if request.method == 'POST':
-        # handle submitted registrations
+        # handle submitted registration forms
         # TODO refactor RegisterForm creation to somewhere else
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -184,6 +215,10 @@ def register_view(request):
 
 
 def login_view(request):
+    """
+    POST only, handles user login
+    :param request: Request to handle
+    """
     # TODO make this a proper form to display errors and stuff
     username = request.POST.get('username')
     password = request.POST.get('password')
@@ -197,5 +232,9 @@ def login_view(request):
 
 
 def logout_view(request):
+    """
+    Logs out current user and redirects to index page
+    :param request: Request to handle
+    """
     logout(request)
     return redirect('ratings')

@@ -1,3 +1,6 @@
+"""
+Constants, choices, and methods that are directly related to them
+"""
 from django.core.urlresolvers import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -105,11 +108,20 @@ RECOMMENDED_OPTIONS_CHOICES = [
     (4, 'Mirror')
 ]
 
+
 def generate_version_urls():
+    """
+    Generate urls for ratings page based on VERSION_CHOICES
+    :rtype list: List of tuples containing version abbreviation and link
+    """
     return [(version[1], reverse('ratings') + "?version=%d" % version[0])
             for version in VERSION_CHOICES]
 
 
 def generate_level_urls():
+    """
+    Generate urls for ratings page based on levels (1-12)
+    :rtype list: List of tuples containing level number and link
+    """
     return [(level, reverse('ratings') + "?difficulty=%d" % level)
             for level in range(1,13)]
