@@ -25,12 +25,16 @@ SAMPLE_USER_DATA = [{
     'username': 'ben',
     'password': 'lel',
     'dj_name': 'blarg',
-    'play_side': 0,
+    'playside': 0,
+    'best_techniques': [],
+    'location': 'USA'
 },{
     'username': 'jimwich',
     'password': 'asdfasdf',
     'dj_name': 'fdsaa',
-    'play_side': 1,
+    'playside': 1,
+    'best_techniques': [],
+    'location': 'USA'
 }]
 
 
@@ -46,7 +50,7 @@ def create_some_charts(songs):
 
 
 def create_some_users():
-    return [create_new_user(**user_data) for user_data in SAMPLE_USER_DATA]
+    return [create_new_user(user_data) for user_data in SAMPLE_USER_DATA]
 
 
 def create_some_reviews(charts, users):
