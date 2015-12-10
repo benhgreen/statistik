@@ -4,7 +4,13 @@
 
 {% block bootstrap3_content %}
     <div style="clear: both" class="container" xmlns="http://www.w3.org/1999/html">
-        <h1 style="float: left">{% block title %}No title{% endblock %}</h1>
+        <h1 style="float: left">
+            {% if page_link %}
+                <a style="color: #000;" href="{{ page_link }}">{{ title }}</a>
+            {% else %}
+                {{ title }}
+            {% endif %}
+        </h1>
 
 
         <div id="userinfo">
