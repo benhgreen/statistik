@@ -86,4 +86,4 @@ class UserProfile(models.Model):
     ])
 
     def __str__(self):
-        return 'DJ %s\'s UserProfile' % self.dj_name
+        return 'DJ %s' % self.dj_name
