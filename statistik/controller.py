@@ -92,7 +92,7 @@ def get_charts_by_ids(ids):
     return Chart.objects.filter(pk__in=ids)
 
 
-def get_charts_by_query(version=None, difficulty=None, play_style='SP'):
+def get_charts_by_query(version=None, difficulty=None, play_style=None):
     """
     Chart lookup by game-related parameters
     :param version:         Game version to filter by (from VERSION_CHOICES)
@@ -113,7 +113,7 @@ def get_charts_by_query(version=None, difficulty=None, play_style='SP'):
     filters['type__in'] = {
         'SP': [0, 1, 2],
         'DP': [3, 4, 5]
-    }[play_style]
+    }[play_style or 'SP']
 
     return Chart.objects.filter(**filters).prefetch_related('song').order_by(
         'song__game_version')
@@ -370,7 +370,8 @@ def get_elo_rankings(level, rate_type):
     :param str rate_type:   Rating type (refer to Chart model for options)
     :rtype list:            List of dicts containing chart/ranking data
     """
-    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3).prefetch_related('song').order_by('-' + rate_type)
+    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3)\
+        .prefetch_related('song').order_by('-' + rate_type)
 
     # assemble displayed elo info for matched charts
     # TODO add link to 'normal' chart reviews
