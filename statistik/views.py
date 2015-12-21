@@ -15,7 +15,7 @@ from statistik.controller import (get_chart_data, generate_review_form,
                                   get_reviews_for_user, get_user_list,
                                   create_new_user, elo_rate_charts,
                                   get_elo_rankings, make_elo_matchup,
-                                  add_page_titles)
+                                  create_page_title)
 from statistik.forms import RegisterForm
 
 
@@ -57,8 +57,7 @@ class RatingsView(TemplateView):
         if difficulty or not (difficulty and version):
             title_elements.append('LV. ' + str(difficulty or 12))
         title_elements.append(play_style)
-        context['title'] = ' // '.join(title_elements)
-        context['page_title'] = 'STATISTIK // ' + context['title']
+        create_page_title(context, title_elements)
 
         # create version/level navigator to display above songlist
         context['versions'] = generate_version_urls()
@@ -89,8 +88,7 @@ def chart_view(request):
     title_elements = [song_title,
                       chart.get_type_display(),
                       str(chart.difficulty) + '☆']
-    page_link = reverse('ratings')
-    add_page_titles(context, title_elements, page_link)
+    create_page_title(context, title_elements)
 
 
     context['difficulty'] = chart.difficulty
@@ -139,17 +137,15 @@ def elo_view(request):
             # display list of charts ranked by elo
             # TODO fix line length
             context['chart_list'] = get_elo_rankings(level, rate_type_display)
-            context['title'] = ' // '.join(
-                ['ELO', level + '☆', type_display + ' LIST'])
+            title_elements = ['ELO', level + '☆', type_display + ' LIST']
         else:
             # display two songs to rank
             [context['chart1'], context['chart2']] = make_elo_matchup(level)
 
             # add page title
-            context['title'] = ' // '.join(
-                ['ELO', level + '☆', type_display + ' RATE'])
+            title_elements = ['ELO', level + '☆', type_display + ' RATE']
 
-    context['page_title'] = 'STATISTIK // ' + context['title']
+    create_page_title(context, title_elements)
     context['level'] = level
     context['is_hc'] = rate_type
     context['is_hc_display'] = type_display
@@ -172,8 +168,8 @@ def user_view(request):
         context['review'] = get_reviews_for_user(user.id)
 
         # assemble page title
-        context['title'] = ' // '.join([user.username.upper(), 'REVIEWS'])
-        context['page_title'] = 'STATISTIK // ' + context['title']
+        title_elements = [user.username.upper(), 'REVIEWS']
+        create_page_title(context, title_elements)
 
         return render(request, 'user.html', context)
 
@@ -182,8 +178,8 @@ def user_view(request):
         context['users'] = get_user_list()
 
         # assemble page title
-        context['title'] = 'USERS'
-        context['page_title'] = 'STATISTIK // ' + context['title']
+        title_elements =  ['USERS']
+        create_page_title(context, title_elements)
 
         return render(request, 'userlist.html', context)
 
@@ -212,8 +208,8 @@ def register_view(request):
     context['form'] = form
 
     # assemble page title
-    context['title'] = 'REGISTRATION'
-    context['page_title'] = 'STATISTIK // ' + context['title']
+    title_elements =  ['REGISTRATION']
+    create_page_title(context, title_elements)
 
     return render(request, 'register.html', context)
 

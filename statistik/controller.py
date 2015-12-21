@@ -410,16 +410,12 @@ def make_elo_matchup(level):
     } for chart in [chart1, chart2]]
 
 
-def add_page_titles(context, title_elements, page_link=None):
+def create_page_title(context, title_elements):
     """
-
-    :param dict context:
-    :param listtitle_elements:
-    :param str page_link:
-    :return:
+    Assemble title elements into title and page title, and update context
+    :param dict context: Context to modify
+    :param list title_elements: List of elements to join into the title
     """
 
     context['title'] = ' // '.join(title_elements)
     context['page_title'] = ' // '.join(['STATISTIK', context['title']])
-    if page_link:
-        context['page_link'] = page_link
