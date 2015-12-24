@@ -9,7 +9,8 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from statistik.constants import (FULL_VERSION_NAMES, generate_version_urls,
-                                 generate_level_urls, SCORE_CATEGORY_CHOICES)
+                                 generate_level_urls, SCORE_CATEGORY_CHOICES,
+                                 generate_elo_level_urls)
 from statistik.controller import (get_chart_data, generate_review_form,
                                   get_charts_by_ids, get_reviews_for_chart,
                                   get_reviews_for_user, get_user_list,
@@ -124,15 +125,12 @@ def elo_view(request):
     """
     win = request.GET.get('win')
     lose = request.GET.get('lose')
-    level = request.GET.get('level')
+    level = request.GET.get('level', '12')
 
     clear_type = int(request.GET.get('type', 0))
     # TODO extend to accommodate exhc and score types
     rate_type_column = 'elo_rating_hc' if clear_type == 1 else 'elo_rating'
     type_display = SCORE_CATEGORY_CHOICES[clear_type][1]
-
-    if not level:
-        return HttpResponseBadRequest()
 
     # handle incoming elo reviews
     # TODO don't use GET for this
@@ -150,18 +148,19 @@ def elo_view(request):
             # display list of charts ranked by elo
             # TODO fix line length
             context['chart_list'] = get_elo_rankings(level, rate_type_column)
-            title_elements = ['ELO ' + level + '☆', type_display + ' LIST']
+            title_elements = ['ELO', level + '☆ '  + type_display + ' LIST']
         else:
             # display two songs to rank
             [context['chart1'], context['chart2']] = make_elo_matchup(level)
 
             # add page title
-            title_elements = ['ELO ' + level + '☆', type_display + ' MATCHING']
+            title_elements = ['ELO', level + '☆ ' + type_display + ' MATCHING']
 
     create_page_title(context, title_elements)
     context['level'] = level
     context['is_hc'] = clear_type
     context['is_hc_display'] = type_display
+    context['level_links'] = generate_elo_level_urls()
     context['nav_links'] = make_nav_links(
             level=int(level),
             elo='list' if display_list else 'match',

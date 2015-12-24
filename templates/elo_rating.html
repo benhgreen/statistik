@@ -8,6 +8,21 @@
 {% endblock %}
 
 {% block content %}
+
+    <div align="center" style="word-spacing: .5em">
+    NC |&nbsp;
+    {% for level in level_links %}
+        <a style="color: #000;" href="{{ level.1 }}"><b>{{ level.0 }}</b></a>
+    {% endfor %}
+    &nbsp; HC |&nbsp;
+    {% for level in level_links %}
+        <a style="color: #000;" href="{{ level.1 }}&type=1"><b>{{ level.0 }}</b></a>
+    {% endfor %}
+    </div>
+
+    <br>
+    <br>
+
     {% if chart_list %}
         <table border="1" align="center" style="width:65%">
         <tr style="line-height: 15px;font-size: small;

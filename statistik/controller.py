@@ -434,7 +434,7 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
     :param int clear_type:  Rating type (refer to Chart model for options)
     :rtype list:            List of tuples of format (link text, link)
     """
-    ret = [('HOME', reverse('index'))]
+    ret = [('INDEX', reverse('index'))]
     if not elo:
         if level:
             ret.append(('ALL %d☆ %s' % (level, style),

@@ -125,3 +125,12 @@ def generate_level_urls():
     """
     return [(level, reverse('ratings') + "?difficulty=%d" % level)
             for level in range(1,13)]
+
+
+def generate_elo_level_urls():
+    """
+    Generate urls for elo pages
+    :rtype list: List of tuples containing level number and link
+    """
+    return [(level, reverse('elo') + "?level=%d" % level)
+            for level in range(1,13)]
