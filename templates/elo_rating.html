@@ -7,18 +7,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
 {% endblock %}
 
-{% block title %}
-    {% if chart_list %}
-        <a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&hc={{ is_hc }}">{{ title }}</a>
-    {% else %}
-        <a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&list=true&hc={{ is_hc }}">{{ title }}</a>
-    {% endif %}
-{% endblock %}
-
 {% block content %}
     {% if chart_list %}
-        <div align="center" style="font-size: large">click the title above to return to rating.</div>
-        <br>
         <table border="1" align="center" style="width:65%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
@@ -38,15 +28,15 @@
         <br>
         <br>
         <br>
-        <div align="center" style="font-size: large">select the more difficult chart. view the current rankings by clicking the title above.</div>
+        <div align="center" style="font-size: large">select the more difficult chart.</div>
         <br>
         <br>
         <table border="1" align="center" style="width:80%">
             <tr style="line-height: 4em">
-                <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&hc={{ is_hc }}">{{ chart1.title }} [{{ chart1.type }}]</a></td>
-                <td style="width:5%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true&hc={{ is_hc }}">DRAW</a></td>
-                <td style="width:5%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&hc={{ is_hc }}">PASS</a></td>
-                <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart2.id }}&lose={{ chart1.id }}&hc={{ is_hc }}">{{ chart2.title }} [{{ chart2.type }}]</a></td>
+                <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&type={{ is_hc }}">{{ chart1.title }} [{{ chart1.type }}]</a></td>
+                <td style="width:5%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true&type={{ is_hc }}">DRAW</a></td>
+                <td style="width:5%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&type={{ is_hc }}">PASS</a></td>
+                <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart2.id }}&lose={{ chart1.id }}&type={{ is_hc }}">{{ chart2.title }} [{{ chart2.type }}]</a></td>
             </tr>
         </table>
     {% endif %}

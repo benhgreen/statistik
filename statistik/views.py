@@ -9,7 +9,7 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from statistik.constants import (FULL_VERSION_NAMES, generate_version_urls,
-                                 generate_level_urls)
+                                 generate_level_urls, SCORE_CATEGORY_CHOICES)
 from statistik.controller import (get_chart_data, generate_review_form,
                                   get_charts_by_ids, get_reviews_for_chart,
                                   get_reviews_for_user, get_user_list,
@@ -116,11 +116,10 @@ def elo_view(request):
     lose = request.GET.get('lose')
     level = request.GET.get('level')
 
-    is_hc = int(request.GET.get('hc', 0))
+    clear_type = int(request.GET.get('type', 0))
     # TODO extend to accommodate exhc and score types
-    rate_type = 1 if is_hc else 0
-    rate_type_display = 'elo_rating_hc' if is_hc else 'elo_rating'
-    type_display = 'HC' if is_hc else 'NC'
+    rate_type_column = 'elo_rating_hc' if clear_type == 1 else 'elo_rating'
+    type_display = SCORE_CATEGORY_CHOICES[clear_type][1]
 
     if not level:
         return HttpResponseBadRequest()
@@ -129,9 +128,9 @@ def elo_view(request):
     # TODO don't use GET for this
     if win and lose:
         draw = bool(request.GET.get('draw'))
-        elo_rate_charts(int(win), int(lose), draw, rate_type)
-        return HttpResponseRedirect(reverse('elo') + '?level=%s&hc=%s' %
-                                    (level, rate_type))
+        elo_rate_charts(int(win), int(lose), draw, clear_type)
+        return HttpResponseRedirect(reverse('elo') + '?level=%s&type=%d' %
+                                    (level, clear_type))
 
     # handle regular requests
     else:
@@ -140,19 +139,23 @@ def elo_view(request):
         if display_list:
             # display list of charts ranked by elo
             # TODO fix line length
-            context['chart_list'] = get_elo_rankings(level, rate_type_display)
-            title_elements = ['ELO', level + '☆', type_display + ' LIST']
+            context['chart_list'] = get_elo_rankings(level, rate_type_column)
+            title_elements = ['ELO ' + level + '☆', type_display + ' LIST']
         else:
             # display two songs to rank
             [context['chart1'], context['chart2']] = make_elo_matchup(level)
 
             # add page title
-            title_elements = ['ELO', level + '☆', type_display + ' RATE']
+            title_elements = ['ELO ' + level + '☆', type_display + ' MATCHING']
 
     create_page_title(context, title_elements)
     context['level'] = level
-    context['is_hc'] = rate_type
+    context['is_hc'] = clear_type
     context['is_hc_display'] = type_display
+    context['nav_links'] = make_nav_links(
+            level=int(level),
+            elo='list' if display_list else 'match',
+            clear_type=clear_type)
     return render(request, 'elo_rating.html', context)
 
 
@@ -186,6 +189,7 @@ def user_view(request):
         # assemble page title
         title_elements =  ['USER LIST']
         create_page_title(context, title_elements)
+        context['nav_links'] = make_nav_links()
 
         return render(request, 'userlist.html', context)
 

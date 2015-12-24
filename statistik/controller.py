@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
-                                 FULL_VERSION_NAMES)
+                                 FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES)
 from statistik.forms import ReviewForm
 from statistik.models import Chart, Review, UserProfile, EloReview
 
@@ -422,15 +422,17 @@ def create_page_title(context, title_elements):
     context['page_title'] = ' // '.join(['STATISTIK', context['title']])
 
 
-def make_nav_links(level=None, style='SP', version=None, user=None, elo=None):
+def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
+                   clear_type=None):
     """
-
-    :param int level:   Add a link to all songs of this level
-    :param str style:   'SP' or 'DP'
-    :param int version: Add a link too all song from this version
-    :param int user:    User ID or 0 to reference user list
-    :param bool elo:    Make all links use elo stuff
-    :rtype list:        List of tuples of format (link text, link)
+    Create nav links to display underneath page title
+    :param int level:       Add a link to all songs of this level
+    :param str style:       'SP' or 'DP'
+    :param int version:     Add a link too all song from this version
+    :param int user:        User ID or 0 to reference user list
+    :param str elo:         either None, 'list', or 'match'
+    :param int clear_type:  Rating type (refer to Chart model for options)
+    :rtype list:            List of tuples of format (link text, link)
     """
     ret = [('HOME', reverse('index'))]
     if not elo:
@@ -447,6 +449,18 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None):
         if user:
             ret.append(('USER LIST',
                        reverse('users')))
+
+    else:
+        type_display = SCORE_CATEGORY_CHOICES[int(clear_type)][1]
+
+        if elo == 'match':
+            ret.append(('ELO %d☆ %s LIST' % (level, type_display),
+                        reverse('elo') + '?level=%d&type=%d&list=true' % (
+                            level, clear_type)))
+        elif elo == 'list':
+            ret.append(('ELO %d☆ %s MATCHING' % (level, type_display),
+                        reverse('elo') + '?level=%d&type=%d' % (
+                            level, clear_type)))
 
     return ret
 
