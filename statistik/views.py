@@ -21,11 +21,21 @@ from statistik.forms import RegisterForm
 
 def index(request):
     """
-    Redirect requests to base URL to ratings page for SP level 12s
+    Returns index page
     :param request: Request to handle
     :rtype HTTPResponse:
     """
-    return redirect('ratings')
+    context = {
+        'index_links': [
+            ('STANDARD RATINGS', reverse('ratings')),
+            ('ELO RATINGS', reverse('elo')),
+            ('USER LIST', reverse('users'))
+        ],
+
+        'title': 'STATISTIK // INDEX',
+        'page_title': 'STATISTIK // INDEX'
+    }
+    return render(request, 'index.html', context)
 
 
 class RatingsView(TemplateView):
