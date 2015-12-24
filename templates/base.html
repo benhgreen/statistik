@@ -5,11 +5,7 @@
 {% block bootstrap3_content %}
     <div style="clear: both" class="container" xmlns="http://www.w3.org/1999/html">
         <h1 style="float: left">
-            {% if page_link %}
-                <a style="color: #000;" href="{{ page_link }}">{{ title }}</a>
-            {% else %}
-                {{ title }}
-            {% endif %}
+            {{ title }}
         </h1>
 
 
@@ -28,6 +24,17 @@
             {% endif %}
             </h5>
         </div>
+
+        {% if nav_links %}
+            <br>
+            <br>
+            <br>
+            <div style="float: left">
+                {% for link in nav_links %}
+                    <a style="color: #000;padding-right: 10px;font-weight: 600" href="{{ link.1 }}">// {{ link.0 }} //</a>
+                {% endfor %}
+            </div>
+        {% endif %}
 
     </div>
 

@@ -15,7 +15,7 @@ from statistik.controller import (get_chart_data, generate_review_form,
                                   get_reviews_for_user, get_user_list,
                                   create_new_user, elo_rate_charts,
                                   get_elo_rankings, make_elo_matchup,
-                                  create_page_title)
+                                  create_page_title, make_nav_links)
 from statistik.forms import RegisterForm
 
 
@@ -54,7 +54,7 @@ class RatingsView(TemplateView):
         title_elements = []
         if version:
             title_elements.append(FULL_VERSION_NAMES[int(version)].upper())
-        if difficulty or not (difficulty and version):
+        if difficulty or not (difficulty or version):
             title_elements.append('LV. ' + str(difficulty or 12))
         title_elements.append(play_style)
         create_page_title(context, title_elements)
@@ -99,6 +99,10 @@ def chart_view(request):
 
     # get reviews for this chart, cache users for username and playside lookup
     context['reviews'] = get_reviews_for_chart(chart_id)
+
+    context['nav_links'] = make_nav_links(level=chart.difficulty,
+                                          style=chart.get_type_display()[:2],
+                                          version=chart.song.game_version)
 
     return render(request, 'chart.html', context)
 
@@ -171,6 +175,8 @@ def user_view(request):
         title_elements = [user.username.upper(), 'REVIEWS']
         create_page_title(context, title_elements)
 
+        context['nav_links'] = make_nav_links(user=True)
+
         return render(request, 'user.html', context)
 
     else:
@@ -178,7 +184,7 @@ def user_view(request):
         context['users'] = get_user_list()
 
         # assemble page title
-        title_elements =  ['USERS']
+        title_elements =  ['USER LIST']
         create_page_title(context, title_elements)
 
         return render(request, 'userlist.html', context)

@@ -6,12 +6,13 @@ import statistics
 
 import elo
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import transaction
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
-                                 RECOMMENDED_OPTIONS_CHOICES)
+                                 RECOMMENDED_OPTIONS_CHOICES,
+                                 FULL_VERSION_NAMES)
 from statistik.forms import ReviewForm
 from statistik.models import Chart, Review, UserProfile, EloReview
-
 
 def organize_reviews(matched_reviews, user_id):
     """
@@ -413,9 +414,39 @@ def make_elo_matchup(level):
 def create_page_title(context, title_elements):
     """
     Assemble title elements into title and page title, and update context
-    :param dict context: Context to modify
-    :param list title_elements: List of elements to join into the title
+    :param dict context:            Context to modify
+    :param list title_elements:     List of elements to join into the title
     """
 
     context['title'] = ' // '.join(title_elements)
     context['page_title'] = ' // '.join(['STATISTIK', context['title']])
+
+
+def make_nav_links(level=None, style='SP', version=None, user=None, elo=None):
+    """
+
+    :param int level:   Add a link to all songs of this level
+    :param str style:   'SP' or 'DP'
+    :param int version: Add a link too all song from this version
+    :param int user:    User ID or 0 to reference user list
+    :param bool elo:    Make all links use elo stuff
+    :rtype list:        List of tuples of format (link text, link)
+    """
+    ret = [('HOME', reverse('index'))]
+    if not elo:
+        if level:
+            ret.append(('ALL %d☆ %s' % (level, style),
+                        reverse('ratings') + "?difficulty=%d&style=%s" % (
+                            level, style)))
+        if version:
+            version_display = FULL_VERSION_NAMES[version].upper()
+            ret.append(('ALL %s %s' % (version_display, style),
+                       reverse('ratings') + "?version=%d&style=%s" % (
+                            version, style)))
+
+        if user:
+            ret.append(('USER LIST',
+                       reverse('users')))
+
+    return ret
+

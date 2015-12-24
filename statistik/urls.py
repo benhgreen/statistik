@@ -20,7 +20,7 @@ from statistik import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.index),
+    url(r'^$', views.index, name='index'),
     url(r'^ratings$', views.RatingsView.as_view(), name='ratings'),
     url(r'^user$', views.user_view, name='users'),
     url(r'^chart$', views.chart_view, name='chart'),
