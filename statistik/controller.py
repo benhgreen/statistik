@@ -138,6 +138,13 @@ def get_chart_data(version=None, difficulty=None, play_style=None, user=None):
 
     chart_data = []
     for chart in matched_charts:
+        # use clickagain rating if we don't have a NC rating for this chart
+        used_clickagain = False
+        if not avg_ratings[chart.id].get('clear_rating'):
+            if chart.clickagain_nc:
+                avg_ratings[chart.id]['clear_rating'] = chart.clickagain_nc
+                used_clickagain = True
+
         chart_data.append({
             'id': chart.id,
 
@@ -163,8 +170,10 @@ def get_chart_data(version=None, difficulty=None, play_style=None, user=None):
             'type_display': chart.get_type_display(),
 
             'has_reviewed': avg_ratings[chart.id].get(
-                'has_reviewed'
-            )
+                'has_reviewed'),
+
+            'clickagain': used_clickagain
+
         })
     return chart_data
 
@@ -434,7 +443,7 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
     :param int clear_type:  Rating type (refer to Chart model for options)
     :rtype list:            List of tuples of format (link text, link)
     """
-    ret = [('INDEX', reverse('index'))]
+    ret = [('I', reverse('index'))]
     if not elo:
         if level:
             ret.append(('ALL %d☆ %s' % (level, style),

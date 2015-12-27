@@ -25,7 +25,7 @@ with open('misc/iidxfm_db.csv') as csvfile:
                     else:
                         hard = None
                     if normal and hard:
-                        chart.clickagain_nc = normal
-                        chart.clickagain_hc = hard
+                        chart.clickagain_nc = normal - .1
+                        chart.clickagain_hc = hard - .1
                         chart.save()
                         print('%s[%s] %s:%s' % (chart.song.title, chart.get_type_display(), normal, hard))
