@@ -1,7 +1,7 @@
 import csv
 from statistik.models import Song, Chart
 
-with open('assets/chart.csv', encoding='utf-8') as csvfile:
+with open('misc/chart.csv', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
 

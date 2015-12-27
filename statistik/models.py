@@ -34,6 +34,9 @@ class Chart(models.Model):
     elo_rating = models.FloatField(default=1000)
     elo_rating_hc = models.FloatField(default=1000)
 
+    clickagain_nc = models.FloatField(default=None, null=True)
+    clickagain_hc = models.FloatField(default=None, null=True)
+
     def __str__(self):
         return "%s [%s]" % (self.song_id, self.get_type_display())
 
