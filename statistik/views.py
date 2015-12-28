@@ -131,11 +131,13 @@ def elo_view(request):
     lose = request.GET.get('lose')
     level = request.GET.get('level', '12')
     display_list = bool(request.GET.get('list'))
+    clear_type = int(request.GET.get('type', 0))
+
 
     if not (display_list or request.user.is_authenticated()):
-        return HttpResponseRedirect(reverse('elo') + '?level=%s&list=true' % level)
+        return HttpResponseRedirect(reverse('elo') + '?level=%s&type=%d&list=true' %
+                                    (level, clear_type))
 
-    clear_type = int(request.GET.get('type', 0))
     # TODO extend to accommodate exhc and score types
     rate_type_column = 'elo_rating_hc' if clear_type == 1 else 'elo_rating'
     type_display = SCORE_CATEGORY_CHOICES[clear_type][1]
@@ -144,7 +146,7 @@ def elo_view(request):
     # TODO don't use GET for this
     if win and lose:
         draw = bool(request.GET.get('draw'))
-        elo_rate_charts(int(win), int(lose), draw, clear_type)
+        elo_rate_charts(int(win), int(lose), request.user, draw, clear_type)
         return HttpResponseRedirect(reverse('elo') + '?level=%s&type=%d' %
                                     (level, clear_type))
 

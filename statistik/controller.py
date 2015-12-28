@@ -339,11 +339,12 @@ def create_new_user(user_data):
     return user
 
 
-def elo_rate_charts(chart1_id, chart2_id, draw=False, rate_type=0):
+def elo_rate_charts(chart1_id, chart2_id, user, draw=False, rate_type=0):
     """
     Add new Elo rating for two charts
     :param int chart1_id:   ID of winning chart
     :param int chart2_id:   ID of losing chart
+    :param User user:       User who created the review
     :param bool draw:       True if match was a draw
     :param int rate_type:   Rating type (refer to Chart model for options)
     """
@@ -370,7 +371,8 @@ def elo_rate_charts(chart1_id, chart2_id, draw=False, rate_type=0):
             EloReview.objects.create(first=win_chart,
                                      second=lose_chart,
                                      drawn=draw,
-                                     type=rate_type)
+                                     type=rate_type,
+                                     created_by=user)
 
 
 def get_elo_rankings(level, rate_type):
@@ -392,7 +394,8 @@ def get_elo_rankings(level, rate_type):
             'id': chart.id,
             'title': chart.song.title,
             'type': chart.get_type_display(),
-            'rating': round(getattr(chart, rate_type), 3)
+            'rating': round(getattr(chart, rate_type), 3),
+            'link': reverse('chart') + '?id=' + str(chart.id)
         })
     return chart_data
 

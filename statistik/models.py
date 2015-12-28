@@ -50,6 +50,7 @@ class EloReview(models.Model):
     drawn = models.BooleanField()
     created_at = models.DateTimeField(auto_now=True)
     type = models.SmallIntegerField(choices=SCORE_CATEGORY_CHOICES)
+    created_by = models.ForeignKey(User, null=True, default=None)
 
 
 class Review(models.Model):

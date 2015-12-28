@@ -21,7 +21,10 @@
     </div>
 
     <br>
-    <br>
+
+    <div align="center" style="font-weight: 500;line-height: 1.5em">
+    click a song title to view its ratings.
+    </div><br>
 
     {% if chart_list %}
         <table border="1" align="center" style="width:65%">
@@ -34,7 +37,7 @@
             {% for chart in chart_list %}
                 <tr style="line-height: 150%">
                     <td>{{ chart.index }}</td>
-                    <td>{{ chart.title }} [{{ chart.type }}]</td>
+                    <td><a style="color: #000;;" href="{{ chart.link }}">{{ chart.title }} [{{ chart.type }}]</a></td>
                     <td>{{ chart.rating }}</td>
                 </tr>
             {% endfor %}
