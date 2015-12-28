@@ -74,6 +74,8 @@ class RatingsView(TemplateView):
         context['versions'] = generate_version_urls()
         context['levels'] = generate_level_urls()
 
+        context['nav_links'] = make_nav_links()
+
         return context
 
 
