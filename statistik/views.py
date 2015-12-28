@@ -95,7 +95,7 @@ def chart_view(request):
 
     # truncate long song title
     song_title = chart.song.title if len(
-        chart.song.title) < 15 else chart.song.title[:15] + '...'
+        chart.song.title) <= 15 else chart.song.title[:15] + '...'
 
     # assemble page title
     title_elements = [song_title,
