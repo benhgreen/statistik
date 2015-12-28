@@ -5,6 +5,7 @@ Main view controller for Statistik
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
@@ -125,9 +126,14 @@ def elo_view(request):
     Handle requests for Elo views (lists as well as individual matchups)
     :param request: Request to handle
     """
+
     win = request.GET.get('win')
     lose = request.GET.get('lose')
     level = request.GET.get('level', '12')
+    display_list = bool(request.GET.get('list'))
+
+    if not (display_list or request.user.is_authenticated()):
+        return HttpResponseRedirect(reverse('elo') + '?level=%s&list=true' % level)
 
     clear_type = int(request.GET.get('type', 0))
     # TODO extend to accommodate exhc and score types
@@ -145,7 +151,6 @@ def elo_view(request):
     # handle regular requests
     else:
         context = {}
-        display_list = bool(request.GET.get('list'))
         if display_list:
             # display list of charts ranked by elo
             # TODO fix line length
@@ -218,11 +223,15 @@ def register_view(request):
         if form.is_valid():
             data = form.cleaned_data
             # TODO verify user was actually created
-            create_new_user(data)
-            user = authenticate(username=data.get('username'),
+            try:
+                create_new_user(data)
+            except IntegrityError:
+                form.add_error('username', 'Username taken.')
+            else:
+                user = authenticate(username=data.get('username'),
                                 password=data.get('password'))
-            login(request, user)
-            return redirect('ratings')
+                login(request, user)
+                return redirect('index')
     else:
         # display blank form
         form = RegisterForm()
@@ -249,7 +258,7 @@ def login_view(request):
         if user.is_active:
             login(request, user)
 
-    return redirect('ratings')
+    return redirect('index')
 
 
 def logout_view(request):
@@ -258,4 +267,4 @@ def logout_view(request):
     :param request: Request to handle
     """
     logout(request)
-    return redirect('ratings')
+    return redirect('index')

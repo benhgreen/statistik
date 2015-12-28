@@ -15,12 +15,15 @@
             {% if user.is_authenticated %}
                 welcome, <a style="color: #000" href="{% url 'users' %}?id={{ user.id }}"> {{ user.username }}</a> | <a href="{% url 'logout' %}">logout</a>
             {% else %}
-                <form action="{% url 'login' %}" method="post">
+                <form style="display: inline;" action="{% url 'login' %}" method="post">
                     {% csrf_token %}
                     <input name="username" type="text" placeholder="username">
                     <input name="password" type="password" placeholder="password">
                     <input type="submit" value="login">
                 </form>
+                <a href="{% url 'register' %}"><button style="color: #000;">register</button></a>
+
+
             {% endif %}
             </h5>
         </div>
