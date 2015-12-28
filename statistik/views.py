@@ -183,7 +183,7 @@ def user_view(request):
         if not user:
             return HttpResponseBadRequest()
 
-        context['review'] = get_reviews_for_user(user.id)
+        context['reviews'] = get_reviews_for_user(user.id)
 
         # assemble page title
         title_elements = [user.username.upper(), 'REVIEWS']
