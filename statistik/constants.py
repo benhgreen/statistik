@@ -18,7 +18,15 @@ TECHNIQUE_CHOICES = [
     (4, 'Scales'),
     (5, 'Chord Scales'),
     (6, 'Denim'),
-    (7, 'Trills')
+    (7, 'Trills'),
+    (8, 'Rolls'),
+    (9, 'Chords')
+]
+
+DIFFICULTY_SPIKE_CHOICES = [
+    (0, 'Beginning'),
+    (1, 'Middle'),
+    (2, 'End')
 ]
 
 SCORE_CATEGORY_CHOICES = [
@@ -106,7 +114,19 @@ RECOMMENDED_OPTIONS_CHOICES = [
     (1, 'Random'),
     (2, 'S-Random'),
     (3, 'R-Random'),
-    (4, 'Mirror')
+    (4, 'Mirror'),
+    (5, 'Flip'),
+    (6, 'Regular Left'),
+    (7, 'Random Left'),
+    (8, 'S-Random Left'),
+    (9, 'R-Random Left'),
+    (10, 'Mirror Left'),
+    (11, 'Regular Right'),
+    (12, 'Random Right'),
+    (13, 'S-Random Right'),
+    (14, 'R-Random Right'),
+    (15, 'Mirror Right'),
+
 ]
 
 

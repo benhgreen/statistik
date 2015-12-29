@@ -5,7 +5,8 @@ from django.db import models
 from statistik.constants import (CHART_TYPE_CHOICES,
                                  TECHNIQUE_CHOICES, VERSION_CHOICES, PLAYSIDE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
-                                 RATING_VALIDATORS, SCORE_CATEGORY_CHOICES)
+                                 RATING_VALIDATORS, SCORE_CATEGORY_CHOICES,
+                                 DIFFICULTY_SPIKE_CHOICES)
 
 
 class Song(models.Model):
@@ -34,8 +35,8 @@ class Chart(models.Model):
     elo_rating = models.FloatField(default=1000)
     elo_rating_hc = models.FloatField(default=1000)
 
-    clickagain_nc = models.FloatField(default=None, null=True)
-    clickagain_hc = models.FloatField(default=None, null=True)
+    clickagain_nc = models.FloatField(null=True)
+    clickagain_hc = models.FloatField(null=True)
 
     def __str__(self):
         return "%s [%s]" % (self.song_id, self.get_type_display())
@@ -50,7 +51,7 @@ class EloReview(models.Model):
     drawn = models.BooleanField()
     created_at = models.DateTimeField(auto_now=True)
     type = models.SmallIntegerField(choices=SCORE_CATEGORY_CHOICES)
-    created_by = models.ForeignKey(User, null=True, default=None)
+    created_by = models.ForeignKey(User, null=True)
 
 
 class Review(models.Model):
@@ -67,6 +68,9 @@ class Review(models.Model):
                                      validators=RATING_VALIDATORS)
     characteristics = ArrayField(
         models.IntegerField(choices=TECHNIQUE_CHOICES), null=True)
+    difficulty_spike = ArrayField(
+        models.IntegerField(choices=DIFFICULTY_SPIKE_CHOICES, null=True)
+    )
     recommended_options = ArrayField(models.IntegerField(
         choices=RECOMMENDED_OPTIONS_CHOICES), null=True)
 
