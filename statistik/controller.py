@@ -221,6 +221,10 @@ def generate_review_form(user, chart_id, form_data=None):
                 # if they don't, create a blank form
                 else:
                     form = ReviewForm()
+            if chart.type < 3:
+                form.fields.get('recommended_options').choices = RECOMMENDED_OPTIONS_CHOICES[:6]
+            else:
+                form.fields.get('recommended_options').choices = RECOMMENDED_OPTIONS_CHOICES[6:]
             return form
 
 # TODO fix this garbage up

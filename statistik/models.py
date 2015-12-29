@@ -68,9 +68,9 @@ class Review(models.Model):
                                      validators=RATING_VALIDATORS)
     characteristics = ArrayField(
         models.IntegerField(choices=TECHNIQUE_CHOICES), null=True)
-    difficulty_spike = ArrayField(
-        models.IntegerField(choices=DIFFICULTY_SPIKE_CHOICES, null=True)
-    )
+    # difficulty_spike = ArrayField(
+    #     models.IntegerField(choices=DIFFICULTY_SPIKE_CHOICES, null=True)
+    # )
     recommended_options = ArrayField(models.IntegerField(
         choices=RECOMMENDED_OPTIONS_CHOICES), null=True)
 
