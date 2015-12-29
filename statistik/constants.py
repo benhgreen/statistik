@@ -17,7 +17,8 @@ TECHNIQUE_CHOICES = [
     (3, 'Charge Notes'),
     (4, 'Scales'),
     (5, 'Chord Scales'),
-    (6, 'Denim')
+    (6, 'Denim'),
+    (7, 'Trills')
 ]
 
 SCORE_CATEGORY_CHOICES = [

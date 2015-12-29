@@ -43,6 +43,7 @@
 
 {% if form %}
 <form style="width: 40%;margin: auto;padding-top: 2em" action="{{ request.get_full_path }}" method="post">
+    <div align="center" style="font-weight: 500;line-height: 1.5em">please only rate clears you have achieved.</div><br>
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}
