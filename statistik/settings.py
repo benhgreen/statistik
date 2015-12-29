@@ -118,3 +118,9 @@ STATICFILES_DIRS = (
 BOOTSTRAP3 = {
     'set_placeholder': False
 }
+
+SERVER_EMAIL = 'django@statistik.benhgreen.com'
+EMAIL_BACKEND = "sgbackend.SendGridBackend"
+SENDGRID_API_KEY = os.environ.get('SENDGRID_KEY')
+
+ADMINS = ('Ben', 'ben.green@inventati.org')
