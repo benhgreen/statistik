@@ -30,9 +30,9 @@
         <tr style="line-height: 150%">
             <td style="width: 14em"><a style="color: #000" href="{% url 'chart' %}?id={{ review.chart_id }}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
 
-            {% if 'N' in chart.type_display %}
+            {% if 'N' in review.type_display %}
                 <td class="lv_col" style="color: #1822d6;">
-            {% elif 'H' in chart.type_display%}
+            {% elif 'H' in review.type_display%}
                 <td class="lv_col" style="color: #a69b43;">
             {% else %}
                 <td class="lv_col" style="color: #c62c4a;">
