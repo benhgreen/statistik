@@ -50,7 +50,7 @@ def get_avg_ratings(chart_ids, user_id=None):
                             ratings for that chart as well as a has_reviewed
                             boolean.
     """
-    matched_reviews = Review.objects.filter(chart__in=chart_ids)
+    matched_reviews = Review.objects.filter(chart__in=chart_ids).exclude(user_id=7)
     organized_reviews, reviewed_charts = organize_reviews(matched_reviews,
                                                           user_id=user_id)
     ret = {}
