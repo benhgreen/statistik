@@ -39,6 +39,7 @@ class ReviewForm(forms.Form):
 
     text = forms.CharField(label="REVIEW TEXT",
                            help_text="Optional, limit 256 characters.",
+                           max_length=256,
                            widget=forms.Textarea(
                                attrs={'rows': 4, 'cols': 15}), required=False)
     clear_rating = forms.FloatField(label="NC RATING",
