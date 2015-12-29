@@ -17,7 +17,8 @@ from statistik.controller import (get_chart_data, generate_review_form,
                                   get_reviews_for_user, get_user_list,
                                   create_new_user, elo_rate_charts,
                                   get_elo_rankings, make_elo_matchup,
-                                  create_page_title, make_nav_links)
+                                  create_page_title, make_nav_links,
+                                  generate_user_form)
 from statistik.forms import RegisterForm
 
 
@@ -191,6 +192,10 @@ def user_view(request):
             return HttpResponseBadRequest()
 
         context['reviews'] = get_reviews_for_user(user.id)
+
+        # if user is the logged in user, let them edit their options
+        if request.user.id == int(user_id):
+            context['form'] = generate_user_form(request.user, request.POST)
 
         # assemble page title
         title_elements = [user.username.upper(), 'REVIEWS']

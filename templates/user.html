@@ -54,4 +54,18 @@
     {% endfor %}
 </table>
 
+    {% if form %}
+        <br>
+        <form style="width: 40%;margin: auto;padding-top: 2em" action="{% url 'users' %}?id={{ request.user.id }}" method="post">
+        {% csrf_token %}
+            <div align="center" style="font-weight: 500;line-height: 1.5em">edit your info here.</div><br>
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "star" %} Submit
+            </button>
+    {% endbuttons %}
+</form>
+    {% endif %}
+
 {% endblock %}

@@ -11,7 +11,7 @@ from django.db import transaction
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
                                  FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES)
-from statistik.forms import ReviewForm
+from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile, EloReview
 
 def organize_reviews(matched_reviews, user_id):
@@ -222,6 +222,50 @@ def generate_review_form(user, chart_id, form_data=None):
                 else:
                     form = ReviewForm()
             return form
+
+# TODO fix this garbage up
+def generate_user_form(user, form_data=None):
+    form = RegisterForm(form_data) if form_data else RegisterForm()
+    up = user.userprofile
+
+    form.fields.pop('username')
+    for field in form.fields.values():
+        field.required = False
+
+    if form_data and form.is_valid():
+        form_data = form.cleaned_data
+        if form_data.get('password'):
+            user.set_password(form_data.get('password'))
+        if form_data.get('email'):
+            user.email = form_data.get('email')
+        user.save()
+
+        for field in ['dj_name', 'location']:
+            if form_data.get(field):
+                setattr(up, field, form_data.get(field))
+        if form_data.get('playside'):
+            up.play_side = form_data.get('playside')
+        if form_data.get('best_techniques'):
+            up.best_techniques = form_data.get('best_techniques')
+        up.save()
+
+    data = {
+        'dj_name': up.dj_name,
+        'playside': up.play_side,
+        'email': user.email,
+        'location': up.location,
+        'best_techniques': up.best_techniques
+    }
+
+    new_form = RegisterForm(data)
+    new_form.fields.pop('username')
+    for field in new_form.fields.values():
+        field.required = False
+    for error in form.errors.items():
+        print(error)
+        new_form.add_error(error[0], error[1])
+
+    return new_form
 
 
 def get_reviews_for_chart(chart_id):
