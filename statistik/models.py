@@ -39,7 +39,7 @@ class Chart(models.Model):
     clickagain_hc = models.FloatField(blank=True, null=True)
 
     def __str__(self):
-        return "%s [%s]" % (self.song_id, self.get_type_display())
+        return "%s [%s]" % (self.song.title, self.get_type_display())
 
     class Meta:
         unique_together = ('song', 'type')
