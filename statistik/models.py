@@ -12,9 +12,9 @@ from statistik.constants import (CHART_TYPE_CHOICES,
 class Song(models.Model):
     music_id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=64)
-    alt_title = models.CharField(max_length=64, null=True)
+    alt_title = models.CharField(max_length=64, null=True, blank=True)
     artist = models.CharField(max_length=64)
-    alt_artist = models.CharField(max_length=64, null=True)
+    alt_artist = models.CharField(max_length=64, null=True, blank=True)
     genre = models.CharField(max_length=64)
     bpm_min = models.SmallIntegerField()
     bpm_max = models.SmallIntegerField()
@@ -35,8 +35,8 @@ class Chart(models.Model):
     elo_rating = models.FloatField(default=1000)
     elo_rating_hc = models.FloatField(default=1000)
 
-    clickagain_nc = models.FloatField(null=True)
-    clickagain_hc = models.FloatField(null=True)
+    clickagain_nc = models.FloatField(blank=True, null=True)
+    clickagain_hc = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return "%s [%s]" % (self.song_id, self.get_type_display())
