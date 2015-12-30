@@ -191,8 +191,7 @@ def generate_review_form(user, chart_id, form_data=None):
     # if user is authenticated and can review this chart, display review form
     if user.is_authenticated():
         user_profile = UserProfile.objects.filter(user=user).first()
-        if user_profile and (user_profile.max_reviewable >= chart.difficulty
-                             or user_profile.max_reviewable == 0):
+        if user_profile:
 
             # handle incoming reviews
             if form_data:
@@ -362,7 +361,6 @@ def get_user_list():
                 TECHNIQUE_CHOICES[x][1]
                 for x in user.userprofile.best_techniques]),
 
-            'max_reviewable': user.userprofile.max_reviewable,
             'location': user.userprofile.location
         })
     return user_data
