@@ -10,7 +10,7 @@ from statistik.constants import (CHART_TYPE_CHOICES,
 
 
 class Song(models.Model):
-    music_id = models.IntegerField(primary_key=True)
+    music_id = models.IntegerField(unique=True, null=True, blank=True)
     title = models.CharField(max_length=64)
     alt_title = models.CharField(max_length=64, null=True, blank=True)
     artist = models.CharField(max_length=64)
