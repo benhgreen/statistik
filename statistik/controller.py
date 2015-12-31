@@ -117,7 +117,7 @@ def get_charts_by_query(version=None, difficulty=None, play_style=None):
     }[play_style or 'SP']
 
     return Chart.objects.filter(**filters).prefetch_related('song').order_by(
-        'song__game_version', 'song__title')
+        'song__game_version', 'song__title', 'type')
 
 
 def get_chart_data(version=None, difficulty=None, play_style=None, user=None):
