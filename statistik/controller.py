@@ -351,7 +351,7 @@ def get_user_list():
     :rtype list:    List of dicts containing user info
     """
     users = User.objects.filter(is_superuser=False).prefetch_related(
-        'userprofile')
+        'userprofile').order_by('username')
 
     # assemble display info for users
     user_data = []
