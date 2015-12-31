@@ -42,7 +42,17 @@
             <td class="reviewtext_col">
                 {{ review.text }}
                     {% if review.characteristics %}
-                        <b>({{ review.characteristics }})</b>
+                        {% for item in review.characteristics %}
+                            {% if forloop.first and forloop.last %}
+                                <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
+                            {% elif forloop.last %}
+                                <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
+                            {% elif forloop.first%}
+                                <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
+                            {% else %}
+                                <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
+                            {% endif %}
+                        {% endfor %}
                     {% endif %}
             </td>
             <td class="options_col">{{ review.recommended_options }}</td>

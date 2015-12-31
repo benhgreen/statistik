@@ -294,9 +294,11 @@ def get_reviews_for_chart(chart_id):
             'exhc_rating': review.exhc_rating,
             'score_rating': review.score_rating,
 
-            'characteristics': ', '.join([
-                TECHNIQUE_CHOICES[x][1]
-                for x in review.characteristics]),
+            'characteristics': [
+                (TECHNIQUE_CHOICES[x][1], '#187638')
+                if x in review.user.userprofile.best_techniques
+                else (TECHNIQUE_CHOICES[x][1], '#000')
+                for x in review.characteristics],
 
             'recommended_options': ', '.join([
                 RECOMMENDED_OPTIONS_CHOICES[x][1]
@@ -329,9 +331,12 @@ def get_reviews_for_user(user_id):
             'exhc_rating': review.exhc_rating,
             'score_rating': review.score_rating,
 
-            'characteristics': ', '.join([
-                TECHNIQUE_CHOICES[x][1] for x in
-                review.characteristics]),
+            'characteristics': [
+                (TECHNIQUE_CHOICES[x][1], '#187638')
+                if x in review.user.userprofile.best_techniques
+                else (TECHNIQUE_CHOICES[x][1], '#000')
+                for x in review.characteristics],
+
             'recommended_options': ', '.join([
                 RECOMMENDED_OPTIONS_CHOICES[x][1]
                 for x in review.recommended_options])
