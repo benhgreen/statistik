@@ -60,6 +60,9 @@
         <button type="submit" class="btn btn-primary">
             Submit
         </button>
+        {% if review_exists %}
+        <input class="btn btn-danger" type="button" onclick="location.href='{% url 'chart' %}?id={{ chart_id }}&delete=true';" value="Delete" />
+        {% endif %}
     {% endbuttons %}
 </form>
 {% endif %}

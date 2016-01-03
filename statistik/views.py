@@ -18,7 +18,7 @@ from statistik.controller import (get_chart_data, generate_review_form,
                                   create_new_user, elo_rate_charts,
                                   get_elo_rankings, make_elo_matchup,
                                   create_page_title, make_nav_links,
-                                  generate_user_form)
+                                  generate_user_form, delete_review)
 from statistik.forms import RegisterForm
 
 
@@ -92,6 +92,10 @@ def chart_view(request):
     if not chart_id:
         return HttpResponseBadRequest()
 
+    if request.GET.get('delete') == 'true' and request.user.is_authenticated():
+        delete_review(request.user.id, chart_id)
+        return HttpResponseRedirect(reverse('chart') + '?id=%s' % chart_id)
+
     # TODO remove all direct interaction with chart
     chart = get_charts_by_ids([chart_id])[0]
 
@@ -107,10 +111,11 @@ def chart_view(request):
 
 
     context['difficulty'] = chart.difficulty
+    context['chart_id'] = chart_id
 
     form_data = request.POST if request.method == 'POST' else None
-    context['form'] = generate_review_form(request.user, chart_id,
-                                           form_data)
+    context['form'], context['review_exists'] = generate_review_form(
+            request.user, chart_id, form_data)
 
     # get reviews for this chart, cache users for username and playside lookup
     context['reviews'] = get_reviews_for_chart(chart_id)

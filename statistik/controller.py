@@ -184,7 +184,7 @@ def generate_review_form(user, chart_id, form_data=None):
     :param User user:       User as found in request.user
     :param int chart_id:    ID of chart to lookup
     :param dict form_data:  Form data to process as a POST request
-    :rtype ReviewForm:      ReviewForm with fields pre-populated as necessary
+    :rtype tuple:           (ReviewForm, bool indicating if user reviewed chart)
     """
     chart = Chart.objects.get(pk=chart_id)
 
@@ -192,6 +192,7 @@ def generate_review_form(user, chart_id, form_data=None):
     if user.is_authenticated():
         user_profile = UserProfile.objects.filter(user=user).first()
         if user_profile:
+            has_reviewed = False
 
             # handle incoming reviews
             if form_data:
@@ -200,6 +201,7 @@ def generate_review_form(user, chart_id, form_data=None):
                     Review.objects.update_or_create(chart=chart,
                                                     user=user,
                                                     defaults=form.cleaned_data)
+                    has_reviewed = True
             # handle regular page requests
             else:
                 # check if user has an existing review for this chart
@@ -216,6 +218,7 @@ def generate_review_form(user, chart_id, form_data=None):
                                         'characteristics',
                                         'recommended_options']}
                     form = ReviewForm(data)
+                    has_reviewed = True
 
                 # if they don't, create a blank form
                 else:
@@ -224,7 +227,8 @@ def generate_review_form(user, chart_id, form_data=None):
                 form.fields.get('recommended_options').choices = RECOMMENDED_OPTIONS_CHOICES[:5]
             else:
                 form.fields.get('recommended_options').choices = RECOMMENDED_OPTIONS_CHOICES[5:]
-            return form
+            return form, has_reviewed
+    return None, None
 
 # TODO fix this garbage up
 def generate_user_form(user, form_data=None):
@@ -528,3 +532,13 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
 
     return ret
 
+
+def delete_review(user_id, chart_id):
+    """
+    Delete review for a particular user/chart combo
+    :param int user_id:
+    :param chart_id:
+    """
+    review = Review.objects.filter(chart_id=chart_id, user_id=user_id).first()
+    if review:
+        review.delete()
