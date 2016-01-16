@@ -1,14 +1,15 @@
 """
 Main view controller for Statistik
 """
+import json
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import (HttpResponseBadRequest, HttpResponseRedirect,
+                         HttpResponse)
 from django.shortcuts import redirect, render
-from django.views.generic import TemplateView
 from statistik.constants import (FULL_VERSION_NAMES, generate_version_urls,
                                  generate_level_urls, SCORE_CATEGORY_CHOICES,
                                  generate_elo_level_urls)
@@ -41,44 +42,43 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-class RatingsView(TemplateView):
+def ratings_view(request):
     """
-    Handles requests for rating chart pages
+    Assemble ratings page. Possible filters include difficulty and version.
+    :rtype dict: Context including chart data
     """
-    template_name = 'ratings.html'
+    difficulty = request.GET.get('difficulty')
+    version = request.GET.get('version')
+    play_style = request.GET.get('style', 'SP')
+    user = request.user.id
 
-    def get_context_data(self):
-        """
-        Assemble ratings page. Possible filters include difficulty and version.
-        :rtype dict: Context including chart data
-        """
-        context = super(RatingsView, self).get_context_data()
-        difficulty = self.request.GET.get('difficulty')
-        version = self.request.GET.get('version')
-        play_style = self.request.GET.get('style', 'SP')
-        user = self.request.user.id
+    chart_data = get_chart_data(version, difficulty, play_style, user,
+                                include_reviews=bool(request.GET.get('json')))
 
-        # assemble displayed info for each of the charts
-        context['charts'] = get_chart_data(version, difficulty, play_style,
-                                           user)
+    if request.GET.get('json') == 'true':
+        return HttpResponse(json.dumps({'data': chart_data}, indent=4, ensure_ascii=False))
 
-        # assemble page title
-        # TODO uniform page title assembly which allows for links in title
-        title_elements = []
-        if version:
-            title_elements.append(FULL_VERSION_NAMES[int(version)].upper())
-        if difficulty or not (difficulty or version):
-            title_elements.append('LV. ' + str(difficulty or 12))
-        title_elements.append(play_style)
-        create_page_title(context, title_elements)
+    # assemble displayed info for each of the charts
+    context = {
+        'charts': chart_data
+    }
 
-        # create version/level navigator to display above songlist
-        context['versions'] = generate_version_urls()
-        context['levels'] = generate_level_urls()
+    # assemble page title
+    title_elements = []
+    if version:
+        title_elements.append(FULL_VERSION_NAMES[int(version)].upper())
+    if difficulty or not (difficulty or version):
+        title_elements.append('LV. ' + str(difficulty or 12))
+    title_elements.append(play_style)
+    create_page_title(context, title_elements)
 
-        context['nav_links'] = make_nav_links()
+    # create version/level navigator to display above songlist
+    context['versions'] = generate_version_urls()
+    context['levels'] = generate_level_urls()
 
-        return context
+    context['nav_links'] = make_nav_links()
+
+    return render(request, 'ratings.html', context)
 
 
 def chart_view(request):
@@ -101,14 +101,13 @@ def chart_view(request):
 
     # truncate long song title
     song_title = chart.song.title if len(
-        chart.song.title) <= 15 else chart.song.title[:15] + '...'
+            chart.song.title) <= 15 else chart.song.title[:15] + '...'
 
     # assemble page title
     title_elements = [song_title,
                       chart.get_type_display(),
                       str(chart.difficulty) + '☆']
     create_page_title(context, title_elements)
-
 
     context['difficulty'] = chart.difficulty
     context['chart_id'] = chart_id
@@ -139,10 +138,10 @@ def elo_view(request):
     display_list = bool(request.GET.get('list'))
     clear_type = int(request.GET.get('type', 0))
 
-
     if not (display_list or request.user.is_authenticated()):
-        return HttpResponseRedirect(reverse('elo') + '?level=%s&type=%d&list=true' %
-                                    (level, clear_type))
+        return HttpResponseRedirect(
+            reverse('elo') + '?level=%s&type=%d&list=true' %
+            (level, clear_type))
 
     # TODO extend to accommodate exhc and score types
     rate_type_column = 'elo_rating_hc' if clear_type == 1 else 'elo_rating'
@@ -163,7 +162,7 @@ def elo_view(request):
             # display list of charts ranked by elo
             # TODO fix line length
             context['chart_list'] = get_elo_rankings(level, rate_type_column)
-            title_elements = ['ELO', level + '☆ '  + type_display + ' LIST']
+            title_elements = ['ELO', level + '☆ ' + type_display + ' LIST']
         else:
             # display two songs to rank
             [context['chart1'], context['chart2']] = make_elo_matchup(level)
@@ -215,7 +214,7 @@ def user_view(request):
         context['users'] = get_user_list()
 
         # assemble page title
-        title_elements =  ['USER LIST']
+        title_elements = ['USER LIST']
         create_page_title(context, title_elements)
         context['nav_links'] = make_nav_links()
 
@@ -241,7 +240,7 @@ def register_view(request):
                 form.add_error('username', 'Username taken.')
             else:
                 user = authenticate(username=data.get('username'),
-                                password=data.get('password'))
+                                    password=data.get('password'))
                 login(request, user)
                 return redirect('index')
     else:
@@ -250,7 +249,7 @@ def register_view(request):
     context['form'] = form
 
     # assemble page title
-    title_elements =  ['REGISTRATION']
+    title_elements = ['REGISTRATION']
     create_page_title(context, title_elements)
 
     return render(request, 'register.html', context)

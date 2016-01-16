@@ -38,7 +38,7 @@ def organize_reviews(matched_reviews, user_id):
     return review_dict, user_reviewed
 
 
-def get_avg_ratings(chart_ids, user_id=None):
+def get_avg_ratings(chart_ids, user_id=None, include_reviews=False):
     """
     Get average ratings for all charts.
     :param list chart_ids:  List of chart ids to retrieve ratings for
@@ -75,6 +75,31 @@ def get_avg_ratings(chart_ids, user_id=None):
 
             # set 'has_reviewed' if the user has reviewed this chart
             ret[chart]['has_reviewed'] = (chart in reviewed_charts)
+
+            # include reviews if requested
+            if include_reviews:
+                ret[chart]['reviews'] = [
+                    {
+                        'user': review.user.get_username(),
+                        'user_id': review.user.id,
+                        'playside': review.user.userprofile.get_play_side_display(),
+
+                        'text': review.text,
+                        'clear_rating': review.clear_rating,
+                        'hc_rating': review.hc_rating,
+                        'exhc_rating': review.exhc_rating,
+                        'score_rating': review.score_rating,
+
+                        'characteristics': [
+                            (TECHNIQUE_CHOICES[x][1], '#187638')
+                            if x in review.user.userprofile.best_techniques
+                            else (TECHNIQUE_CHOICES[x][1], '#000')
+                            for x in review.characteristics],
+
+                        'recommended_options': ', '.join([
+                            RECOMMENDED_OPTIONS_CHOICES[x][1]
+                            for x in review.recommended_options])
+                                                     } for review in specific_reviews]
 
         # winding up here means no reviews were found for one of the charts
         # which means the template will just use '--' for all the ratings
@@ -120,7 +145,8 @@ def get_charts_by_query(version=None, difficulty=None, play_style=None):
         'song__game_version', 'song__title', 'type')
 
 
-def get_chart_data(version=None, difficulty=None, play_style=None, user=None):
+def get_chart_data(version=None, difficulty=None, play_style=None, user=None,
+                   include_reviews=False):
     """
     Retrieve chart data acc to specified params and format chart data for
     usage in templates.
@@ -134,7 +160,7 @@ def get_chart_data(version=None, difficulty=None, play_style=None, user=None):
     matched_chart_ids = [chart.id for chart in matched_charts]
 
     # get avg ratings for the charts in the returned queryset
-    avg_ratings = get_avg_ratings(matched_chart_ids, user)
+    avg_ratings = get_avg_ratings(matched_chart_ids, user, include_reviews)
 
     chart_data = []
     for chart in matched_charts:
@@ -145,7 +171,7 @@ def get_chart_data(version=None, difficulty=None, play_style=None, user=None):
                 avg_ratings[chart.id]['clear_rating'] = chart.clickagain_nc
                 used_clickagain = True
 
-        chart_data.append({
+        data = {
             'id': chart.id,
 
             'title': chart.song.title,
@@ -168,13 +194,15 @@ def get_chart_data(version=None, difficulty=None, play_style=None, user=None):
             'game_version': chart.song.game_version,
             'game_version_display': chart.song.get_game_version_display(),
             'type_display': chart.get_type_display(),
-
-            'has_reviewed': avg_ratings[chart.id].get(
-                'has_reviewed'),
-
             'clickagain': used_clickagain
+        }
 
-        })
+        if include_reviews:
+            data['reviews'] = avg_ratings[chart.id].get('reviews')
+        else:
+            data['has_reviewed'] = avg_ratings[chart.id].get('has_reviewed')
+
+        chart_data.append(data)
     return chart_data
 
 
