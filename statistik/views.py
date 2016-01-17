@@ -56,7 +56,8 @@ def ratings_view(request):
                                 include_reviews=bool(request.GET.get('json')))
 
     if request.GET.get('json') == 'true':
-        return HttpResponse(json.dumps({'data': chart_data}, indent=4, ensure_ascii=False))
+        return HttpResponse(
+            json.dumps({'data': chart_data}, indent=4, ensure_ascii=False))
 
     # assemble displayed info for each of the charts
     context = {
@@ -140,8 +141,8 @@ def elo_view(request):
 
     if not (display_list or request.user.is_authenticated()):
         return HttpResponseRedirect(
-            reverse('elo') + '?level=%s&type=%d&list=true' %
-            (level, clear_type))
+                reverse('elo') + '?level=%s&type=%d&list=true' %
+                (level, clear_type))
 
     # TODO extend to accommodate exhc and score types
     rate_type_column = 'elo_rating_hc' if clear_type == 1 else 'elo_rating'
