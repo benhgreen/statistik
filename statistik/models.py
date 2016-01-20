@@ -5,8 +5,7 @@ from django.db import models
 from statistik.constants import (CHART_TYPE_CHOICES,
                                  TECHNIQUE_CHOICES, VERSION_CHOICES, PLAYSIDE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
-                                 RATING_VALIDATORS, SCORE_CATEGORY_CHOICES,
-                                 DIFFICULTY_SPIKE_CHOICES)
+                                 RATING_VALIDATORS, SCORE_CATEGORY_CHOICES)
 
 
 class Song(models.Model):
@@ -88,6 +87,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     dj_name = models.CharField(max_length=6)
     location = models.CharField(max_length=64)
+    # language = models.SmallIntegerField(choices=LANGUAGE_CHOICES, default=0)
     play_side = models.SmallIntegerField(choices=PLAYSIDE_CHOICES)
     best_techniques = ArrayField(
         models.IntegerField(choices=TECHNIQUE_CHOICES), size=3)

@@ -10,7 +10,8 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
-                                 FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES)
+                                 FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES,
+                                 get_localized_choices)
 from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile, EloReview
 
@@ -219,12 +220,13 @@ def generate_review_form(user, chart_id, form_data=None):
     # if user is authenticated and can review this chart, display review form
     if user.is_authenticated():
         user_profile = UserProfile.objects.filter(user=user).first()
+        language = 1
         if user_profile:
             has_reviewed = False
 
             # handle incoming reviews
             if form_data:
-                form = ReviewForm(form_data)
+                form = ReviewForm(form_data, language=language)
                 if form.is_valid(difficulty=chart.difficulty):
                     Review.objects.update_or_create(chart=chart,
                                                     user=user,
@@ -245,16 +247,16 @@ def generate_review_form(user, chart_id, form_data=None):
                                         'score_rating',
                                         'characteristics',
                                         'recommended_options']}
-                    form = ReviewForm(data)
+                    form = ReviewForm(language=language)
                     has_reviewed = True
 
                 # if they don't, create a blank form
                 else:
-                    form = ReviewForm()
+                    form = ReviewForm(language=language)
             if chart.type < 3:
-                form.fields.get('recommended_options').choices = RECOMMENDED_OPTIONS_CHOICES[:5]
+                form.fields.get('recommended_options').choices = get_localized_choices('RECOMMENDED_OPTIONS_CHOICES', language)[:5]
             else:
-                form.fields.get('recommended_options').choices = RECOMMENDED_OPTIONS_CHOICES[5:]
+                form.fields.get('recommended_options').choices = get_localized_choices('RECOMMENDED_OPTIONS_CHOICES', language)[5:]
             return form, has_reviewed
     return None, None
 

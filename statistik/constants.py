@@ -1,6 +1,8 @@
 """
 Constants, choices, and methods that are directly related to them
 """
+import sys
+
 from django.core.urlresolvers import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -10,17 +12,22 @@ MIN_RATING = 1.0
 RATING_VALIDATORS = [MaxValueValidator(MAX_RATING),
                      MinValueValidator(MIN_RATING)]
 
+LANGUAGE_CHOICES = [
+    (0, 'English'),
+    (1, 'Japanese')
+]
+
 TECHNIQUE_CHOICES = [
-    (0, 'Scratching'),
-    (1, 'Jacks'),
-    (2, 'Speed Changes'),
-    (3, 'Charge Notes'),
-    (4, 'Scales'),
-    (5, 'Chord Scales'),
-    (6, 'Denim'),
-    (7, 'Trills'),
-    (8, 'Rolls'),
-    (9, 'Chords')
+    (0, 'Scratching/皿'),
+    (1, 'Jacks/縦連'),
+    (2, 'Speed Changes/ソフラン'),
+    (3, 'Charge Notes/CN'),
+    (4, 'Scales/階段'),
+    (5, 'Chord Scales/2重階段'),
+    (6, 'Denim/デニム'),
+    (7, 'Trills/高速トリル'),
+    (8, 'Rolls/トリル'),
+    (9, 'Chords/同時押し')
 ]
 
 DIFFICULTY_SPIKE_CHOICES = [
@@ -109,25 +116,31 @@ PLAYSIDE_CHOICES = [
     (1, '2P')
 ]
 
+# TODO translate DP options
 RECOMMENDED_OPTIONS_CHOICES = [
-    (0, 'Regular'),
-    (1, 'Random'),
-    (2, 'S-Random'),
-    (3, 'R-Random'),
-    (4, 'Mirror'),
-    (5, 'Flip'),
-    (6, 'Regular Left'),
-    (7, 'Random Left'),
-    (8, 'S-Random Left'),
-    (9, 'R-Random Left'),
-    (10, 'Mirror Left'),
-    (11, 'Regular Right'),
-    (12, 'Random Right'),
-    (13, 'S-Random Right'),
-    (14, 'R-Random Right'),
-    (15, 'Mirror Right'),
-
+    (0, 'Regular/正'),
+    (1, 'Random/乱'),
+    (2, 'S-Random/S乱'),
+    (3, 'R-Random/R乱'),
+    (4, 'Mirror/鏡'),
+    (5, 'Flip/Flip'),
+    (6, 'Regular Left/正1P'),
+    (7, 'Random Left/乱1P'),
+    (8, 'S-Random Left/S乱1P'),
+    (9, 'R-Random Left/R乱1P'),
+    (10, 'Mirror Left/Mirror Left'),
+    (11, 'Regular Right/正2P'),
+    (12, 'Random Right/乱2P'),
+    (13, 'S-Random Right/S乱2P'),
+    (14, 'R-Random Right/R乱2P'),
+    (15, 'Mirror Right/Mirror Right'),
 ]
+
+def get_localized_choices(choices, language=0):
+    choicez = [(choice[0], choice[1].split('/')[language])
+            for choice in getattr(sys.modules[__name__], choices)]
+    print(choicez)
+    return choicez
 
 
 def generate_version_urls():

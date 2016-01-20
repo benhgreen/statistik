@@ -1,20 +1,22 @@
 from django import forms
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
-    RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING
+    RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING, \
+    LANGUAGE_CHOICES, SCORE_CATEGORY_CHOICES, get_localized_choices
 
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(label="USERNAME")
+    username = forms.CharField(label="USERNAME/ユーザーネーム")
     email = forms.EmailField(label="EMAIL", required=False,
                              help_text='Optional.')
-    password = forms.CharField(label="PASSWORD", widget=forms.PasswordInput)
-    reenter_password = forms.CharField(label="RE-ENTER PASSWORD",
+    password = forms.CharField(label="PASSWORD/パスワード", widget=forms.PasswordInput)
+    reenter_password = forms.CharField(label="RE-ENTER PASSWORD/パスワード【再入力】",
                                        widget=forms.PasswordInput)
     dj_name = forms.CharField(label="DJ NAME", max_length=6)
-    location = forms.CharField(label="LOCATION", max_length=64)
-    playside = forms.ChoiceField(label="PLAYSIDE", choices=PLAYSIDE_CHOICES)
-    best_techniques = forms.MultipleChoiceField(label="MOST INSANE TECHNIQUES",
-                                                help_text="Limit 3.",
+    language = forms.ChoiceField(label='LANGUAGE/言語選択', choices=LANGUAGE_CHOICES)
+    location = forms.CharField(label="LOCATION/位置", max_length=64)
+    playside = forms.ChoiceField(label="PLAYSIDE/プレーサイド", choices=PLAYSIDE_CHOICES)
+    best_techniques = forms.MultipleChoiceField(label="MOST INSANE TECHNIQUES/得意な特徴",
+                                                help_text="Limit 3/最大3つ.",
                                                 choices=TECHNIQUE_CHOICES,
                                                 widget=forms.CheckboxSelectMultiple(),
                                                 required=False)
@@ -35,40 +37,42 @@ class RegisterForm(forms.Form):
 
 
 class ReviewForm(forms.Form):
-    RANGE_HELP_TEXT = "Range: 1.0-14.0."
 
-    text = forms.CharField(label="REVIEW TEXT",
-                           help_text="Optional, limit 256 characters.",
-                           max_length=256,
+    def __init__(self, *args, language=0):
+        super().__init__(*args)
+        self.localize(language)
+
+    text = forms.CharField(max_length=256,
                            widget=forms.Textarea(
                                attrs={'rows': 4, 'cols': 15}), required=False)
-    clear_rating = forms.FloatField(label="NC RATING",
-                                    help_text=RANGE_HELP_TEXT,
-                                    required=False,
+    clear_rating = forms.FloatField(required=False,
                                     validators=RATING_VALIDATORS)
-    hc_rating = forms.FloatField(label="HC RATING",
-                                 help_text=RANGE_HELP_TEXT,
-                                 required=False,
+    hc_rating = forms.FloatField(required=False,
                                  validators=RATING_VALIDATORS)
-    exhc_rating = forms.FloatField(label="EXHC RATING",
-                                   help_text=RANGE_HELP_TEXT,
-                                   required=False,
+    exhc_rating = forms.FloatField(required=False,
                                    validators=RATING_VALIDATORS)
-    score_rating = forms.FloatField(label="SCORE RATING",
-                                    help_text=RANGE_HELP_TEXT,
-                                    required=False,
+    score_rating = forms.FloatField(required=False,
                                     validators=RATING_VALIDATORS)
-    characteristics = forms.MultipleChoiceField(label="CHARACTERISTICS",
-                                                choices=TECHNIQUE_CHOICES,
-                                                widget=forms.CheckboxSelectMultiple(),
+    characteristics = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
                                                 required=False)
 
     recommended_options = forms.MultipleChoiceField(
-        label="RECOMMENDED OPTIONS (FOR YOUR PLAY SIDE)",
-        choices=RECOMMENDED_OPTIONS_CHOICES,
         widget=forms.CheckboxSelectMultiple(),
         required=False,
     )
+
+    def localize(self, language):
+        RANGE_HELP_TEXT = ["Range: 1.0-14.0.", "範囲は1.0から14.0まで"][language]
+        self.fields.get('text').label = ["REVIEW TEXT", "意見・攻略テキスト"][language]
+        self.fields.get('text').help_text = ["Optional, limit 256 characters.", "任意・最大256字"][language]
+        for i, type in enumerate(['clear_rating', 'hc_rating', 'exhc_rating', 'score_rating']):
+            field = self.fields.get(type)
+            field.help_text = RANGE_HELP_TEXT
+            type_abbrev = SCORE_CATEGORY_CHOICES[i][1]
+            field.label = [type_abbrev + ' RATING', '難易度(' + type_abbrev + ')'][language]
+        self.fields.get('characteristics').label = ["CHARACTERISTICS", "特徴"][language]
+        self.fields.get('characteristics').choices = get_localized_choices('TECHNIQUE_CHOICES', language)
+        self.fields.get('recommended_options').label = ["RECOMMENDED OPTIONS (FOR YOUR PLAY SIDE)", "おすすめのOP(あなたのプレーサイド)"][language]
 
     def clean(self):
         cleaned_data = super(ReviewForm, self).clean()
