@@ -165,11 +165,15 @@ def get_chart_data(version=None, difficulty=None, play_style=None, user=None,
     chart_data = []
     for chart in matched_charts:
         # use clickagain rating if we don't have a NC rating for this chart
-        used_clickagain = False
+        clickagain_nc = False
+        clickagain_hc = False
         if not avg_ratings[chart.id].get('clear_rating'):
             if chart.clickagain_nc:
                 avg_ratings[chart.id]['clear_rating'] = chart.clickagain_nc
-                used_clickagain = True
+                clickagain_nc = True
+            if chart.clickagain_nc:
+                avg_ratings[chart.id]['hc_rating'] = chart.clickagain_hc
+                clickagain_hc = True
 
         data = {
             'id': chart.id,
@@ -194,7 +198,8 @@ def get_chart_data(version=None, difficulty=None, play_style=None, user=None,
             'game_version': chart.song.game_version,
             'game_version_display': chart.song.get_game_version_display(),
             'type_display': chart.get_type_display(),
-            'clickagain': used_clickagain
+            'clickagain_nc': clickagain_nc,
+            'clickagain_hc': clickagain_hc
         }
 
         if include_reviews:
