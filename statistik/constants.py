@@ -136,11 +136,10 @@ RECOMMENDED_OPTIONS_CHOICES = [
     (15, 'Mirror Right/Mirror Right'),
 ]
 
+
 def get_localized_choices(choices, language=0):
-    choicez = [(choice[0], choice[1].split('/')[language])
+    return [(choice[0], choice[1].split('/')[language])
             for choice in getattr(sys.modules[__name__], choices)]
-    print(choicez)
-    return choicez
 
 
 def generate_version_urls():
@@ -158,7 +157,7 @@ def generate_level_urls():
     :rtype list: List of tuples containing level number and link
     """
     return [(level, reverse('ratings') + "?difficulty=%d" % level)
-            for level in range(1,13)]
+            for level in range(1, 13)]
 
 
 def generate_elo_level_urls():
@@ -167,4 +166,4 @@ def generate_elo_level_urls():
     :rtype list: List of tuples containing level number and link
     """
     return [(level, reverse('elo') + "?level=%d" % level)
-            for level in range(1,13)]
+            for level in range(1, 13)]

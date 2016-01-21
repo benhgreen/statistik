@@ -5,7 +5,12 @@ from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
 
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(label="USERNAME/ユーザーネーム")
+
+    def __init__(self, *args, language=0):
+        super(RegisterForm, self).__init__(*args)
+        self.localize(language)
+
+    username = forms.CharField()
     email = forms.EmailField(label="EMAIL", required=False,
                              help_text='Optional.')
     password = forms.CharField(label="PASSWORD/パスワード", widget=forms.PasswordInput)
@@ -20,6 +25,9 @@ class RegisterForm(forms.Form):
                                                 choices=TECHNIQUE_CHOICES,
                                                 widget=forms.CheckboxSelectMultiple(),
                                                 required=False)
+
+    def localize(self, language):
+        self.fields.get('username').label = ["USERNAME", "ユーザーネーム"][language]
 
     def is_valid(self):
         super(RegisterForm, self).is_valid()
@@ -39,7 +47,7 @@ class RegisterForm(forms.Form):
 class ReviewForm(forms.Form):
 
     def __init__(self, *args, language=0):
-        super().__init__(*args)
+        super(ReviewForm, self).__init__(*args)
         self.localize(language)
 
     text = forms.CharField(max_length=256,
