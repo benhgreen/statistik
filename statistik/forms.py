@@ -11,23 +11,31 @@ class RegisterForm(forms.Form):
         self.localize(language)
 
     username = forms.CharField()
-    email = forms.EmailField(label="EMAIL", required=False,
-                             help_text='Optional.')
-    password = forms.CharField(label="PASSWORD/パスワード", widget=forms.PasswordInput)
-    reenter_password = forms.CharField(label="RE-ENTER PASSWORD/パスワード【再入力】",
-                                       widget=forms.PasswordInput)
+    email = forms.EmailField(required=False)
+    password = forms.CharField(widget=forms.PasswordInput)
+    reenter_password = forms.CharField(widget=forms.PasswordInput)
     dj_name = forms.CharField(label="DJ NAME", max_length=6)
-    language = forms.ChoiceField(label='LANGUAGE/言語選択', choices=LANGUAGE_CHOICES)
-    location = forms.CharField(label="LOCATION/位置", max_length=64)
-    playside = forms.ChoiceField(label="PLAYSIDE/プレーサイド", choices=PLAYSIDE_CHOICES)
-    best_techniques = forms.MultipleChoiceField(label="MOST INSANE TECHNIQUES/得意な特徴",
-                                                help_text="Limit 3/最大3つ.",
-                                                choices=TECHNIQUE_CHOICES,
-                                                widget=forms.CheckboxSelectMultiple(),
+    language = forms.ChoiceField(choices=LANGUAGE_CHOICES)
+    location = forms.CharField(max_length=64)
+    playside = forms.ChoiceField(choices=PLAYSIDE_CHOICES)
+    best_techniques = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
                                                 required=False)
 
     def localize(self, language):
         self.fields.get('username').label = ["USERNAME", "ユーザーネーム"][language]
+        self.fields.get('email').label = ["EMAIL", "メールアドレス"][language]
+        self.fields.get('email').help_text = ['Optional.', '任意'][language]
+        self.fields.get('password').label = ["PASSWORD", "パスワード"][language]
+        self.fields.get('reenter_password').label = ["RE-ENTER PASSWORD", "パスワード【再入力】"][language]
+        self.fields.get('language').label = ["LANGUAGE", "言語選択"][language]
+        self.fields.get('language').initial = language
+        self.fields.get('location').label = ["LOCATION", "位置"][language]
+        self.fields.get('playside').label = ["PLAYSIDE", "プレーサイド"][language]
+
+        tech_field = self.fields.get('best_techniques')
+        tech_field.label = ["MOST INSANE TECHNIQUES", "得意な特徴"][language]
+        tech_field.help_text = ["Limit 3.", "最大3つ"][language]
+        tech_field.choices = get_localized_choices('TECHNIQUE_CHOICES', language)
 
     def is_valid(self):
         super(RegisterForm, self).is_valid()

@@ -231,7 +231,8 @@ def register_view(request):
     if request.method == 'POST':
         # handle submitted registration forms
         # TODO refactor RegisterForm creation to somewhere else
-        form = RegisterForm(request.POST)
+        language = int(request.POST.get('language', 0))
+        form = RegisterForm(request.POST, language=language)
         if form.is_valid():
             data = form.cleaned_data
             # TODO verify user was actually created
@@ -246,11 +247,12 @@ def register_view(request):
                 return redirect('index')
     else:
         # display blank form
-        form = RegisterForm()
+        language = int(request.GET.get('language', 0))
+        form = RegisterForm(language=language)
     context['form'] = form
 
     # assemble page title
-    title_elements = ['REGISTRATION']
+    title_elements = [['REGISTRATION', '新規登録'][language]]
     create_page_title(context, title_elements)
 
     return render(request, 'register.html', context)

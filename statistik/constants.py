@@ -14,7 +14,7 @@ RATING_VALIDATORS = [MaxValueValidator(MAX_RATING),
 
 LANGUAGE_CHOICES = [
     (0, 'English'),
-    (1, 'Japanese')
+    (1, '日本語')
 ]
 
 TECHNIQUE_CHOICES = [
