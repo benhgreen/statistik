@@ -559,11 +559,11 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
         type_display = SCORE_CATEGORY_CHOICES[int(clear_type)][1]
 
         if elo == 'match':
-            ret.append(('ELO %d☆ %s LIST' % (level, type_display),
+            ret.append(('ELO %d☆ %s' % (level, type_display) + _(' LIST'),
                         reverse('elo') + '?level=%d&type=%d&list=true' % (
                             level, clear_type)))
         elif elo == 'list':
-            ret.append(('ELO %d☆ %s MATCHING' % (level, type_display),
+            ret.append(('ELO %d☆ %s' % (level, type_display)  +  _(' MATCHING'),
                         reverse('elo') + '?level=%d&type=%d' % (
                             level, clear_type)))
 

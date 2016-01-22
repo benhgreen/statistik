@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-22 04:56+0000\n"
+"POT-Creation-Date: 2016-01-22 12:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,122 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: statistik/constants.py:15
+msgid "Scratching"
+msgstr "皿"
+
+#: statistik/constants.py:16
+msgid "Jacks"
+msgstr "縦連"
+
+#: statistik/constants.py:17
+msgid "Speed Changes"
+msgstr "ソフラン"
+
+#: statistik/constants.py:18
+msgid "Charge Notes"
+msgstr "CN"
+
+#: statistik/constants.py:19
+msgid "Scales"
+msgstr "階段"
+
+#: statistik/constants.py:20
+msgid "Chord Scales"
+msgstr "2重階段"
+
+#: statistik/constants.py:21
+msgid "Denim"
+msgstr "デニム"
+
+#: statistik/constants.py:22
+msgid "Trills"
+msgstr "加速トリル"
+
+#: statistik/constants.py:23
+msgid "Rolls"
+msgstr "トリル"
+
+#: statistik/constants.py:24
+msgid "Chords"
+msgstr "同時推し"
+
+#: statistik/constants.py:28
+msgid "Beginning"
+msgstr "序盤発狂"
+
+#: statistik/constants.py:29
+msgid "Middle"
+msgstr "中盤発狂"
+
+#: statistik/constants.py:30
+msgid "End"
+msgstr "ラス殺し"
+
+#: statistik/constants.py:114
+msgid "Regular"
+msgstr "正"
+
+#: statistik/constants.py:115
+msgid "Random"
+msgstr "乱"
+
+#: statistik/constants.py:116
+msgid "S-Random"
+msgstr "S乱"
+
+#: statistik/constants.py:117
+msgid "R-Random"
+msgstr "R乱"
+
+#: statistik/constants.py:118
+msgid "Mirror"
+msgstr "鏡"
+
+#: statistik/constants.py:119
+msgid "Flip"
+msgstr "動詞"
+
+#: statistik/constants.py:120
+msgid "Regular Left"
+msgstr "正(1P)"
+
+#: statistik/constants.py:121
+msgid "Random Left"
+msgstr "乱(1P)"
+
+#: statistik/constants.py:122
+msgid "S-Random Left"
+msgstr "S乱(1P)"
+
+#: statistik/constants.py:123
+msgid "R-Random Left"
+msgstr "R乱(1P)"
+
+#: statistik/constants.py:124
+msgid "Mirror Left"
+msgstr "鏡(1P)"
+
+#: statistik/constants.py:125
+msgid "Regular Right"
+msgstr "正(2P)"
+
+#: statistik/constants.py:126
+msgid "Random Right"
+msgstr "乱(2P)"
+
+#: statistik/constants.py:127
+msgid "S-Random Right"
+msgstr "S乱(2P)"
+
+#: statistik/constants.py:128
+msgid "R-Random Right"
+msgstr "R乱(2P)"
+
+#: statistik/constants.py:129
+msgid "Mirror Right"
+msgstr "鏡(2P)"
 
 #: statistik/controller.py:540 statistik/views.py:40 statistik/views.py:41
 msgid "INDEX"
@@ -84,7 +200,7 @@ msgstr "最大3つ"
 msgid "Range: 1.0-14.0."
 msgstr "範囲は1.0から14.0まで"
 
-#: statistik/forms.py:42 templates/chart.html:19
+#: statistik/forms.py:42 templates/chart.html:19 templates/user.html:23
 msgid "REVIEW TEXT"
 msgstr "意見"
 
@@ -93,20 +209,24 @@ msgid "Optional, limit 256 characters."
 msgstr "任意・最大256字"
 
 #: statistik/forms.py:47 templates/chart.html:21 templates/ratings.html:59
+#: templates/user.html:25
 msgid "NC RATING"
 msgstr ""
 "難易度\n"
 "(ノマゲ)"
 
 #: statistik/forms.py:51 templates/chart.html:22 templates/ratings.html:60
+#: templates/user.html:26
 msgid "HC RATING"
 msgstr "難易度(HARD)"
 
 #: statistik/forms.py:55 templates/chart.html:23 templates/ratings.html:61
+#: templates/user.html:27
 msgid "EXHC RATING"
 msgstr "難易度(EXHARD)"
 
 #: statistik/forms.py:59 templates/chart.html:24 templates/ratings.html:62
+#: templates/user.html:28
 msgid "SCORE RATING"
 msgstr "難易度(スコア)"
 
@@ -129,6 +249,14 @@ msgstr "標準レート"
 #: statistik/views.py:36
 msgid "ELO RATINGS"
 msgstr "ELO式レート"
+
+#: statistik/views.py:167
+msgid " LIST"
+msgstr "レート一覧"
+
+#: statistik/views.py:173
+msgid " MATCHING"
+msgstr "マッチング"
 
 #: statistik/views.py:207
 msgid "REVIEWS"
@@ -166,21 +294,51 @@ msgstr "新規登録"
 msgid "USER"
 msgstr "ユーザーリスト"
 
-#: templates/chart.html:20
+#: templates/chart.html:20 templates/user.html:24
 msgid "RECOMMENDED OPTIONS"
-msgstr "おすすめのOP(あなたのプレーサイド)"
+msgstr "おすすめのOP"
 
 #: templates/chart.html:57
 msgid "please only rate clears you have achieved."
 msgstr "楽曲をクリアできないとレートを遠慮してください"
 
-#: templates/chart.html:62
+#: templates/chart.html:62 templates/register.html:17
 msgid "submit"
 msgstr "投稿"
 
 #: templates/chart.html:65
 msgid "delete"
-msgstr ""
+msgstr "動詞"
+
+#: templates/elo_rating.html:30
+msgid "RANK"
+msgstr "順位"
+
+#: templates/elo_rating.html:31
+#, fuzzy
+#| msgid "SONG TITLE"
+msgid "TITLE"
+msgstr "タイトル"
+
+#: templates/elo_rating.html:32
+msgid "RATING"
+msgstr "レート"
+
+#: templates/elo_rating.html:46
+msgid "select the more difficult chart."
+msgstr "より難しい楽曲を選んでください"
+
+#: templates/elo_rating.html:49
+msgid "click a song title to view its ratings."
+msgstr "難易度を見るとタイトルをクリック"
+
+#: templates/elo_rating.html:55
+msgid "DRAW"
+msgstr "両方"
+
+#: templates/elo_rating.html:56
+msgid "PASS"
+msgstr "スキップ"
 
 #: templates/index.html:16
 msgid ""
@@ -202,7 +360,7 @@ msgstr "詳しくは楽曲のタイトルをクリック。ヘッダーをクリ
 msgid "red ratings indicate clickagain as default"
 msgstr "赤い難易度はclickagainで参考されています"
 
-#: templates/ratings.html:57
+#: templates/ratings.html:57 templates/user.html:21
 msgid "SONG TITLE"
 msgstr "タイトル"
 
@@ -217,57 +375,3 @@ msgstr ""
 #: templates/userlist.html:19
 msgid "click a username to view their reviews."
 msgstr "ユーザーネームをクリックしてレート一覧を見ます"
-
-msgid "Scratching"
-msgstr "皿"
-
-msgid "Jacks"
-msgstr "縦連"
-
-msgid "Speed Changes"
-msgstr "ソフラン"
-
-msgid "Charge Notes"
-msgstr "CN"
-
-msgid "Scales"
-msgstr "階段"
-
-msgid "Chord Scales"
-msgstr "2重階段"
-
-msgid "Denim"
-msgstr "デニム"
-
-msgid "Trills"
-msgstr "加速トリル"
-
-msgid "Rolls"
-msgstr "トリル"
-
-msgid "Chords"
-msgstr "同時推し"
-
-msgid "Beginning"
-msgstr "序盤発狂"
-
-msgid "Middle"
-msgstr "中盤発狂"
-
-msgid "End"
-msgstr "ラス殺し"
-
-msgid "Regular"
-msgstr "正"
-
-msgid "Random"
-msgstr "乱"
-
-msgid "S-Random"
-msgstr "S乱"
-
-msgid "R-Random"
-msgstr "R乱"
-
-msgid "Mirror"
-msgstr "鏡"

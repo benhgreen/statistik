@@ -12,22 +12,22 @@ RATING_VALIDATORS = [MaxValueValidator(MAX_RATING),
                      MinValueValidator(MIN_RATING)]
 
 TECHNIQUE_CHOICES = [
-    (0, 'Scratching'),
-    (1, 'Jacks'),
-    (2, 'Speed Changes'),
-    (3, 'Charge Notes'),
-    (4, 'Scales'),
-    (5, 'Chord Scales'),
-    (6, 'Denim'),
-    (7, 'Trills'),
-    (8, 'Rolls'),
-    (9, 'Chords')
+    (0, _('Scratching')),
+    (1, _('Jacks')),
+    (2, _('Speed Changes')),
+    (3, _('Charge Notes')),
+    (4, _('Scales')),
+    (5, _('Chord Scales')),
+    (6, _('Denim')),
+    (7, _('Trills')),
+    (8, _('Rolls')),
+    (9, _('Chords'))
 ]
 
 DIFFICULTY_SPIKE_CHOICES = [
-    (0, 'Beginning'),
-    (1, 'Middle'),
-    (2, 'End')
+    (0, _('Beginning')),
+    (1, _('Middle')),
+    (2, _('End'))
 ]
 
 SCORE_CATEGORY_CHOICES = [
@@ -111,22 +111,22 @@ PLAYSIDE_CHOICES = [
 ]
 
 RECOMMENDED_OPTIONS_CHOICES = [
-    (0, 'Regular'),
-    (1, 'Random'),
-    (2, 'S-Random'),
-    (3, 'R-Random'),
-    (4, 'Mirror'),
-    (5, 'Flip'),
-    (6, 'Regular Left'),
-    (7, 'Random Left'),
-    (8, 'S-Random Left'),
-    (9, 'R-Random Left'),
-    (10, 'Mirror Left'),
-    (11, 'Regular Right'),
-    (12, 'Random Right'),
-    (13, 'S-Random Right'),
-    (14, 'R-Random Right'),
-    (15, 'Mirror Right'),
+    (0, _('Regular')),
+    (1, _('Random')),
+    (2, _('S-Random')),
+    (3, _('R-Random')),
+    (4, _('Mirror')),
+    (5, _('Flip')),
+    (6, _('Regular Left')),
+    (7, _('Random Left')),
+    (8, _('S-Random Left')),
+    (9, _('R-Random Left')),
+    (10, _('Mirror Left')),
+    (11, _('Regular Right')),
+    (12, _('Random Right')),
+    (13, _('S-Random Right')),
+    (14, _('R-Random Right')),
+    (15, _('Mirror Right')),
 
 ]
 

@@ -18,14 +18,14 @@
 <table class="sortable" border="1" align="center" style="width:95%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td style="background-color: #3d393f">SONG</td>
-            <td style="background-color: #3d393f">LV</td>
-            <td style="background-color: #3d393f">REVIEW TEXT</td>
-            <td style="background-color: #3d393f">RECOMMENDED OPTIONS</td>
-            <td style="background-color: #3d393f">NC RATING</td>
-            <td style="background-color: #3d393f">HC RATING</td>
-            <td style="background-color: #3d393f">EXHC RATING</td>
-            <td style="background-color: #3d393f">SCORE RATING</td>
+            <td style="background-color: #3d393f;width: 20%;">{% trans 'SONG TITLE' %}</td>
+            <td style="background-color: #3d393f;width: 5%;">LV</td>
+            <td style="background-color: #3d393f;width: 20%;">{% trans 'REVIEW TEXT' %}</td>
+            <td style="background-color: #3d393f;width: 15%;">{% trans 'RECOMMENDED OPTIONS' %}</td>
+            <td style="background-color: #3d393f;width: 7%;">{% trans 'NC RATING' %}</td>
+            <td style="background-color: #3d393f;width: 7%;">{% trans 'HC RATING' %}</td>
+            <td style="background-color: #3d393f;width: 7%;">{% trans 'EXHC RATING' %}</td>
+            <td style="background-color: #3d393f;width: 7%;">{% trans 'SCORE RATING' %}</td>
         </tr>
     {% for review in reviews %}
         <tr style="line-height: 150%">

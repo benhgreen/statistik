@@ -2,6 +2,7 @@
 
 {% load bootstrap3 %}
 {% load static %}
+{% load i18n %}
 
 {% block bootstrap3_extra_head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
@@ -22,17 +23,13 @@
 
     <br>
 
-    <div align="center" style="font-weight: 500;line-height: 1.5em">
-    click a song title to view its ratings.
-    </div><br>
-
     {% if chart_list %}
         <table border="1" align="center" style="width:65%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td style="background-color: #3d393f">RANK</td>
-            <td style="background-color: #3d393f">TITLE</td>
-            <td style="background-color: #3d393f">RATING</td>
+            <td style="background-color: #3d393f">{% trans 'RANK' %}</td>
+            <td style="background-color: #3d393f">{% trans 'SONG TITLE' %}</td>
+            <td style="background-color: #3d393f">{% trans 'RATING' %}</td>
         </tr>
             {% for chart in chart_list %}
                 <tr style="line-height: 150%">
@@ -46,14 +43,17 @@
         <br>
         <br>
         <br>
-        <div align="center" style="font-size: large">select the more difficult chart.</div>
+        <div align="center" style="font-size: large">{% trans 'select the more difficult chart.' %}</div>
         <br>
+        <div align="center" style="font-weight: 500;line-height: 1.5em">
+        {% trans 'click a song title to view its ratings.' %}
+        </div><br>
         <br>
-        <table border="1" align="center" style="width:80%">
+        <table border="1" align="center" style="width:95%">
             <tr style="line-height: 4em">
                 <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&type={{ is_hc }}">{{ chart1.title }} [{{ chart1.type }}]</a></td>
-                <td style="width:5%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true&type={{ is_hc }}">DRAW</a></td>
-                <td style="width:5%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&type={{ is_hc }}">PASS</a></td>
+                <td style="width:10%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true&type={{ is_hc }}">{% trans 'DRAW' %}</a></td>
+                <td style="width:10%"><a style="color: #000;" href="{% url 'elo' %}?level={{ level }}&type={{ is_hc }}">{% trans 'PASS' %}</a></td>
                 <td style="width:35%"><a style="color: #000;font-size: larger;font-weight: 500;" href="{% url 'elo' %}?level={{ level }}&win={{ chart2.id }}&lose={{ chart1.id }}&type={{ is_hc }}">{{ chart2.title }} [{{ chart2.type }}]</a></td>
             </tr>
         </table>

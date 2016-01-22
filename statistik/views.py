@@ -164,13 +164,13 @@ def elo_view(request):
             # display list of charts ranked by elo
             # TODO fix line length
             context['chart_list'] = get_elo_rankings(level, rate_type_column)
-            title_elements = ['ELO', level + '☆ ' + type_display + ' LIST']
+            title_elements = ['ELO', level + '☆ ' + type_display + _(' LIST')]
         else:
             # display two songs to rank
             [context['chart1'], context['chart2']] = make_elo_matchup(level)
 
             # add page title
-            title_elements = ['ELO', level + '☆ ' + type_display + ' MATCHING']
+            title_elements = ['ELO', level + '☆ ' + type_display + _(' MATCHING')]
 
     create_page_title(context, title_elements)
     context['level'] = level
