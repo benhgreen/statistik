@@ -1,6 +1,8 @@
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
-    RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING
+    RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING, \
+    localize_choices
 
 
 class RegisterForm(forms.Form):
@@ -35,37 +37,38 @@ class RegisterForm(forms.Form):
 
 
 class ReviewForm(forms.Form):
-    RANGE_HELP_TEXT = "Range: 1.0-14.0."
+    RANGE_HELP_TEXT = _("Range: 1.0-14.0.")
 
-    text = forms.CharField(label="REVIEW TEXT",
-                           help_text="Optional, limit 256 characters.",
+    text = forms.CharField(label=_("REVIEW TEXT"),
+                           help_text=_("Optional, limit 256 characters."),
                            max_length=256,
                            widget=forms.Textarea(
                                attrs={'rows': 4, 'cols': 15}), required=False)
-    clear_rating = forms.FloatField(label="NC RATING",
+    clear_rating = forms.FloatField(label=_("NC RATING"),
                                     help_text=RANGE_HELP_TEXT,
                                     required=False,
                                     validators=RATING_VALIDATORS)
-    hc_rating = forms.FloatField(label="HC RATING",
+    hc_rating = forms.FloatField(label=_("HC RATING"),
                                  help_text=RANGE_HELP_TEXT,
                                  required=False,
                                  validators=RATING_VALIDATORS)
-    exhc_rating = forms.FloatField(label="EXHC RATING",
+    exhc_rating = forms.FloatField(label=_("EXHC RATING"),
                                    help_text=RANGE_HELP_TEXT,
                                    required=False,
                                    validators=RATING_VALIDATORS)
-    score_rating = forms.FloatField(label="SCORE RATING",
+    score_rating = forms.FloatField(label=_("SCORE RATING"),
                                     help_text=RANGE_HELP_TEXT,
                                     required=False,
                                     validators=RATING_VALIDATORS)
-    characteristics = forms.MultipleChoiceField(label="CHARACTERISTICS",
-                                                choices=TECHNIQUE_CHOICES,
+
+    characteristics = forms.MultipleChoiceField(label=_("CHARACTERISTICS"),
+                                                choices=localize_choices(TECHNIQUE_CHOICES),
                                                 widget=forms.CheckboxSelectMultiple(),
                                                 required=False)
 
     recommended_options = forms.MultipleChoiceField(
-        label="RECOMMENDED OPTIONS (FOR YOUR PLAY SIDE)",
-        choices=RECOMMENDED_OPTIONS_CHOICES,
+        label=_("RECOMMENDED OPTIONS (FOR YOUR PLAY SIDE)"),
+        choices=localize_choices(RECOMMENDED_OPTIONS_CHOICES),
         widget=forms.CheckboxSelectMultiple(),
         required=False,
     )

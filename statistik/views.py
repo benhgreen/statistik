@@ -10,6 +10,7 @@ from django.db import IntegrityError
 from django.http import (HttpResponseBadRequest, HttpResponseRedirect,
                          HttpResponse)
 from django.shortcuts import redirect, render
+from django.utils.translation import ugettext as _
 from statistik.constants import (FULL_VERSION_NAMES, generate_version_urls,
                                  generate_level_urls, SCORE_CATEGORY_CHOICES,
                                  generate_elo_level_urls)
@@ -31,13 +32,13 @@ def index(request):
     """
     context = {
         'index_links': [
-            ('STANDARD RATINGS', reverse('ratings')),
-            ('ELO RATINGS', reverse('elo')),
-            ('USER LIST', reverse('users'))
+            (_('STANDARD RATINGS'), reverse('ratings')),
+            (_('ELO RATINGS'), reverse('elo')),
+            (_('USER LIST'), reverse('users'))
         ],
 
-        'title': 'STATISTIK // INDEX',
-        'page_title': 'STATISTIK // INDEX'
+        'title': 'STATISTIK // ' + _('INDEX'),
+        'page_title': 'STATISTIK // ' + _('INDEX')
     }
     return render(request, 'index.html', context)
 

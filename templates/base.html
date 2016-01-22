@@ -1,6 +1,7 @@
 {% extends 'bootstrap.html' %}
 
 {% load bootstrap3 %}
+{% load i18n %}
 
 {% block bootstrap3_content %}
     <div style="clear: both" class="container" xmlns="http://www.w3.org/1999/html">
@@ -13,15 +14,15 @@
             <br>
             <h5 style="float: right;">
             {% if user.is_authenticated %}
-                welcome, <a style="color: #000" href="{% url 'users' %}?id={{ user.id }}"> {{ user.username }}</a> | <a href="{% url 'logout' %}">logout</a>
+                {% trans 'welcome' %}, <a style="color: #000" href="{% url 'users' %}?id={{ user.id }}"> {{ user.username }}</a> | <a style="color: #000" href="{% url 'logout' %}">{% trans 'logout' %}</a>
             {% else %}
                 <form style="display: inline;" action="{% url 'login' %}" method="post">
                     {% csrf_token %}
-                    <input name="username" type="text" placeholder="username">
-                    <input name="password" type="password" placeholder="password">
-                    <input type="submit" value="login">
+                    <input name="{% trans 'username' %}" type="text" placeholder="{% trans 'username' %}">
+                    <input name="{% trans 'password' %}" type="password" placeholder="{% trans 'password' %}">
+                    <input type="submit" value="{% trans 'login' %}">
                 </form>
-                <a href="{% url 'register' %}"><button style="color: #000;">register</button></a>
+                <a href="{% url 'register' %}"><button style="color: #000;">{% trans 'register' %}</button></a>
 
 
             {% endif %}

@@ -52,6 +52,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'statistik.urls'
@@ -114,6 +115,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 BOOTSTRAP3 = {
     'set_placeholder': False

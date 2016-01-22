@@ -2,6 +2,7 @@
 
 {% load bootstrap3 %}
 {% load static %}
+{% load i18n %}
 
 {% block bootstrap3_extra_head %}
     <script src="{% static "js/sorttable.js" %}"></script>
@@ -13,14 +14,14 @@
 <table class="sortable" border="1" align="center" style="width:95%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td style="background-color: #3d393f">USER</td>
-            <td style="background-color: #3d393f">PLAYSIDE</td>
-            <td style="background-color: #3d393f">REVIEW TEXT</td>
-            <td style="background-color: #3d393f">RECOMMENDED OPTIONS</td>
-            <td style="background-color: #3d393f">NC RATING</td>
-            <td style="background-color: #3d393f">HC RATING</td>
-            <td style="background-color: #3d393f">EXHC RATING</td>
-            <td style="background-color: #3d393f">SCORE RATING</td>
+            <td style="background-color: #3d393f;width: 10%">{% trans 'USER' %}</td>
+            <td style="background-color: #3d393f;width: 8%">{% trans 'PLAYSIDE' %}</td>
+            <td style="background-color: #3d393f;width: 30%">{% trans 'REVIEW TEXT' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'RECOMMENDED OPTIONS' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'NC RATING' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'HC RATING' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'EXHC RATING' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'SCORE RATING' %}</td>
         </tr>
     {% for review in reviews %}
         <tr style="line-height: 150%">
@@ -53,7 +54,7 @@
 
 {% if form %}
 <form style="width: 40%;margin: auto;padding-top: 2em" action="{{ request.get_full_path }}" method="post">
-    <div align="center" style="font-weight: 500;line-height: 1.5em">please only rate clears you have achieved.</div><br>
+    <div align="center" style="font-weight: 500;line-height: 1.5em">{% trans 'please only rate clears you have achieved.' %}</div><br>
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}

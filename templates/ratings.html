@@ -2,6 +2,7 @@
 
 {% load bootstrap3 %}
 {% load static %}
+{% load i18n %}
 
 {% block bootstrap3_extra_head %}
     <script src="{% static "js/sorttable.js" %}"></script>
@@ -41,9 +42,9 @@
     <br>
 
     <div align="center" style="font-weight: 500;line-height: 1.5em">
-        songs are rated from 1.0 to 14.0 (13.0 = 12.11)
-        <br>click a song's title for more info, or click table headers to sort.
-        <br>red ratings indicate clickagain as default.
+        {% trans 'songs are rated from 1.0 to 14.0 (13.0 = 12.11)' %}
+        <br>{% trans "click a song's title for more info, or click table headers to sort." %}
+        <br>{% trans 'red ratings indicate clickagain as default' %}.
     </div>
 
     <br>
@@ -51,14 +52,14 @@
     <table class="sortable" border="1" align="center" style="width:85%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td style="background-color: #3d393f">VER</td>
-            <td class="sorttable_numeric" style="background-color: #3d393f">LV</td>
-            <td class="sortable_alpha" style="background-color: #3d393f">SONG TITLE</td>
-            <td style="background-color: #3d393f">NOTE COUNT</td>
-            <td style="background-color: #3d393f">NC RATING</td>
-            <td style="background-color: #3d393f">HC RATING</td>
-            <td style="background-color: #3d393f">EXHC RATING</td>
-            <td style="background-color: #3d393f">SCORE RATING</td>
+            <td style="background-color: #3d393f;width: 5%">VER</td>
+            <td class="sorttable_numeric" style="background-color: #3d393f;width: 5%">LV</td>
+            <td class="sortable_alpha" style="background-color: #3d393f;width: 41%">{% trans 'SONG TITLE' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'NOTE COUNT' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{%  trans 'NC RATING' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'HC RATING' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'EXHC RATING' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'SCORE RATING' %}</td>
         </tr>
     {% for chart in charts %}
         <tr>

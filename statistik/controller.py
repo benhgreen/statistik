@@ -10,7 +10,8 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
-                                 FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES)
+                                 FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES,
+                                 localize_choices)
 from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile, EloReview
 
@@ -257,9 +258,9 @@ def generate_review_form(user, chart_id, form_data=None):
                 else:
                     form = ReviewForm()
             if chart.type < 3:
-                form.fields.get('recommended_options').choices = RECOMMENDED_OPTIONS_CHOICES[:5]
+                form.fields.get('recommended_options').choices = localize_choices(RECOMMENDED_OPTIONS_CHOICES[:5])
             else:
-                form.fields.get('recommended_options').choices = RECOMMENDED_OPTIONS_CHOICES[5:]
+                form.fields.get('recommended_options').choices = localize_choices(RECOMMENDED_OPTIONS_CHOICES[5:])
             return form, has_reviewed
     return None, None
 
