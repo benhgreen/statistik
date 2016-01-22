@@ -2,6 +2,7 @@
 
 {% load bootstrap3 %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
     <a style="color: #000;" href="{% url 'users' %}">{{ title }}</a>
@@ -68,7 +69,7 @@
         <br>
         <form style="width: 40%;margin: auto;padding-top: 2em" action="{% url 'users' %}?id={{ request.user.id }}" method="post">
         {% csrf_token %}
-            <div align="center" style="font-weight: 500;line-height: 1.5em">edit your info here.</div><br>
+            <div align="center" style="font-weight: 500;line-height: 1.5em">{% trans 'edit your info here.' %}</div><br>
         {% bootstrap_form form %}
         {% buttons %}
             <button type="submit" class="btn btn-primary">

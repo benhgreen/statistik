@@ -204,7 +204,7 @@ def user_view(request):
             context['form'] = generate_user_form(request.user, request.POST)
 
         # assemble page title
-        title_elements = [user.username.upper(), 'REVIEWS']
+        title_elements = [user.username.upper(), _('REVIEWS')]
         create_page_title(context, title_elements)
 
         context['nav_links'] = make_nav_links(user=True)
@@ -216,7 +216,7 @@ def user_view(request):
         context['users'] = get_user_list()
 
         # assemble page title
-        title_elements = ['USER LIST']
+        title_elements = [_('USER LIST')]
         create_page_title(context, title_elements)
         context['nav_links'] = make_nav_links()
 
@@ -251,7 +251,7 @@ def register_view(request):
     context['form'] = form
 
     # assemble page title
-    title_elements = ['REGISTRATION']
+    title_elements = [_('REGISTRATION')]
     create_page_title(context, title_elements)
 
     return render(request, 'register.html', context)

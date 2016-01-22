@@ -2,6 +2,7 @@
 
 {% load bootstrap3 %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
     <a style="color: #000;" href="{% url 'ratings' %}">{{ title }}</a>
@@ -15,17 +16,17 @@
 {% block content %}
 
 <div align="center" style="font-weight: 500;line-height: 1.5em">
-    click a username to view their reviews.
+    {% trans 'click a username to view their reviews.' %}
 </div><br>
 
 <table class="sortable" border="1" align="center" style="width:75%">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td style="width: 10em;background-color: #3d393f">USERNAME</td>
-            <td style="width: 4em;background-color: #3d393f">DJ NAME</td>
-            <td style="width: 2em;background-color: #3d393f">PLAYSIDE</td>
-            <td style="background-color: #3d393f">MOST INSANE TECHNIQUES</td>
-            <td style="background-color: #3d393f">LOCATION</td>
+            <td style="width: 15%;background-color: #3d393f">{% trans 'USERNAME' %}</td>
+            <td style="width: 10%;background-color: #3d393f">DJ NAME</td>
+            <td style="width: 15%;background-color: #3d393f">{% trans 'PLAYSIDE' %}</td>
+            <td style="background-color: #3d393f">{% trans 'MOST INSANE TECHNIQUES' %}</td>
+            <td style="background-color: #3d393f">{% trans 'LOCATION' %}</td>
         </tr>
     {% for user_item in users %}
         <tr style="line-height: 150%">

@@ -1,0 +1,273 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-22 04:56+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: statistik/controller.py:540 statistik/views.py:40 statistik/views.py:41
+msgid "INDEX"
+msgstr "ホームページ"
+
+#: statistik/controller.py:543
+#, python-format
+msgid "ALL %(level)d☆ %(style)s"
+msgstr "%(style)s %(level)d☆のすべて"
+
+#: statistik/controller.py:549
+#, python-format
+msgid "ALL %(version)s %(style)s"
+msgstr "%(style)s %(version)sのすべて"
+
+#: statistik/controller.py:555 statistik/views.py:37 statistik/views.py:219
+msgid "USER LIST"
+msgstr "ユーザーリスト"
+
+#: statistik/forms.py:9 templates/userlist.html:25
+msgid "USERNAME"
+msgstr "ユーザーリスト"
+
+#: statistik/forms.py:10
+msgid "EMAIL"
+msgstr "メールアドレス"
+
+#: statistik/forms.py:11
+msgid "Optional."
+msgstr "任意"
+
+#: statistik/forms.py:12
+msgid "PASSWORD"
+msgstr "パスワード"
+
+#: statistik/forms.py:13
+msgid "RE-ENTER PASSWORD"
+msgstr "パスワード【再入力"
+
+#: statistik/forms.py:16 templates/userlist.html:29
+msgid "LOCATION"
+msgstr "位置"
+
+#: statistik/forms.py:17 templates/chart.html:18 templates/userlist.html:27
+msgid "PLAYSIDE"
+msgstr "プレーサイド"
+
+#: statistik/forms.py:18 templates/userlist.html:28
+msgid "MOST INSANE TECHNIQUES"
+msgstr "得意な特徴"
+
+#: statistik/forms.py:19
+msgid "Limit 3."
+msgstr "最大3つ"
+
+#: statistik/forms.py:28 statistik/forms.py:29
+msgid "Passwords do not match."
+msgstr ""
+
+#: statistik/forms.py:33
+msgid "Please select no more than 3."
+msgstr "最大3つ"
+
+#: statistik/forms.py:40
+msgid "Range: 1.0-14.0."
+msgstr "範囲は1.0から14.0まで"
+
+#: statistik/forms.py:42 templates/chart.html:19
+msgid "REVIEW TEXT"
+msgstr "意見"
+
+#: statistik/forms.py:43
+msgid "Optional, limit 256 characters."
+msgstr "任意・最大256字"
+
+#: statistik/forms.py:47 templates/chart.html:21 templates/ratings.html:59
+msgid "NC RATING"
+msgstr ""
+"難易度\n"
+"(ノマゲ)"
+
+#: statistik/forms.py:51 templates/chart.html:22 templates/ratings.html:60
+msgid "HC RATING"
+msgstr "難易度(HARD)"
+
+#: statistik/forms.py:55 templates/chart.html:23 templates/ratings.html:61
+msgid "EXHC RATING"
+msgstr "難易度(EXHARD)"
+
+#: statistik/forms.py:59 templates/chart.html:24 templates/ratings.html:62
+msgid "SCORE RATING"
+msgstr "難易度(スコア)"
+
+#: statistik/forms.py:64
+msgid "CHARACTERISTICS"
+msgstr "特徴"
+
+#: statistik/forms.py:70
+msgid "RECOMMENDED OPTIONS (FOR YOUR PLAY SIDE)"
+msgstr "おすすめのOP(あなたのプレーサイド)"
+
+#: statistik/forms.py:94
+msgid "Please rate within 2.0 of actual difficulty."
+msgstr ""
+
+#: statistik/views.py:35
+msgid "STANDARD RATINGS"
+msgstr "標準レート"
+
+#: statistik/views.py:36
+msgid "ELO RATINGS"
+msgstr "ELO式レート"
+
+#: statistik/views.py:207
+msgid "REVIEWS"
+msgstr "レート一覧"
+
+#: statistik/views.py:254
+msgid "REGISTRATION"
+msgstr "新規登録"
+
+#: templates/base.html:17
+msgid "welcome"
+msgstr "ようこそ"
+
+#: templates/base.html:17
+msgid "logout"
+msgstr "ログアウト"
+
+#: templates/base.html:21
+msgid "username"
+msgstr "ユーザーネーム"
+
+#: templates/base.html:22
+msgid "password"
+msgstr "パスワード"
+
+#: templates/base.html:23
+msgid "login"
+msgstr "ログイン"
+
+#: templates/base.html:25
+msgid "register"
+msgstr "新規登録"
+
+#: templates/chart.html:17
+msgid "USER"
+msgstr "ユーザーリスト"
+
+#: templates/chart.html:20
+msgid "RECOMMENDED OPTIONS"
+msgstr "おすすめのOP(あなたのプレーサイド)"
+
+#: templates/chart.html:57
+msgid "please only rate clears you have achieved."
+msgstr "楽曲をクリアできないとレートを遠慮してください"
+
+#: templates/chart.html:62
+msgid "submit"
+msgstr "投稿"
+
+#: templates/chart.html:65
+msgid "delete"
+msgstr ""
+
+#: templates/index.html:16
+msgid ""
+"please direct questions/suggestions to dybbuk via PM or IRC (or find me on "
+"your favorite social network via the main page of this site)"
+msgstr ""
+
+#: templates/ratings.html:45
+msgid "songs are rated from 1.0 to 14.0 (13.0 = 12.11)"
+msgstr ""
+"楽曲の難易度は1.0から14.0まででレートされています(13.0は clickagainの12.11と"
+"同じ)"
+
+#: templates/ratings.html:46
+msgid "click a song's title for more info, or click table headers to sort."
+msgstr "詳しくは楽曲のタイトルをクリック。ヘッダーをクリックしてソートします"
+
+#: templates/ratings.html:47
+msgid "red ratings indicate clickagain as default"
+msgstr "赤い難易度はclickagainで参考されています"
+
+#: templates/ratings.html:57
+msgid "SONG TITLE"
+msgstr "タイトル"
+
+#: templates/ratings.html:58
+msgid "NOTE COUNT"
+msgstr "ノート数"
+
+#: templates/user.html:72
+msgid "edit your info here."
+msgstr ""
+
+#: templates/userlist.html:19
+msgid "click a username to view their reviews."
+msgstr "ユーザーネームをクリックしてレート一覧を見ます"
+
+msgid "Scratching"
+msgstr "皿"
+
+msgid "Jacks"
+msgstr "縦連"
+
+msgid "Speed Changes"
+msgstr "ソフラン"
+
+msgid "Charge Notes"
+msgstr "CN"
+
+msgid "Scales"
+msgstr "階段"
+
+msgid "Chord Scales"
+msgstr "2重階段"
+
+msgid "Denim"
+msgstr "デニム"
+
+msgid "Trills"
+msgstr "加速トリル"
+
+msgid "Rolls"
+msgstr "トリル"
+
+msgid "Chords"
+msgstr "同時推し"
+
+msgid "Beginning"
+msgstr "序盤発狂"
+
+msgid "Middle"
+msgstr "中盤発狂"
+
+msgid "End"
+msgstr "ラス殺し"
+
+msgid "Regular"
+msgstr "正"
+
+msgid "Random"
+msgstr "乱"
+
+msgid "S-Random"
+msgstr "S乱"
+
+msgid "R-Random"
+msgstr "R乱"
+
+msgid "Mirror"
+msgstr "鏡"

@@ -18,8 +18,8 @@
             {% else %}
                 <form style="display: inline;" action="{% url 'login' %}" method="post">
                     {% csrf_token %}
-                    <input name="{% trans 'username' %}" type="text" placeholder="{% trans 'username' %}">
-                    <input name="{% trans 'password' %}" type="password" placeholder="{% trans 'password' %}">
+                    <input name="username" type="text" placeholder="{% trans 'username' %}">
+                    <input name="password" type="password" placeholder="{% trans 'password' %}">
                     <input type="submit" value="{% trans 'login' %}">
                 </form>
                 <a href="{% url 'register' %}"><button style="color: #000;">{% trans 'register' %}</button></a>

@@ -8,6 +8,7 @@ import elo
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import transaction
+from django.utils.translation import ugettext as _
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
                                  FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES,
@@ -92,13 +93,13 @@ def get_avg_ratings(chart_ids, user_id=None, include_reviews=False):
                         'score_rating': review.score_rating,
 
                         'characteristics': [
-                            (TECHNIQUE_CHOICES[x][1], '#187638')
+                            (_(TECHNIQUE_CHOICES[x][1]), '#187638')
                             if x in review.user.userprofile.best_techniques
-                            else (TECHNIQUE_CHOICES[x][1], '#000')
+                            else (_(TECHNIQUE_CHOICES[x][1]), '#000')
                             for x in review.characteristics],
 
                         'recommended_options': ', '.join([
-                            RECOMMENDED_OPTIONS_CHOICES[x][1]
+                            _(RECOMMENDED_OPTIONS_CHOICES[x][1])
                             for x in review.recommended_options])
                                                      } for review in specific_reviews]
 
@@ -333,13 +334,13 @@ def get_reviews_for_chart(chart_id):
             'score_rating': review.score_rating,
 
             'characteristics': [
-                (TECHNIQUE_CHOICES[x][1], '#187638')
+                (_(TECHNIQUE_CHOICES[x][1]), '#187638')
                 if x in review.user.userprofile.best_techniques
-                else (TECHNIQUE_CHOICES[x][1], '#000')
+                else (_(TECHNIQUE_CHOICES[x][1]), '#000')
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                RECOMMENDED_OPTIONS_CHOICES[x][1]
+                _(RECOMMENDED_OPTIONS_CHOICES[x][1])
                 for x in review.recommended_options])
         })
     return review_data
@@ -372,11 +373,11 @@ def get_reviews_for_user(user_id):
             'characteristics': [
                 (TECHNIQUE_CHOICES[x][1], '#187638')
                 if x in review.user.userprofile.best_techniques
-                else (TECHNIQUE_CHOICES[x][1], '#000')
+                else (_(TECHNIQUE_CHOICES[x][1]), '#000')
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                RECOMMENDED_OPTIONS_CHOICES[x][1]
+                _(RECOMMENDED_OPTIONS_CHOICES[x][1])
                 for x in review.recommended_options])
         })
 
@@ -401,7 +402,7 @@ def get_user_list():
 
             'playside': user.userprofile.get_play_side_display(),
             'best_techniques': ', '.join([
-                TECHNIQUE_CHOICES[x][1]
+                _(TECHNIQUE_CHOICES[x][1])
                 for x in user.userprofile.best_techniques]),
 
             'location': user.userprofile.location
@@ -536,20 +537,22 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
     :param int clear_type:  Rating type (refer to Chart model for options)
     :rtype list:            List of tuples of format (link text, link)
     """
-    ret = [('INDEX', reverse('index'))]
+    ret = [(_('INDEX'), reverse('index'))]
     if not elo:
         if level:
-            ret.append(('ALL %d☆ %s' % (level, style),
+            ret.append((_('ALL %(level)d☆ %(style)s') % {'level': level,
+                                                         'style': style},
                         reverse('ratings') + "?difficulty=%d&style=%s" % (
                             level, style)))
         if version:
             version_display = FULL_VERSION_NAMES[version].upper()
-            ret.append(('ALL %s %s' % (version_display, style),
+            ret.append((_('ALL %(version)s %(style)s') % {'version': version_display,
+                                                          'style': style},
                        reverse('ratings') + "?version=%d&style=%s" % (
                             version, style)))
 
         if user:
-            ret.append(('USER LIST',
+            ret.append((_('USER LIST'),
                        reverse('users')))
 
     else:

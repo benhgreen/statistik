@@ -6,18 +6,18 @@ from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
 
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(label="USERNAME")
-    email = forms.EmailField(label="EMAIL", required=False,
-                             help_text='Optional.')
-    password = forms.CharField(label="PASSWORD", widget=forms.PasswordInput)
-    reenter_password = forms.CharField(label="RE-ENTER PASSWORD",
+    username = forms.CharField(label=_("USERNAME"))
+    email = forms.EmailField(label=_("EMAIL"), required=False,
+                             help_text=_('Optional.'))
+    password = forms.CharField(label=_("PASSWORD"), widget=forms.PasswordInput)
+    reenter_password = forms.CharField(label=_("RE-ENTER PASSWORD"),
                                        widget=forms.PasswordInput)
     dj_name = forms.CharField(label="DJ NAME", max_length=6)
-    location = forms.CharField(label="LOCATION", max_length=64)
-    playside = forms.ChoiceField(label="PLAYSIDE", choices=PLAYSIDE_CHOICES)
-    best_techniques = forms.MultipleChoiceField(label="MOST INSANE TECHNIQUES",
-                                                help_text="Limit 3.",
-                                                choices=TECHNIQUE_CHOICES,
+    location = forms.CharField(label=_("LOCATION"), max_length=64)
+    playside = forms.ChoiceField(label=_("PLAYSIDE"), choices=PLAYSIDE_CHOICES)
+    best_techniques = forms.MultipleChoiceField(label=_("MOST INSANE TECHNIQUES"),
+                                                help_text=_("Limit 3."),
+                                                choices=localize_choices(TECHNIQUE_CHOICES),
                                                 widget=forms.CheckboxSelectMultiple(),
                                                 required=False)
 
@@ -25,12 +25,12 @@ class RegisterForm(forms.Form):
         super(RegisterForm, self).is_valid()
         data = self.cleaned_data
         if data.get('password') != data.get('reenter_password'):
-            self.add_error('password', 'Passwords do not match.')
-            self.add_error('reenter_password', 'Passwords do not match.')
+            self.add_error('password', _('Passwords do not match.'))
+            self.add_error('reenter_password', _('Passwords do not match.'))
             return False
 
         if len(data.get('best_techniques')) > 3:
-            self.add_error('best_techniques', 'Please select no more than 3.')
+            self.add_error('best_techniques', _('Please select no more than 3.'))
             return False
 
         return True
@@ -91,6 +91,6 @@ class ReviewForm(forms.Form):
             rating = self.cleaned_data.get(field)
             if rating is not None and not min_rating <= rating <= max_rating:
                 self.add_error(field,
-                               'Please rate within 2.0 of actual difficulty.')
+                               _('Please rate within 2.0 of actual difficulty.'))
                 return False
         return True

@@ -2,6 +2,7 @@
 
 {% load bootstrap3 %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
     <br><br><br>
@@ -12,5 +13,5 @@
     </div>
     <br>
     <br>
-    <div align="center">please direct questions/suggestions to dybbuk via PM or IRC.</div>
+    <div align="center">{% trans 'please direct questions/suggestions to dybbuk via PM or IRC (or find me on your favorite social network via the main page of this site)' %}</div>
 {% endblock %}
