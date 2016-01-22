@@ -251,6 +251,7 @@ def generate_review_form(user, chart_id, form_data=None):
                                         'exhc_rating',
                                         'score_rating',
                                         'characteristics',
+                                        'difficulty_spike',
                                         'recommended_options']}
                     form = ReviewForm(data)
                     has_reviewed = True

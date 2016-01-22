@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-22 12:48+0000\n"
+"POT-Creation-Date: 2016-01-22 14:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,105 +58,105 @@ msgstr "トリル"
 msgid "Chords"
 msgstr "同時押し"
 
-#: statistik/constants.py:28
+#: statistik/constants.py:29
 msgid "Beginning"
 msgstr "序盤発狂"
 
-#: statistik/constants.py:29
+#: statistik/constants.py:30
 msgid "Middle"
 msgstr "中盤発狂"
 
-#: statistik/constants.py:30
+#: statistik/constants.py:31
 msgid "End"
 msgstr "ラス殺し"
 
-#: statistik/constants.py:114
+#: statistik/constants.py:115
 msgid "Regular"
 msgstr "正"
 
-#: statistik/constants.py:115
+#: statistik/constants.py:116
 msgid "Random"
 msgstr "乱"
 
-#: statistik/constants.py:116
+#: statistik/constants.py:117
 msgid "S-Random"
 msgstr "S乱"
 
-#: statistik/constants.py:117
+#: statistik/constants.py:118
 msgid "R-Random"
 msgstr "R乱"
 
-#: statistik/constants.py:118
+#: statistik/constants.py:119
 msgid "Mirror"
 msgstr "鏡"
 
-#: statistik/constants.py:119
+#: statistik/constants.py:120
 msgid "Flip"
 msgstr "FLIP"
 
-#: statistik/constants.py:120
+#: statistik/constants.py:121
 msgid "Regular Left"
 msgstr "正(1P)"
 
-#: statistik/constants.py:121
+#: statistik/constants.py:122
 msgid "Random Left"
 msgstr "乱(1P)"
 
-#: statistik/constants.py:122
+#: statistik/constants.py:123
 msgid "S-Random Left"
 msgstr "S乱(1P)"
 
-#: statistik/constants.py:123
+#: statistik/constants.py:124
 msgid "R-Random Left"
 msgstr "R乱(1P)"
 
-#: statistik/constants.py:124
+#: statistik/constants.py:125
 msgid "Mirror Left"
 msgstr "鏡(1P)"
 
-#: statistik/constants.py:125
+#: statistik/constants.py:126
 msgid "Regular Right"
 msgstr "正(2P)"
 
-#: statistik/constants.py:126
+#: statistik/constants.py:127
 msgid "Random Right"
 msgstr "乱(2P)"
 
-#: statistik/constants.py:127
+#: statistik/constants.py:128
 msgid "S-Random Right"
 msgstr "S乱(2P)"
 
-#: statistik/constants.py:128
+#: statistik/constants.py:129
 msgid "R-Random Right"
 msgstr "R乱(2P)"
 
-#: statistik/constants.py:129
+#: statistik/constants.py:130
 msgid "Mirror Right"
 msgstr "鏡(2P)"
 
-#: statistik/controller.py:540 statistik/views.py:40 statistik/views.py:41
+#: statistik/controller.py:541 statistik/views.py:40 statistik/views.py:41
 msgid "INDEX"
 msgstr "ホームページ"
 
-#: statistik/controller.py:543
+#: statistik/controller.py:544
 #, python-format
 msgid "ALL %(level)d☆ %(style)s"
 msgstr "%(style)s %(level)d☆のすべて"
 
-#: statistik/controller.py:549
+#: statistik/controller.py:550
 #, python-format
 msgid "ALL %(version)s %(style)s"
 msgstr "%(style)s %(version)sのすべて"
 
-#: statistik/controller.py:555 statistik/views.py:37 statistik/views.py:219
+#: statistik/controller.py:556 statistik/views.py:37 statistik/views.py:219
 msgid "USER LIST"
 msgstr "ユーザーリスト"
 
-#: statistik/controller.py:562 statistik/views.py:167
+#: statistik/controller.py:563 statistik/views.py:167
 msgid " LIST"
 msgstr "楽曲一覧"
 
-#: statistik/controller.py:566 statistik/views.py:173
+#: statistik/controller.py:567 statistik/views.py:173
 msgid " MATCHING"
 msgstr "マッチング"
 
@@ -368,3 +368,6 @@ msgstr "ここにユーザー情報を編集して下さい"
 #: templates/userlist.html:19
 msgid "click a username to view their reviews."
 msgstr "ユーザーネームをクリックすると評価一覧が見えます"
+
+#~ msgid "None"
+#~ msgstr "代名詞"

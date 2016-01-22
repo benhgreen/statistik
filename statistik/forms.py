@@ -61,9 +61,9 @@ class ReviewForm(forms.Form):
                                     required=False,
                                     validators=RATING_VALIDATORS)
 
-    difficulty_spike = forms.MultipleChoiceField(label=_('DIFFICULTY FOCUS'),
-                                                 required=False,
-                                                 choices=DIFFICULTY_SPIKE_CHOICES)
+    difficulty_spike = forms.ChoiceField(label=_('DIFFICULTY FOCUS'),
+                                         required=False,
+                                         choices=DIFFICULTY_SPIKE_CHOICES)
 
     characteristics = forms.MultipleChoiceField(label=_("CHARACTERISTICS"),
                                                 choices=localize_choices(TECHNIQUE_CHOICES),

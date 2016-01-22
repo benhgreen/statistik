@@ -25,9 +25,10 @@ TECHNIQUE_CHOICES = [
 ]
 
 DIFFICULTY_SPIKE_CHOICES = [
-    (0, _('Beginning')),
-    (1, _('Middle')),
-    (2, _('End'))
+    (0, ''),
+    (1, _('Beginning')),
+    (2, _('Middle')),
+    (3, _('End'))
 ]
 
 SCORE_CATEGORY_CHOICES = [
