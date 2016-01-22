@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-22 15:03+0000\n"
+"POT-Creation-Date: 2016-01-22 15:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -217,26 +217,26 @@ msgid "Optional, limit 256 characters."
 msgstr "任意・最大256字"
 
 #: statistik/forms.py:47 templates/chart.html:22 templates/ratings.html:59
-#: templates/user.html:25
+#: templates/user.html:26
 msgid "NC RATING"
 msgstr "難易度(ノマゲ)"
 
 #: statistik/forms.py:51 templates/chart.html:23 templates/ratings.html:60
-#: templates/user.html:26
+#: templates/user.html:27
 msgid "HC RATING"
 msgstr "難易度(HARD)"
 
 #: statistik/forms.py:55 templates/chart.html:24 templates/ratings.html:61
-#: templates/user.html:27
+#: templates/user.html:28
 msgid "EXHC RATING"
 msgstr "難易度(EXHARD)"
 
 #: statistik/forms.py:59 templates/chart.html:25 templates/ratings.html:62
-#: templates/user.html:28
+#: templates/user.html:29
 msgid "SCORE RATING"
 msgstr "難易度(スコア)"
 
-#: statistik/forms.py:64 templates/chart.html:20
+#: statistik/forms.py:64 templates/chart.html:20 templates/user.html:24
 msgid "DIFFICULTY FOCUS"
 msgstr "発狂ポイント"
 
@@ -296,7 +296,7 @@ msgstr "新規登録"
 msgid "USER"
 msgstr "ユーザーリスト"
 
-#: templates/chart.html:21 templates/user.html:24
+#: templates/chart.html:21 templates/user.html:25
 msgid "RECOMMENDED OPTIONS"
 msgstr "おすすめのOP"
 
@@ -361,7 +361,7 @@ msgstr "赤い難易度はclickagainで参考されています"
 msgid "NOTE COUNT"
 msgstr "ノート数"
 
-#: templates/user.html:72
+#: templates/user.html:74
 msgid "edit your info here."
 msgstr "ここにユーザー情報を編集して下さい"
 
