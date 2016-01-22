@@ -334,6 +334,8 @@ def get_reviews_for_chart(chart_id):
             'exhc_rating': review.exhc_rating,
             'score_rating': review.score_rating,
 
+            'difficulty_spike': _(review.get_difficulty_spike_display()),
+
             'characteristics': [
                 (_(TECHNIQUE_CHOICES[x][1]), '#187638')
                 if x in review.user.userprofile.best_techniques
@@ -370,6 +372,8 @@ def get_reviews_for_user(user_id):
             'hc_rating': review.hc_rating,
             'exhc_rating': review.exhc_rating,
             'score_rating': review.score_rating,
+
+            'difficulty_spike': _(review.get_difficulty_spike_display()),
 
             'characteristics': [
                 (TECHNIQUE_CHOICES[x][1], '#187638')
