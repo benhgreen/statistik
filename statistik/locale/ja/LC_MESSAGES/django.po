@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-22 12:19+0000\n"
+"POT-Creation-Date: 2016-01-22 12:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -152,6 +152,14 @@ msgstr "%(style)s %(version)sのすべて"
 msgid "USER LIST"
 msgstr "ユーザーリスト"
 
+#: statistik/controller.py:562 statistik/views.py:167
+msgid " LIST"
+msgstr "レート一覧"
+
+#: statistik/controller.py:566 statistik/views.py:173
+msgid " MATCHING"
+msgstr "マッチング"
+
 #: statistik/forms.py:9 templates/userlist.html:25
 msgid "USERNAME"
 msgstr "ユーザーリスト"
@@ -211,9 +219,7 @@ msgstr "任意・最大256字"
 #: statistik/forms.py:47 templates/chart.html:21 templates/ratings.html:59
 #: templates/user.html:25
 msgid "NC RATING"
-msgstr ""
-"難易度\n"
-"(ノマゲ)"
+msgstr "難易度(ノマゲ)"
 
 #: statistik/forms.py:51 templates/chart.html:22 templates/ratings.html:60
 #: templates/user.html:26
@@ -231,14 +237,18 @@ msgid "SCORE RATING"
 msgstr "難易度(スコア)"
 
 #: statistik/forms.py:64
+msgid "DIFFICULTY FOCUS"
+msgstr ""
+
+#: statistik/forms.py:68
 msgid "CHARACTERISTICS"
 msgstr "特徴"
 
-#: statistik/forms.py:70
+#: statistik/forms.py:74
 msgid "RECOMMENDED OPTIONS (FOR YOUR PLAY SIDE)"
 msgstr "おすすめのOP(あなたのプレーサイド)"
 
-#: statistik/forms.py:94
+#: statistik/forms.py:98
 msgid "Please rate within 2.0 of actual difficulty."
 msgstr ""
 
@@ -249,14 +259,6 @@ msgstr "標準レート"
 #: statistik/views.py:36
 msgid "ELO RATINGS"
 msgstr "ELO式レート"
-
-#: statistik/views.py:167
-msgid " LIST"
-msgstr "レート一覧"
-
-#: statistik/views.py:173
-msgid " MATCHING"
-msgstr "マッチング"
 
 #: statistik/views.py:207
 msgid "REVIEWS"
@@ -314,10 +316,9 @@ msgstr "動詞"
 msgid "RANK"
 msgstr "順位"
 
-#: templates/elo_rating.html:31
-#, fuzzy
-#| msgid "SONG TITLE"
-msgid "TITLE"
+#: templates/elo_rating.html:31 templates/ratings.html:57
+#: templates/user.html:21
+msgid "SONG TITLE"
 msgstr "タイトル"
 
 #: templates/elo_rating.html:32
@@ -341,16 +342,12 @@ msgid "PASS"
 msgstr "スキップ"
 
 #: templates/index.html:16
-msgid ""
-"please direct questions/suggestions to dybbuk via PM or IRC (or find me on "
-"your favorite social network via the main page of this site)"
+msgid "please direct questions/suggestions to dybbuk via PM or IRC (or find me on your favorite social network via the main page of this site)"
 msgstr ""
 
 #: templates/ratings.html:45
 msgid "songs are rated from 1.0 to 14.0 (13.0 = 12.11)"
-msgstr ""
-"楽曲の難易度は1.0から14.0まででレートされています(13.0は clickagainの12.11と"
-"同じ)"
+msgstr "楽曲の難易度は1.0から14.0まででレートされています(13.0は clickagainの12.11と同じ)"
 
 #: templates/ratings.html:46
 msgid "click a song's title for more info, or click table headers to sort."
@@ -359,10 +356,6 @@ msgstr "詳しくは楽曲のタイトルをクリック。ヘッダーをクリ
 #: templates/ratings.html:47
 msgid "red ratings indicate clickagain as default"
 msgstr "赤い難易度はclickagainで参考されています"
-
-#: templates/ratings.html:57 templates/user.html:21
-msgid "SONG TITLE"
-msgstr "タイトル"
 
 #: templates/ratings.html:58
 msgid "NOTE COUNT"

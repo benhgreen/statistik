@@ -69,6 +69,8 @@ class Review(models.Model):
                                     validators=RATING_VALIDATORS)
     score_rating = models.FloatField(null=True,
                                      validators=RATING_VALIDATORS)
+    # difficulty_spike = models.SmallIntegerField(null=True,
+    #                                             choices=DIFFICULTY_SPIKE_CHOICES)
     characteristics = ArrayField(
         models.IntegerField(choices=TECHNIQUE_CHOICES), null=True)
     # difficulty_spike = ArrayField(

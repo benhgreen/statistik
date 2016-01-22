@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
     RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING, \
-    localize_choices
+    localize_choices, DIFFICULTY_SPIKE_CHOICES
 
 
 class RegisterForm(forms.Form):
@@ -60,6 +60,10 @@ class ReviewForm(forms.Form):
                                     help_text=RANGE_HELP_TEXT,
                                     required=False,
                                     validators=RATING_VALIDATORS)
+
+    difficulty_spike = forms.MultipleChoiceField(label=_('DIFFICULTY FOCUS'),
+                                                 required=False,
+                                                 choices=DIFFICULTY_SPIKE_CHOICES)
 
     characteristics = forms.MultipleChoiceField(label=_("CHARACTERISTICS"),
                                                 choices=localize_choices(TECHNIQUE_CHOICES),
