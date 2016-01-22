@@ -56,7 +56,7 @@ msgstr "トリル"
 
 #: statistik/constants.py:24
 msgid "Chords"
-msgstr "同時推し"
+msgstr "同時押し"
 
 #: statistik/constants.py:28
 msgid "Beginning"
@@ -92,7 +92,7 @@ msgstr "鏡"
 
 #: statistik/constants.py:119
 msgid "Flip"
-msgstr "動詞"
+msgstr "FLIP"
 
 #: statistik/constants.py:120
 msgid "Regular Left"
@@ -154,7 +154,7 @@ msgstr "ユーザーリスト"
 
 #: statistik/controller.py:562 statistik/views.py:167
 msgid " LIST"
-msgstr "レート一覧"
+msgstr "楽曲一覧"
 
 #: statistik/controller.py:566 statistik/views.py:173
 msgid " MATCHING"
@@ -198,11 +198,11 @@ msgstr "最大3つ"
 
 #: statistik/forms.py:28 statistik/forms.py:29
 msgid "Passwords do not match."
-msgstr ""
+msgstr "パスワードが一致しません"
 
 #: statistik/forms.py:33
 msgid "Please select no more than 3."
-msgstr "最大3つ"
+msgstr "3つ以上を選ばないでください"
 
 #: statistik/forms.py:40
 msgid "Range: 1.0-14.0."
@@ -238,7 +238,7 @@ msgstr "難易度(スコア)"
 
 #: statistik/forms.py:64
 msgid "DIFFICULTY FOCUS"
-msgstr ""
+msgstr "発狂ポイント"
 
 #: statistik/forms.py:68
 msgid "CHARACTERISTICS"
@@ -250,19 +250,19 @@ msgstr "おすすめのOP(あなたのプレーサイド)"
 
 #: statistik/forms.py:98
 msgid "Please rate within 2.0 of actual difficulty."
-msgstr ""
+msgstr "実際の難易度の2.0以内評価してください"
 
 #: statistik/views.py:35
 msgid "STANDARD RATINGS"
-msgstr "標準レート"
+msgstr "標準評価"
 
 #: statistik/views.py:36
 msgid "ELO RATINGS"
-msgstr "ELO式レート"
+msgstr "ELO式評価"
 
 #: statistik/views.py:207
 msgid "REVIEWS"
-msgstr "レート一覧"
+msgstr "レビュー評価一覧"
 
 #: statistik/views.py:254
 msgid "REGISTRATION"
@@ -302,7 +302,7 @@ msgstr "おすすめのOP"
 
 #: templates/chart.html:57
 msgid "please only rate clears you have achieved."
-msgstr "楽曲をクリアできないとレートを遠慮してください"
+msgstr "楽曲がクリアできないと評価を遠慮してください"
 
 #: templates/chart.html:62 templates/register.html:17
 msgid "submit"
@@ -310,7 +310,7 @@ msgstr "投稿"
 
 #: templates/chart.html:65
 msgid "delete"
-msgstr "動詞"
+msgstr "削除"
 
 #: templates/elo_rating.html:30
 msgid "RANK"
@@ -323,19 +323,19 @@ msgstr "タイトル"
 
 #: templates/elo_rating.html:32
 msgid "RATING"
-msgstr "レート"
+msgstr "難易度"
 
 #: templates/elo_rating.html:46
 msgid "select the more difficult chart."
-msgstr "より難しい楽曲を選んでください"
+msgstr "より難しい譜面を選んでください"
 
 #: templates/elo_rating.html:49
 msgid "click a song title to view its ratings."
-msgstr "難易度を見るとタイトルをクリック"
+msgstr "楽曲の難易度を見るためにタイトルをクリックしてください"
 
 #: templates/elo_rating.html:55
 msgid "DRAW"
-msgstr "両方"
+msgstr "引き分け"
 
 #: templates/elo_rating.html:56
 msgid "PASS"
@@ -343,15 +343,15 @@ msgstr "スキップ"
 
 #: templates/index.html:16
 msgid "please direct questions/suggestions to dybbuk via PM or IRC (or find me on your favorite social network via the main page of this site)"
-msgstr ""
+msgstr "質問やおすすめがあったらPMかIRCでdybbukに連絡して下さい"
 
 #: templates/ratings.html:45
 msgid "songs are rated from 1.0 to 14.0 (13.0 = 12.11)"
-msgstr "楽曲の難易度は1.0から14.0まででレートされています(13.0は clickagainの12.11と同じ)"
+msgstr "楽曲の難易度は1.0から14.0まで評価されています(13.0は clickagainの12.11と同じ)"
 
 #: templates/ratings.html:46
 msgid "click a song's title for more info, or click table headers to sort."
-msgstr "詳しくは楽曲のタイトルをクリック。ヘッダーをクリックしてソートします"
+msgstr "楽曲のタイトルをクリックしたら詳しく表示します。並べ替えるためにヘッダーをクリックしてください"
 
 #: templates/ratings.html:47
 msgid "red ratings indicate clickagain as default"
@@ -363,8 +363,8 @@ msgstr "ノート数"
 
 #: templates/user.html:72
 msgid "edit your info here."
-msgstr ""
+msgstr "ここにユーザー情報を編集して下さい"
 
 #: templates/userlist.html:19
 msgid "click a username to view their reviews."
-msgstr "ユーザーネームをクリックしてレート一覧を見ます"
+msgstr "ユーザーネームをクリックすると評価一覧が見えます"
