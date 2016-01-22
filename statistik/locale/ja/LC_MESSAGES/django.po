@@ -178,7 +178,7 @@ msgstr "パスワード"
 
 #: statistik/forms.py:13
 msgid "RE-ENTER PASSWORD"
-msgstr "パスワード【再入力"
+msgstr "パスワード【再入力】"
 
 #: statistik/forms.py:16 templates/userlist.html:29
 msgid "LOCATION"
