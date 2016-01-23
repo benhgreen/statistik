@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-22 15:07+0000\n"
+"POT-Creation-Date: 2016-01-23 20:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -219,22 +219,22 @@ msgstr "任意・最大256字"
 #: statistik/forms.py:47 templates/chart.html:22 templates/ratings.html:59
 #: templates/user.html:26
 msgid "NC RATING"
-msgstr "難易度(ノマゲ)"
+msgstr "難易度<br>(ノマゲ)"
 
 #: statistik/forms.py:51 templates/chart.html:23 templates/ratings.html:60
 #: templates/user.html:27
 msgid "HC RATING"
-msgstr "難易度(HARD)"
+msgstr "難易度<br>(HARD)"
 
 #: statistik/forms.py:55 templates/chart.html:24 templates/ratings.html:61
 #: templates/user.html:28
 msgid "EXHC RATING"
-msgstr "難易度(EXHARD)"
+msgstr "難易度<br>(EXHARD)"
 
 #: statistik/forms.py:59 templates/chart.html:25 templates/ratings.html:62
 #: templates/user.html:29
 msgid "SCORE RATING"
-msgstr "難易度(スコア)"
+msgstr "難易度<br>(スコア)"
 
 #: statistik/forms.py:64 templates/chart.html:20 templates/user.html:24
 msgid "DIFFICULTY FOCUS"
@@ -347,15 +347,15 @@ msgstr "質問やおすすめがあったらPMかIRCでdybbukに連絡して下�
 
 #: templates/ratings.html:45
 msgid "songs are rated from 1.0 to 14.0 (13.0 = 12.11)"
-msgstr "楽曲の難易度は1.0から14.0まで評価されています(13.0は clickagainの12.11と同じ)"
+msgstr "難易度は1.0から14.0まで評価されています。13.0はclickagainの12.11を基準にしています。"
 
 #: templates/ratings.html:46
 msgid "click a song's title for more info, or click table headers to sort."
-msgstr "楽曲のタイトルをクリックしたら詳しく表示します。並べ替えるためにヘッダーをクリックしてください"
+msgstr "曲のタイトルをクリックすると詳細が表示されます。並び替えには各ヘッダーをクリックしてください。"
 
 #: templates/ratings.html:47
 msgid "red ratings indicate clickagain as default"
-msgstr "赤い難易度はclickagainで参考されています"
+msgstr "フォントの赤い難易度はclickagainを参考にしています。"
 
 #: templates/ratings.html:58
 msgid "NOTE COUNT"
