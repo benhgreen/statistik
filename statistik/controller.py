@@ -188,14 +188,14 @@ def get_chart_data(version=None, difficulty=None, play_style=None, user=None,
             'note_count': chart.note_count,
             'difficulty': chart.difficulty,
 
-            'avg_clear_rating': avg_ratings[chart.id].get(
-                'clear_rating'),
-            'avg_hc_rating': avg_ratings[chart.id].get(
-                'hc_rating'),
-            'avg_exhc_rating': avg_ratings[chart.id].get(
-                'exhc_rating'),
-            'avg_score_rating': avg_ratings[chart.id].get(
-                'score_rating'),
+            'avg_clear_rating': str(avg_ratings[chart.id].get(
+                'clear_rating') or ""),
+            'avg_hc_rating': str(avg_ratings[chart.id].get(
+                'hc_rating') or ""),
+            'avg_exhc_rating': str(avg_ratings[chart.id].get(
+                'exhc_rating') or ""),
+            'avg_score_rating': str(avg_ratings[chart.id].get(
+                'score_rating') or ""),
 
             'game_version': chart.song.game_version,
             'game_version_display': chart.song.get_game_version_display(),
@@ -368,10 +368,10 @@ def get_reviews_for_user(user_id):
             'type_display': review.chart.get_type_display(),
             'difficulty': review.chart.difficulty,
 
-            'clear_rating': review.clear_rating,
-            'hc_rating': review.hc_rating,
-            'exhc_rating': review.exhc_rating,
-            'score_rating': review.score_rating,
+            'clear_rating': str(review.clear_rating or ""),
+            'hc_rating': str(review.hc_rating or ""),
+            'exhc_rating': str(review.exhc_rating or ""),
+            'score_rating': str(review.score_rating or ""),
 
             'difficulty_spike': _(review.get_difficulty_spike_display()),
 
