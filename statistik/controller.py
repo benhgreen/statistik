@@ -329,10 +329,10 @@ def get_reviews_for_chart(chart_id):
             'playside': review.user.userprofile.get_play_side_display(),
 
             'text': review.text,
-            'clear_rating': review.clear_rating,
-            'hc_rating': review.hc_rating,
-            'exhc_rating': review.exhc_rating,
-            'score_rating': review.score_rating,
+            'clear_rating': str(review.clear_rating or ""),
+            'hc_rating': str(review.hc_rating or ""),
+            'exhc_rating': str(review.exhc_rating or ""),
+            'score_rating': str(review.score_rating or ""),
 
             'difficulty_spike': _(review.get_difficulty_spike_display()),
 
