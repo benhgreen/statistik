@@ -334,8 +334,6 @@ def get_reviews_for_chart(chart_id):
             'exhc_rating': str(review.exhc_rating or ""),
             'score_rating': str(review.score_rating or ""),
 
-            'difficulty_spike': _(review.get_difficulty_spike_display()),
-
             'characteristics': [
                 (_(TECHNIQUE_CHOICES[x][1]), '#187638')
                 if x in review.user.userprofile.best_techniques
@@ -346,6 +344,11 @@ def get_reviews_for_chart(chart_id):
                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
                 for x in review.recommended_options])
         })
+        if review.difficulty_spike:
+            review_data[-1]['characteristics'].append(
+                    (_('Difficult ' + review.get_difficulty_spike_display()),
+                     '#000'))
+
     return review_data
 
 
@@ -373,8 +376,6 @@ def get_reviews_for_user(user_id):
             'exhc_rating': str(review.exhc_rating or ""),
             'score_rating': str(review.score_rating or ""),
 
-            'difficulty_spike': _(review.get_difficulty_spike_display()),
-
             'characteristics': [
                 (TECHNIQUE_CHOICES[x][1], '#187638')
                 if x in review.user.userprofile.best_techniques
@@ -385,6 +386,11 @@ def get_reviews_for_user(user_id):
                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
                 for x in review.recommended_options])
         })
+
+        if review.difficulty_spike:
+            review_data[-1]['characteristics'].append(
+                    (_('Difficult ' + review.get_difficulty_spike_display()),
+                     '#000'))
 
     return review_data
 

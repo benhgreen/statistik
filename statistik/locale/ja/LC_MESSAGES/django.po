@@ -59,15 +59,15 @@ msgid "Chords"
 msgstr "同時押し"
 
 #: statistik/constants.py:29
-msgid "Beginning"
+msgid "Difficult Beginning"
 msgstr "序盤発狂"
 
 #: statistik/constants.py:30
-msgid "Middle"
+msgid "Difficult Middle"
 msgstr "中盤発狂"
 
 #: statistik/constants.py:31
-msgid "End"
+msgid "Difficult End"
 msgstr "ラス殺し"
 
 #: statistik/constants.py:115
