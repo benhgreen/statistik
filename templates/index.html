@@ -6,12 +6,12 @@
 
 {% block content %}
     <br><br><br>
-    <div style="text-align: center">
+    <div style="text-align: center;width: 1100px;">
     {% for link in index_links %}
         <a href="{{ link.1 }}" style="color: #000;font-weight: 600;font-size: x-large;text-decoration: underline">//{{ link.0 }}</a><br><br><br><br>
     {% endfor %}
     </div>
     <br>
     <br>
-    <div align="center">{% trans 'please direct questions/suggestions to dybbuk via PM or IRC (or find me on your favorite social network via the main page of this site)' %}</div>
+    <div align="center" style="width: 1100px">{% trans 'please direct questions/suggestions to dybbuk via PM or IRC (or find me on your favorite social network via the main page of this site)' %}</div>
 {% endblock %}
