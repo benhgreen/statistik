@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-23 20:35+0000\n"
+"POT-Creation-Date: 2016-01-27 00:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -138,25 +138,25 @@ msgstr "鏡(2P)"
 msgid "INDEX"
 msgstr "ホームページ"
 
-#: statistik/controller.py:548
+#: statistik/controller.py:554
 #, python-format
 msgid "ALL %(level)d☆ %(style)s"
 msgstr "%(style)s %(level)d☆のすべて"
 
-#: statistik/controller.py:554
+#: statistik/controller.py:560
 #, python-format
 msgid "ALL %(version)s %(style)s"
 msgstr "%(style)s %(version)sのすべて"
 
-#: statistik/controller.py:560 statistik/views.py:37 statistik/views.py:219
+#: statistik/controller.py:566 statistik/views.py:37 statistik/views.py:219
 msgid "USER LIST"
 msgstr "ユーザーリスト"
 
-#: statistik/controller.py:567 statistik/views.py:167
+#: statistik/controller.py:573 statistik/views.py:167
 msgid " LIST"
 msgstr "楽曲一覧"
 
-#: statistik/controller.py:571 statistik/views.py:173
+#: statistik/controller.py:577 statistik/views.py:173
 msgid " MATCHING"
 msgstr "マッチング"
 
@@ -216,27 +216,23 @@ msgstr "意見"
 msgid "Optional, limit 256 characters."
 msgstr "任意・最大256字"
 
-#: statistik/forms.py:47 templates/chart.html:22 templates/ratings.html:59
-#: templates/user.html:26
+#: statistik/forms.py:47 templates/chart.html:21
 msgid "NC RATING"
-msgstr "難易度<br>(ノマゲ)"
+msgstr "難易度(ノマゲ)"
 
-#: statistik/forms.py:51 templates/chart.html:23 templates/ratings.html:60
-#: templates/user.html:27
+#: statistik/forms.py:51 templates/chart.html:22
 msgid "HC RATING"
-msgstr "難易度<br>(HARD)"
+msgstr "難易度(HARD)"
 
-#: statistik/forms.py:55 templates/chart.html:24 templates/ratings.html:61
-#: templates/user.html:28
+#: statistik/forms.py:55 templates/chart.html:23
 msgid "EXHC RATING"
-msgstr "難易度<br>(EXHARD)"
+msgstr "難易度(EXHARD)"
 
-#: statistik/forms.py:59 templates/chart.html:25 templates/ratings.html:62
-#: templates/user.html:29
+#: statistik/forms.py:59 templates/chart.html:24
 msgid "SCORE RATING"
-msgstr "難易度<br>(スコア)"
+msgstr "難易度(スコア)"
 
-#: statistik/forms.py:64 templates/chart.html:20 templates/user.html:24
+#: statistik/forms.py:64
 msgid "DIFFICULTY FOCUS"
 msgstr "発狂ポイント"
 
@@ -296,19 +292,19 @@ msgstr "新規登録"
 msgid "USER"
 msgstr "ユーザーリスト"
 
-#: templates/chart.html:21 templates/user.html:25
+#: templates/chart.html:20 templates/user.html:24
 msgid "RECOMMENDED OPTIONS"
 msgstr "おすすめのOP"
 
-#: templates/chart.html:59
+#: templates/chart.html:60
 msgid "please only rate clears you have achieved."
 msgstr "楽曲がクリアできないと評価を遠慮してください"
 
-#: templates/chart.html:64 templates/register.html:17
+#: templates/chart.html:65 templates/register.html:17
 msgid "submit"
 msgstr "投稿"
 
-#: templates/chart.html:67
+#: templates/chart.html:68
 msgid "delete"
 msgstr "削除"
 
@@ -361,16 +357,26 @@ msgstr "フォントの赤い難易度はclickagainを参考にしています�
 msgid "NOTE COUNT"
 msgstr "ノート数"
 
-#: templates/user.html:74
+#: templates/ratings.html:59 templates/user.html:25
+msgid "NC RATING "
+msgstr "難易度<br>(ノマゲ)"
+
+#: templates/ratings.html:60 templates/user.html:26
+msgid "HC RATING "
+msgstr "難易度<br>(HARD)"
+
+#: templates/ratings.html:61 templates/user.html:27
+msgid "EXHC RATING "
+msgstr "難易度<br>(EXHARD)"
+
+#: templates/ratings.html:62 templates/user.html:28
+msgid "SCORE RATING "
+msgstr "難易度<br>(スコア)"
+
+#: templates/user.html:75
 msgid "edit your info here."
 msgstr "ここにユーザー情報を編集して下さい"
 
 #: templates/userlist.html:19
 msgid "click a username to view their reviews."
 msgstr "ユーザーネームをクリックすると評価一覧が見えます"
-
-#~ msgid "FOCUS"
-#~ msgstr "発狂ポイント"
-
-#~ msgid "None"
-#~ msgstr "代名詞"
