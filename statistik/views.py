@@ -48,6 +48,7 @@ def ratings_view(request):
     Assemble ratings page. Possible filters include difficulty and version.
     :rtype dict: Context including chart data
     """
+    game = int(request.GET.get('game', 0))
     difficulty = request.GET.get('difficulty')
     version = request.GET.get('version')
     play_style = request.GET.get('style', 'SP')
@@ -70,13 +71,14 @@ def ratings_view(request):
     if version:
         title_elements.append(FULL_VERSION_NAMES[int(version)].upper())
     if difficulty or not (difficulty or version):
+        title_elements.insert(0, {0: 'IIDX', 1: 'DDR'}[game])
         title_elements.append('LV. ' + str(difficulty or 12))
     title_elements.append(play_style)
     create_page_title(context, title_elements)
 
     # create version/level navigator to display above songlist
-    context['versions'] = generate_version_urls()
-    context['levels'] = generate_level_urls()
+    context['versions'] = generate_version_urls(game)
+    context['levels'] = generate_level_urls(game)
 
     context['nav_links'] = make_nav_links()
 

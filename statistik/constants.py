@@ -77,7 +77,25 @@ VERSION_CHOICES = [
     (20, 'TRI'),
     (21, 'SPD'),
     (22, 'PEN'),
-    (23, 'COP')
+    (23, 'COP'),
+
+
+    (101, '1st'),
+    (102, '2nd'),
+    (103, '3rd'),
+    (104, '4th'),
+    (105, '5th'),
+    (106, 'MAX'),
+    (107, 'MAX2'),
+    (108, 'EXT'),
+    (109, 'SN'),
+    (110, 'SN2'),
+    (111, 'X'),
+    (112, 'X2'),
+    (113, 'X3'),
+    (114, '2013'),
+    (115, '2014'),
+    (116, 'A')
 ]
 
 FULL_VERSION_NAMES = {
@@ -103,7 +121,24 @@ FULL_VERSION_NAMES = {
     20: 'Tricoro',
     21: 'Spada',
     22: 'Pendual',
-    23: 'Copula'
+    23: 'Copula',
+    
+    101: '1stMIX',
+    102: '2ndMIX',
+    103: '3rdMIX',
+    104: '4thMIX',
+    105: '5thMIX',
+    106: 'DDRMAX',
+    107: 'DDRMAX2',
+    108: 'DDR EXTREME',
+    109: 'DDR SuperNOVA',
+    110: 'DDR SuperNOVA2',
+    111: 'DDR X',
+    112: 'DDR X2',
+    113: 'DDR X3',
+    114: 'DDR 2013',
+    115: 'DDR 2014',
+    116: 'DDR A'
 }
 
 PLAYSIDE_CHOICES = [
@@ -136,22 +171,22 @@ def localize_choices(choices):
     return [(choice[0], _(choice[1])) for choice in choices]
 
 
-def generate_version_urls():
+def generate_version_urls(game):
     """
     Generate urls for ratings page based on VERSION_CHOICES
     :rtype list: List of tuples containing version abbreviation and link
     """
-    return [(version[1], reverse('ratings') + "?version=%d" % version[0])
-            for version in VERSION_CHOICES]
+    return [(version[1], reverse('ratings') + "?version=%d&game=%d" % (version[0], game))
+            for version in VERSION_CHOICES if version[0]//100 == game]
 
 
-def generate_level_urls():
+def generate_level_urls(game):
     """
     Generate urls for ratings page based on levels (1-12)
     :rtype list: List of tuples containing level number and link
     """
-    return [(level, reverse('ratings') + "?difficulty=%d" % level)
-            for level in range(1,13)]
+    return [(level, reverse('ratings') + "?difficulty=%d&game=%d" % (level, game))
+            for level in range(1,{0: 13, 1: 20}[game])]
 
 
 def generate_elo_level_urls():
