@@ -1,10 +1,7 @@
 import json
-
 import re
 import requests
-from django.conf import settings
 from bs4 import BeautifulSoup
-from statistik.models import Song, Chart
 
 TITLES_PAGE = 'https://zenius-i-vanisher.com/v5.2/gamedb.php?gameid=1129'
 NOTECOUNTS_PAGE = 'https://zenius-i-vanisher.com/v5.2/gamedb.php?gameid=1129&show_notecounts=1&sort=&sort_order=asc'
