@@ -293,5 +293,6 @@ def search_view(request):
         if form.is_valid():
             return redirect('ratings')
     else:
-        form = SearchForm()
+        form = SearchForm(initial={'min_level': 0,
+                                   'max_level': 12})
     return render(request, 'search.html', {'form': form})

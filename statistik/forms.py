@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
     RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING, \
-    localize_choices, DIFFICULTY_SPIKE_CHOICES, FULL_VERSION_NAMES
+    localize_choices, DIFFICULTY_SPIKE_CHOICES, FULL_VERSION_NAMES, DIFFICULTY_LEVEL_CHOICES, RATING_CHOICES
 
 
 class RegisterForm(forms.Form):
@@ -99,11 +99,82 @@ class ReviewForm(forms.Form):
                 return False
         return True
 
+
 class SearchForm(forms.Form):
-    song_title = forms.CharField(label=_("SONG TITLE"),
-                                 max_length=100,
+    title = forms.CharField(label=_("TITLE"),
+                            max_length=100,
+
+                            required=False)
+    artist = forms.CharField(label=_("ARTIST"),
+                             max_length=50,
+                             required=False)
+
+    genre = forms.CharField(label=_("GENRE"),
+                            max_length=50,
+                            required=False)
+
+    min_level = forms.ChoiceField(label=_("MIN LEVEL"),
+                                  choices=[(i, str(i)) for i in range(1, 13)],
+                                  validators=RATING_VALIDATORS,
+                                  required=False)
+
+    max_level = forms.ChoiceField(label=_("MAX LEVEL"),
+                                  choices=[(i, str(i)) for i in range(1, 13)],
+                                  validators=RATING_VALIDATORS,
+                                  required=False)
+
+    min_nc = forms.ChoiceField(label=_("MIN NC RATING"),
+                               choices=RATING_CHOICES,
+                               validators=RATING_VALIDATORS,
+                               required=False)
+
+    max_nc = forms.ChoiceField(label=_("MAX NC RATING"),
+                               choices=RATING_CHOICES,
+                               validators=RATING_VALIDATORS,
+                               required=False)
+
+    min_hc = forms.ChoiceField(label=_("MIN HC RATING"),
+                               choices=RATING_CHOICES,
+                               validators=RATING_VALIDATORS,
+                               required=False)
+
+    max_hc = forms.ChoiceField(label=_("MAX HC RATING"),
+                               choices=RATING_CHOICES,
+                               validators=RATING_VALIDATORS,
+                               required=False)
+
+    min_exhc = forms.ChoiceField(label=_("MIN EXHC RATING"),
+                                 choices=RATING_CHOICES,
+                                 validators=RATING_VALIDATORS,
                                  required=False)
+
+    max_exhc = forms.ChoiceField(label=_("MAX EXHC RATING"),
+                                 choices=RATING_CHOICES,
+                                 validators=RATING_VALIDATORS,
+                                 required=False)
+
+    difficulty = forms.MultipleChoiceField(label=_("DIFFICULTY"),
+                                           choices=DIFFICULTY_LEVEL_CHOICES,
+                                           widget=forms.CheckboxSelectMultiple,
+                                           required=False)
+
     version = forms.MultipleChoiceField(label=_("VERSION"),
                                         choices=[(i, FULL_VERSION_NAMES[i]) for i in FULL_VERSION_NAMES],
                                         widget=forms.CheckboxSelectMultiple(),
                                         required=False)
+
+    def is_valid(self):
+        super(SearchForm, self).is_valid()
+        data = self.cleaned_data
+        for (minimum, maximum) in [('min_level', 'max_level'),
+                                   ('min_nc', 'max_nc'),
+                                   ('min_hc', 'max_hc'),
+                                   ('min_exhc', 'max_exhc')]:
+            min_level = data.get(minimum)
+            max_level = data.get(maximum)
+            if min_level and max_level and max_level < min_level:
+                for field in [minimum, maximum]:
+                    self.add_error(field,
+                                   '%s must be higher than %s.' % (minimum, maximum))
+                return False
+        return True
