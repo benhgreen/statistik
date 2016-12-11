@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load bootstrap3 %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+    <br><br><br>
+{#    <div style="text-align: center;width: 1100px;">#}
+    <form action="/search/" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Search">
+    </form>
+{#    </div>#}
+    <br>
+    <br>
+{% endblock %}

@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
     RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING, \
-    localize_choices, DIFFICULTY_SPIKE_CHOICES
+    localize_choices, DIFFICULTY_SPIKE_CHOICES, FULL_VERSION_NAMES
 
 
 class RegisterForm(forms.Form):
@@ -98,3 +98,12 @@ class ReviewForm(forms.Form):
                                _('Please rate within 2.0 of actual difficulty.'))
                 return False
         return True
+
+class SearchForm(forms.Form):
+    song_title = forms.CharField(label=_("SONG TITLE"),
+                                 max_length=100,
+                                 required=False)
+    version = forms.MultipleChoiceField(label=_("VERSION"),
+                                        choices=[(i, FULL_VERSION_NAMES[i]) for i in FULL_VERSION_NAMES],
+                                        widget=forms.CheckboxSelectMultiple(),
+                                        required=False)

@@ -21,7 +21,7 @@ from statistik.controller import (get_chart_data, generate_review_form,
                                   get_elo_rankings, make_elo_matchup,
                                   create_page_title, make_nav_links,
                                   generate_user_form, delete_review)
-from statistik.forms import RegisterForm
+from statistik.forms import RegisterForm, SearchForm
 
 
 def index(request):
@@ -34,7 +34,8 @@ def index(request):
         'index_links': [
             (_('STANDARD RATINGS'), reverse('ratings')),
             (_('ELO RATINGS'), reverse('elo')),
-            (_('USER LIST'), reverse('users'))
+            (_('USER LIST'), reverse('users')),
+            (_('SEARCH'), reverse('search'))
         ],
 
         'title': 'STATISTIK // ' + _('INDEX'),
@@ -281,3 +282,16 @@ def logout_view(request):
     """
     logout(request)
     return redirect('index')
+
+def search_view(request):
+    """
+    Gives the user a search form on GET and redirects to results on POST
+    :param request: Request to handle
+    """
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            return redirect('ratings')
+    else:
+        form = SearchForm()
+    return render(request, 'search.html', {'form': form})
