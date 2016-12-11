@@ -116,41 +116,49 @@ class SearchForm(forms.Form):
     min_level = forms.ChoiceField(label=_("MIN LEVEL"),
                                   choices=[(i, str(i)) for i in range(1, 13)],
                                   validators=RATING_VALIDATORS,
+                                  initial=1,
                                   required=False)
 
     max_level = forms.ChoiceField(label=_("MAX LEVEL"),
                                   choices=[(i, str(i)) for i in range(1, 13)],
                                   validators=RATING_VALIDATORS,
+                                  initial=12,
                                   required=False)
 
     min_nc = forms.ChoiceField(label=_("MIN NC RATING"),
                                choices=RATING_CHOICES,
                                validators=RATING_VALIDATORS,
+                               initial=MIN_RATING,
                                required=False)
 
     max_nc = forms.ChoiceField(label=_("MAX NC RATING"),
                                choices=RATING_CHOICES,
                                validators=RATING_VALIDATORS,
+                               initial=MAX_RATING,
                                required=False)
 
     min_hc = forms.ChoiceField(label=_("MIN HC RATING"),
                                choices=RATING_CHOICES,
                                validators=RATING_VALIDATORS,
+                               initial=MIN_RATING,
                                required=False)
 
     max_hc = forms.ChoiceField(label=_("MAX HC RATING"),
                                choices=RATING_CHOICES,
                                validators=RATING_VALIDATORS,
+                               initial=MAX_RATING,
                                required=False)
 
     min_exhc = forms.ChoiceField(label=_("MIN EXHC RATING"),
                                  choices=RATING_CHOICES,
                                  validators=RATING_VALIDATORS,
+                                 initial=MIN_RATING,
                                  required=False)
 
     max_exhc = forms.ChoiceField(label=_("MAX EXHC RATING"),
                                  choices=RATING_CHOICES,
                                  validators=RATING_VALIDATORS,
+                                 initial=MAX_RATING,
                                  required=False)
 
     difficulty = forms.MultipleChoiceField(label=_("DIFFICULTY"),
