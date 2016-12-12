@@ -124,7 +124,8 @@ def get_charts_by_ids(ids):
 
 
 def get_charts_by_query(versions=None, difficulty=None, play_style=None,
-                        min_difficulty=None, max_difficulty=None, title=None):
+                        min_difficulty=None, max_difficulty=None, title=None,
+                        genre=None, artist=None):
     """
     Chart lookup by game-related parameters
     :param versions:        Game versions to filter by (from VERSION_CHOICES)
@@ -151,6 +152,8 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
         filters['difficulty'] = difficulty
     if not (versions or difficulty or min_difficulty or max_difficulty):
         filters['difficulty'] = 12
+    if genre:
+        filters['song__genre__icontains'] = genre
 
     filters['type__in'] = {
         'SP': [0, 1, 2],
@@ -163,11 +166,15 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
     if title:
         title_query = Q(song__title__icontains=title) | Q(song__alt_title__icontains=title)
         ret = ret.filter(title_query)
+    if artist:
+        artist_query = Q(song__artist__icontains=artist) | Q(song__alt_artist__icontains=artist)
+        ret = ret.filter(artist_query)
     return ret
 
 
 def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
                    min_difficulty=None, max_difficulty=None, title=None,
+                   genre=None, artist=None,
                    include_reviews=False, ):
     """
     Retrieve chart data acc to specified params and format chart data for
@@ -182,7 +189,8 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
     :rtype list:            List of dicts containing chart data
     """
     matched_charts = get_charts_by_query(versions, difficulty, play_style,
-                                         min_difficulty, max_difficulty, title)
+                                         min_difficulty, max_difficulty, title,
+                                         genre, artist)
     matched_chart_ids = [chart.id for chart in matched_charts]
 
     # get avg ratings for the charts in the returned queryset

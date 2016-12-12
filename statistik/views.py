@@ -54,11 +54,14 @@ def ratings_view(request):
     max_difficulty = request.GET.get('max_difficulty')
     title = request.GET.get('title')
     versions = request.GET.getlist('version')
+    genre = request.GET.get('genre')
+    artist = request.GET.get('artist')
     play_style = request.GET.get('style', 'SP')
     user = request.user.id
 
     chart_data = get_chart_data(versions, difficulty, play_style, user,
                                 min_difficulty, max_difficulty, title,
+                                genre, artist,
                                 include_reviews=bool(request.GET.get('json')))
 
     if request.GET.get('json') == 'true':
