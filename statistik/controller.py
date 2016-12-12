@@ -150,8 +150,6 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
         filters['difficulty__in'] = range(1, int(max_difficulty) + 1)
     elif difficulty:
         filters['difficulty'] = difficulty
-    if not (versions or difficulty or min_difficulty or max_difficulty):
-        filters['difficulty'] = 12
     if genre:
         filters['song__genre__icontains'] = genre
 

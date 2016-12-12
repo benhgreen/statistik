@@ -59,6 +59,10 @@ def ratings_view(request):
     play_style = request.GET.get('style', 'SP')
     user = request.user.id
 
+    # show all difficulties in searches, but only 12 when going to the page normally
+    if not request.GET.get('submit') and not (difficulty or versions):
+        difficulty = 12
+
     chart_data = get_chart_data(versions, difficulty, play_style, user,
                                 min_difficulty, max_difficulty, title,
                                 genre, artist,
@@ -306,7 +310,17 @@ def search_view(request):
             # pass on the search filters to the ratings view
             # TODO: remove any unused filters to clean up the query string
             response = redirect('ratings')
-            response['Location'] += '?' + request.GET.urlencode()
+            # delete any filters left empty or at the default to clean up the URL
+            query = request.GET.copy()
+            empty = []
+            # can't delete while iterating over the query so mark them
+            for key in query:
+                if key != 'submit':
+                    if not query[key] or query[key] == str(form.fields[key].initial):
+                        empty.append(key)
+            for key in empty:
+                del(query[key])
+            response['Location'] += '?' + query.urlencode()
             return response
     else:
         form = SearchForm(initial={'min_level': 0,
