@@ -108,7 +108,7 @@ def chart_view(request):
 
     # truncate long song title
     song_title = chart.song.title if len(
-            chart.song.title) <= 15 else chart.song.title[:15] + '...'
+        chart.song.title) <= 15 else chart.song.title[:15] + '...'
 
     # assemble page title
     title_elements = [song_title,
@@ -121,7 +121,7 @@ def chart_view(request):
 
     form_data = request.POST if request.method == 'POST' else None
     context['form'], context['review_exists'] = generate_review_form(
-            request.user, chart_id, form_data)
+        request.user, chart_id, form_data)
 
     # get reviews for this chart, cache users for username and playside lookup
     context['reviews'] = get_reviews_for_chart(chart_id)
@@ -147,8 +147,8 @@ def elo_view(request):
 
     if not (display_list or request.user.is_authenticated()):
         return HttpResponseRedirect(
-                reverse('elo') + '?level=%s&type=%d&list=true' %
-                (level, clear_type))
+            reverse('elo') + '?level=%s&type=%d&list=true' %
+            (level, clear_type))
 
     # TODO extend to accommodate exhc and score types
     rate_type_column = 'elo_rating_hc' if clear_type == 1 else 'elo_rating'
@@ -183,9 +183,9 @@ def elo_view(request):
     context['is_hc_display'] = type_display
     context['level_links'] = generate_elo_level_urls()
     context['nav_links'] = make_nav_links(
-            level=int(level),
-            elo='list' if display_list else 'match',
-            clear_type=clear_type)
+        level=int(level),
+        elo='list' if display_list else 'match',
+        clear_type=clear_type)
     return render(request, 'elo_rating.html', context)
 
 
@@ -304,4 +304,6 @@ def search_view(request):
     else:
         form = SearchForm(initial={'min_level': 0,
                                    'max_level': 12})
-    return render(request, 'search.html', {'form': form})
+    context = {'form': form,
+               'nav_links': make_nav_links()}
+    return render(request, 'search.html', context)

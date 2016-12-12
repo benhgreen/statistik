@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.utils.translation import ugettext as _
-from numpy import arange
 
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
@@ -17,6 +16,7 @@ from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  localize_choices)
 from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile, EloReview
+
 
 def organize_reviews(matched_reviews, user_id):
     """
@@ -101,9 +101,9 @@ def get_avg_ratings(chart_ids, user_id=None, include_reviews=False):
                             for x in review.characteristics],
 
                         'recommended_options': ', '.join([
-                            _(RECOMMENDED_OPTIONS_CHOICES[x][1])
-                            for x in review.recommended_options])
-                                                     } for review in specific_reviews]
+                                                             _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                                                             for x in review.recommended_options])
+                    } for review in specific_reviews]
 
         # winding up here means no reviews were found for one of the charts
         # which means the template will just use '--' for all the ratings
@@ -282,6 +282,7 @@ def generate_review_form(user, chart_id, form_data=None):
             return form, has_reviewed
     return None, None
 
+
 # TODO fix this garbage up
 def generate_user_form(user, form_data=None):
     form = RegisterForm(form_data) if form_data else RegisterForm()
@@ -357,13 +358,13 @@ def get_reviews_for_chart(chart_id):
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                _(RECOMMENDED_OPTIONS_CHOICES[x][1])
-                for x in review.recommended_options])
+                                                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                                                 for x in review.recommended_options])
         })
         if review.difficulty_spike:
             review_data[-1]['characteristics'].append(
-                    (_('Difficult ' + review.get_difficulty_spike_display()),
-                     '#000'))
+                (_('Difficult ' + review.get_difficulty_spike_display()),
+                 '#000'))
 
     return review_data
 
@@ -399,14 +400,14 @@ def get_reviews_for_user(user_id):
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                _(RECOMMENDED_OPTIONS_CHOICES[x][1])
-                for x in review.recommended_options])
+                                                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                                                 for x in review.recommended_options])
         })
 
         if review.difficulty_spike:
             review_data[-1]['characteristics'].append(
-                    (_('Difficult ' + review.get_difficulty_spike_display()),
-                     '#000'))
+                (_('Difficult ' + review.get_difficulty_spike_display()),
+                 '#000'))
 
     return review_data
 
@@ -429,8 +430,8 @@ def get_user_list():
 
             'playside': user.userprofile.get_play_side_display(),
             'best_techniques': ', '.join([
-                _(TECHNIQUE_CHOICES[x][1])
-                for x in user.userprofile.best_techniques]),
+                                             _(TECHNIQUE_CHOICES[x][1])
+                                             for x in user.userprofile.best_techniques]),
 
             'location': user.userprofile.location
         })
@@ -468,29 +469,29 @@ def elo_rate_charts(chart1_id, chart2_id, user, draw=False, rate_type=0):
     """
     rate_type_display = 'elo_rating_hc' if rate_type else 'elo_rating'
     with transaction.atomic():
-            win_chart = Chart.objects.get(pk=chart1_id)
-            lose_chart = Chart.objects.get(pk=chart2_id)
+        win_chart = Chart.objects.get(pk=chart1_id)
+        lose_chart = Chart.objects.get(pk=chart2_id)
 
-            # elo magic happens here
-            elo_env = elo.Elo(k_factor=20)
-            win_chart_elo = getattr(win_chart, rate_type_display)
-            lose_chart_elo = getattr(lose_chart, rate_type_display)
-            win_rating, lose_rating = elo_env.rate_1vs1(win_chart_elo,
-                                                        lose_chart_elo,
-                                                        drawn=draw)
+        # elo magic happens here
+        elo_env = elo.Elo(k_factor=20)
+        win_chart_elo = getattr(win_chart, rate_type_display)
+        lose_chart_elo = getattr(lose_chart, rate_type_display)
+        win_rating, lose_rating = elo_env.rate_1vs1(win_chart_elo,
+                                                    lose_chart_elo,
+                                                    drawn=draw)
 
-            # update charts with new elo ratings
-            setattr(win_chart, rate_type_display, win_rating)
-            setattr(lose_chart, rate_type_display, lose_rating)
-            win_chart.save()
-            lose_chart.save()
+        # update charts with new elo ratings
+        setattr(win_chart, rate_type_display, win_rating)
+        setattr(lose_chart, rate_type_display, lose_rating)
+        win_chart.save()
+        lose_chart.save()
 
-            # record review in case ratings need to be regenerated
-            EloReview.objects.create(first=win_chart,
-                                     second=lose_chart,
-                                     drawn=draw,
-                                     type=rate_type,
-                                     created_by=user)
+        # record review in case ratings need to be regenerated
+        EloReview.objects.create(first=win_chart,
+                                 second=lose_chart,
+                                 drawn=draw,
+                                 type=rate_type,
+                                 created_by=user)
 
 
 def get_elo_rankings(level, rate_type):
@@ -500,7 +501,7 @@ def get_elo_rankings(level, rate_type):
     :param str rate_type:   Rating type (refer to Chart model for options)
     :rtype list:            List of dicts containing chart/ranking data
     """
-    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3)\
+    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3) \
         .prefetch_related('song').order_by('-' + rate_type)
 
     # assemble displayed elo info for matched charts
@@ -531,14 +532,14 @@ def make_elo_matchup(level):
     # only return closely-matched charts for better rankings
     while elo_diff > 50:
         [chart1, chart2] = random.sample(charts, 2)
-        elo_diff = abs(chart1.elo_rating-chart2.elo_rating)
+        elo_diff = abs(chart1.elo_rating - chart2.elo_rating)
 
     # assemble display info for these two charts
     return [{
-        'title': chart.song.title,
-        'type': chart.get_type_display(),
-        'id': chart.id
-    } for chart in [chart1, chart2]]
+                'title': chart.song.title,
+                'type': chart.get_type_display(),
+                'id': chart.id
+            } for chart in [chart1, chart2]]
 
 
 def create_page_title(context, title_elements):
@@ -564,7 +565,8 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
     :param int clear_type:  Rating type (refer to Chart model for options)
     :rtype list:            List of tuples of format (link text, link)
     """
-    ret = [(_('INDEX'), reverse('index'))]
+    ret = [(_('INDEX'), reverse('index')),
+           (_('SEARCH'), reverse('search'))]
     if not elo:
         if level:
             ret.append((_('ALL %(level)d☆ %(style)s') % {'level': level,
@@ -575,12 +577,12 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
             version_display = FULL_VERSION_NAMES[version].upper()
             ret.append((_('ALL %(version)s %(style)s') % {'version': version_display,
                                                           'style': style},
-                       reverse('ratings') + "?version=%d&style=%s" % (
+                        reverse('ratings') + "?version=%d&style=%s" % (
                             version, style)))
 
         if user:
             ret.append((_('USER LIST'),
-                       reverse('users')))
+                        reverse('users')))
 
     else:
         type_display = SCORE_CATEGORY_CHOICES[int(clear_type)][1]
@@ -590,7 +592,7 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
                         reverse('elo') + '?level=%d&type=%d&list=true' % (
                             level, clear_type)))
         elif elo == 'list':
-            ret.append(('ELO %d☆ %s' % (level, type_display)  +  _(' MATCHING'),
+            ret.append(('ELO %d☆ %s' % (level, type_display) + _(' MATCHING'),
                         reverse('elo') + '?level=%d&type=%d' % (
                             level, clear_type)))
 
