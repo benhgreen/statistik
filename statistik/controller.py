@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.utils.translation import ugettext as _
+from numpy import arange
+
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
                                  FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES,
@@ -120,12 +122,15 @@ def get_charts_by_ids(ids):
     return Chart.objects.filter(pk__in=ids)
 
 
-def get_charts_by_query(versions=None, difficulty=None, play_style=None):
+def get_charts_by_query(versions=None, difficulty=None, play_style=None,
+                        min_difficulty=None, max_difficulty=None):
     """
     Chart lookup by game-related parameters
-    :param versions:         Game versions to filter by (from VERSION_CHOICES)
+    :param versions:        Game versions to filter by (from VERSION_CHOICES)
     :param difficulty:      Difficulty to filter by (1-12)
     :param str play_style:  Play style to filter by (from PLAYSIDE_CHOICES)
+    :param min_difficulty:  Minimum difficulty to filter by (1-12)
+    :param max_difficulty:  Maximum difficulty to filter by (1-12)
     :rtype Queryset: Queryset of matched Chart objects
     """
 
@@ -133,8 +138,15 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None):
     # create filters for songlist based off params
     if versions:
         filters['song__game_version__in'] = versions
-    if difficulty:
-        filters['difficulty'] = int(difficulty)
+    if min_difficulty:
+        if max_difficulty:
+            filters['difficulty__in'] = range(int(min_difficulty), int(max_difficulty) + 1)
+        else:
+            filters['difficulty__in'] = range(int(min_difficulty), 13)
+    elif max_difficulty:
+        filters['difficulty__in'] = range(1, int(max_difficulty) + 1)
+    elif difficulty:
+        filters['difficulty'] = difficulty
     if not (versions or difficulty):
         filters['difficulty'] = 12
 
@@ -148,7 +160,8 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None):
 
 
 def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
-                   include_reviews=False):
+                   min_difficulty=None, max_difficulty=None,
+                   include_reviews=False, ):
     """
     Retrieve chart data acc to specified params and format chart data for
     usage in templates.
@@ -156,9 +169,12 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
     :param int difficulty:  Difficulty to filter by (1-12)
     :param str play_style:  Play style to filter by (from PLAYSIDE_CHOICES)
     :param int user:        Mark charts that have been rated by this user
+    :param min_difficulty:  Minimum difficulty to filter by (1-12)
+    :param max_difficulty:  Maximum difficulty to filter by (1-12)
     :rtype list:            List of dicts containing chart data
     """
-    matched_charts = get_charts_by_query(versions, difficulty, play_style)
+    matched_charts = get_charts_by_query(versions, difficulty, play_style,
+                                         min_difficulty, max_difficulty)
     matched_chart_ids = [chart.id for chart in matched_charts]
 
     # get avg ratings for the charts in the returned queryset

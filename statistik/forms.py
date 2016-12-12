@@ -101,6 +101,14 @@ class ReviewForm(forms.Form):
 
 
 class SearchForm(forms.Form):
+
+    class RatingField(forms.ChoiceField):
+        def to_python(self, value):
+            if not value:
+                return None
+            return float(value)
+
+
     title = forms.CharField(label=_("TITLE"),
                             max_length=100,
 
@@ -113,55 +121,55 @@ class SearchForm(forms.Form):
                             max_length=50,
                             required=False)
 
-    min_level = forms.ChoiceField(label=_("MIN LEVEL"),
+    min_difficulty = RatingField(label=_("MIN DIFFICULTY"),
                                   choices=[(i, str(i)) for i in range(1, 13)],
                                   validators=RATING_VALIDATORS,
                                   initial=1,
                                   required=False)
 
-    max_level = forms.ChoiceField(label=_("MAX LEVEL"),
+    max_difficulty = RatingField(label=_("MAX DIFFICULTY"),
                                   choices=[(i, str(i)) for i in range(1, 13)],
                                   validators=RATING_VALIDATORS,
                                   initial=12,
                                   required=False)
 
-    min_nc = forms.ChoiceField(label=_("MIN NC RATING"),
+    min_nc = RatingField(label=_("MIN NC RATING"),
                                choices=RATING_CHOICES,
                                validators=RATING_VALIDATORS,
                                initial=MIN_RATING,
                                required=False)
 
-    max_nc = forms.ChoiceField(label=_("MAX NC RATING"),
+    max_nc = RatingField(label=_("MAX NC RATING"),
                                choices=RATING_CHOICES,
                                validators=RATING_VALIDATORS,
                                initial=MAX_RATING,
                                required=False)
 
-    min_hc = forms.ChoiceField(label=_("MIN HC RATING"),
+    min_hc = RatingField(label=_("MIN HC RATING"),
                                choices=RATING_CHOICES,
                                validators=RATING_VALIDATORS,
                                initial=MIN_RATING,
                                required=False)
 
-    max_hc = forms.ChoiceField(label=_("MAX HC RATING"),
+    max_hc = RatingField(label=_("MAX HC RATING"),
                                choices=RATING_CHOICES,
                                validators=RATING_VALIDATORS,
                                initial=MAX_RATING,
                                required=False)
 
-    min_exhc = forms.ChoiceField(label=_("MIN EXHC RATING"),
+    min_exhc = RatingField(label=_("MIN EXHC RATING"),
                                  choices=RATING_CHOICES,
                                  validators=RATING_VALIDATORS,
                                  initial=MIN_RATING,
                                  required=False)
 
-    max_exhc = forms.ChoiceField(label=_("MAX EXHC RATING"),
+    max_exhc = RatingField(label=_("MAX EXHC RATING"),
                                  choices=RATING_CHOICES,
                                  validators=RATING_VALIDATORS,
                                  initial=MAX_RATING,
                                  required=False)
 
-    difficulty = forms.MultipleChoiceField(label=_("DIFFICULTY"),
+    level = forms.MultipleChoiceField(label=_("LEVEL"),
                                            choices=DIFFICULTY_LEVEL_CHOICES,
                                            widget=forms.CheckboxSelectMultiple,
                                            required=False)
@@ -174,15 +182,14 @@ class SearchForm(forms.Form):
     def is_valid(self):
         super(SearchForm, self).is_valid()
         data = self.cleaned_data
-        for (minimum, maximum) in [('min_level', 'max_level'),
+        for (minimum, maximum) in [('min_difficulty', 'max_difficulty'),
                                    ('min_nc', 'max_nc'),
                                    ('min_hc', 'max_hc'),
                                    ('min_exhc', 'max_exhc')]:
-            min_level = data.get(minimum)
-            max_level = data.get(maximum)
-            if min_level and max_level and max_level < min_level:
+            min_difficulty = data.get(minimum)
+            max_difficulty = data.get(maximum)
+            if min_difficulty and max_difficulty and float(max_difficulty) < float(min_difficulty):
                 for field in [minimum, maximum]:
-                    self.add_error(field,
-                                   '%s must be higher than %s.' % (minimum, maximum))
+                    self.add_error(field, '%s cannot be lower than %s.' % (maximum, minimum))
                 return False
         return True
