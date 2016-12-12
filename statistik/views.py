@@ -75,12 +75,15 @@ def ratings_view(request):
 
     # assemble page title
     title_elements = []
-    if versions:
-        for version in versions:
-            title_elements.append(FULL_VERSION_NAMES[int(version)].upper())
-    if difficulty or not (difficulty or versions):
-        title_elements.append('LV. ' + str(difficulty or 12))
-    title_elements.append(play_style)
+    # if we got here from doing a search
+    if request.GET.get('submit'):
+        title_elements.append('SEARCH RESULTS')
+    else:
+        if versions:
+            title_elements.append(FULL_VERSION_NAMES[int(versions[0])].upper())
+        if difficulty or not (difficulty or versions):
+            title_elements.append('LV. ' + str(difficulty or 12))
+        title_elements.append(play_style)
     create_page_title(context, title_elements)
 
     # create version/level navigator to display above songlist
