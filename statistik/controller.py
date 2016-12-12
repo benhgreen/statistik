@@ -123,7 +123,7 @@ def get_charts_by_ids(ids):
 
 
 def get_charts_by_query(versions=None, difficulty=None, play_style=None,
-                        min_difficulty=None, max_difficulty=None):
+                        min_difficulty=None, max_difficulty=None, title=None):
     """
     Chart lookup by game-related parameters
     :param versions:        Game versions to filter by (from VERSION_CHOICES)
@@ -131,6 +131,7 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
     :param str play_style:  Play style to filter by (from PLAYSIDE_CHOICES)
     :param min_difficulty:  Minimum difficulty to filter by (1-12)
     :param max_difficulty:  Maximum difficulty to filter by (1-12)
+    :param str title:           Song title to filter by
     :rtype Queryset: Queryset of matched Chart objects
     """
 
@@ -147,8 +148,11 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
         filters['difficulty__in'] = range(1, int(max_difficulty) + 1)
     elif difficulty:
         filters['difficulty'] = difficulty
-    if not (versions or difficulty):
+    if not (versions or difficulty or min_difficulty or max_difficulty):
         filters['difficulty'] = 12
+
+    if title:
+        filters['song__title__icontains'] = title
 
     filters['type__in'] = {
         'SP': [0, 1, 2],
@@ -160,7 +164,7 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
 
 
 def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
-                   min_difficulty=None, max_difficulty=None,
+                   min_difficulty=None, max_difficulty=None, title=None,
                    include_reviews=False, ):
     """
     Retrieve chart data acc to specified params and format chart data for
@@ -171,10 +175,11 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
     :param int user:        Mark charts that have been rated by this user
     :param min_difficulty:  Minimum difficulty to filter by (1-12)
     :param max_difficulty:  Maximum difficulty to filter by (1-12)
+    :param str title:           Song title to filter by
     :rtype list:            List of dicts containing chart data
     """
     matched_charts = get_charts_by_query(versions, difficulty, play_style,
-                                         min_difficulty, max_difficulty)
+                                         min_difficulty, max_difficulty, title)
     matched_chart_ids = [chart.id for chart in matched_charts]
 
     # get avg ratings for the charts in the returned queryset
