@@ -120,10 +120,10 @@ def get_charts_by_ids(ids):
     return Chart.objects.filter(pk__in=ids)
 
 
-def get_charts_by_query(version=None, difficulty=None, play_style=None):
+def get_charts_by_query(versions=None, difficulty=None, play_style=None):
     """
     Chart lookup by game-related parameters
-    :param version:         Game version to filter by (from VERSION_CHOICES)
+    :param versions:         Game versions to filter by (from VERSION_CHOICES)
     :param difficulty:      Difficulty to filter by (1-12)
     :param str play_style:  Play style to filter by (from PLAYSIDE_CHOICES)
     :rtype Queryset: Queryset of matched Chart objects
@@ -131,11 +131,11 @@ def get_charts_by_query(version=None, difficulty=None, play_style=None):
 
     filters = {}
     # create filters for songlist based off params
-    if version:
-        filters['song__game_version'] = int(version)
+    if versions:
+        filters['song__game_version__in'] = versions
     if difficulty:
         filters['difficulty'] = int(difficulty)
-    if not (version or difficulty):
+    if not (versions or difficulty):
         filters['difficulty'] = 12
 
     filters['type__in'] = {
@@ -147,18 +147,18 @@ def get_charts_by_query(version=None, difficulty=None, play_style=None):
         'song__game_version', 'song__title', 'type')
 
 
-def get_chart_data(version=None, difficulty=None, play_style=None, user=None,
+def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
                    include_reviews=False):
     """
     Retrieve chart data acc to specified params and format chart data for
     usage in templates.
-    :param int version:     Game version to filter by (from VERSION_CHOICES)
+    :param int versions:     Game versions to filter by (from VERSION_CHOICES)
     :param int difficulty:  Difficulty to filter by (1-12)
     :param str play_style:  Play style to filter by (from PLAYSIDE_CHOICES)
     :param int user:        Mark charts that have been rated by this user
     :rtype list:            List of dicts containing chart data
     """
-    matched_charts = get_charts_by_query(version, difficulty, play_style)
+    matched_charts = get_charts_by_query(versions, difficulty, play_style)
     matched_chart_ids = [chart.id for chart in matched_charts]
 
     # get avg ratings for the charts in the returned queryset

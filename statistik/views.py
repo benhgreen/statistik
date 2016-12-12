@@ -50,11 +50,11 @@ def ratings_view(request):
     :rtype dict: Context including chart data
     """
     difficulty = request.GET.get('difficulty')
-    version = request.GET.get('version')
+    versions = request.GET.getlist('version')
     play_style = request.GET.get('style', 'SP')
     user = request.user.id
 
-    chart_data = get_chart_data(version, difficulty, play_style, user,
+    chart_data = get_chart_data(versions, difficulty, play_style, user,
                                 include_reviews=bool(request.GET.get('json')))
 
     if request.GET.get('json') == 'true':
@@ -68,9 +68,10 @@ def ratings_view(request):
 
     # assemble page title
     title_elements = []
-    if version:
-        title_elements.append(FULL_VERSION_NAMES[int(version)].upper())
-    if difficulty or not (difficulty or version):
+    if versions:
+        for version in versions:
+            title_elements.append(FULL_VERSION_NAMES[int(version)].upper())
+    if difficulty or not (difficulty or versions):
         title_elements.append('LV. ' + str(difficulty or 12))
     title_elements.append(play_style)
     create_page_title(context, title_elements)
@@ -283,16 +284,17 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
+
 def search_view(request):
     """
-    Gives the user a search form on GET and redirects to results on POST
+    GET only, gives the user a search form
     :param request: Request to handle
     """
-    if request.method == 'POST':
-        form = SearchForm(request.POST)
-        if form.is_valid():
-            return redirect('ratings')
-    else:
-        form = SearchForm(initial={'min_level': 0,
+    # if request.method == 'POST':
+    #     form = SearchForm(request.POST)
+    #     if form.is_valid():
+    #         return redirect('ratings')
+    # else:
+    form = SearchForm(initial={'min_level': 0,
                                    'max_level': 12})
     return render(request, 'search.html', {'form': form})

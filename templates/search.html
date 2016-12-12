@@ -9,8 +9,7 @@
         Search
     </h1>
     <br><br><br>
-    <form action="{% url 'search' %}" method="post">
-        {% csrf_token %}
+    <form action="{% url 'ratings' %}" method="get">
         {{ form.as_p }}
         <input type="submit" value="Search">
     </form>
