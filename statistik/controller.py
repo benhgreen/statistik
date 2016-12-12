@@ -8,6 +8,7 @@ import elo
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import transaction
+from django.db.models import Q
 from django.utils.translation import ugettext as _
 
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
@@ -151,16 +152,18 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
     if not (versions or difficulty or min_difficulty or max_difficulty):
         filters['difficulty'] = 12
 
-    if title:
-        filters['song__title__icontains'] = title
-
     filters['type__in'] = {
         'SP': [0, 1, 2],
         'DP': [3, 4, 5]
     }[play_style or 'SP']
 
-    return Chart.objects.filter(**filters).prefetch_related('song').order_by(
+    ret = Chart.objects.filter(**filters).prefetch_related('song').order_by(
         'song__game_version', 'song__title', 'type')
+    # if searching for a title, check if it's in either main or alt title
+    if title:
+        title_query = Q(song__title__icontains=title) | Q(song__alt_title__icontains=title)
+        ret = ret.filter(title_query)
+    return ret
 
 
 def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
