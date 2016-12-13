@@ -2,7 +2,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
     RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING, \
-    localize_choices, DIFFICULTY_SPIKE_CHOICES, FULL_VERSION_NAMES, DIFFICULTY_LEVEL_CHOICES, RATING_CHOICES
+    localize_choices, DIFFICULTY_SPIKE_CHOICES, FULL_VERSION_NAMES, RATING_CHOICES, \
+    CHART_TYPE_CHOICES
 
 
 class RegisterForm(forms.Form):
@@ -168,7 +169,7 @@ class SearchForm(forms.Form):
                            required=False)
 
     level = forms.MultipleChoiceField(label=_("LEVEL"),
-                                      choices=DIFFICULTY_LEVEL_CHOICES,
+                                      choices=CHART_TYPE_CHOICES,
                                       widget=forms.CheckboxSelectMultiple,
                                       required=False)
 

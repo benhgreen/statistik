@@ -56,6 +56,7 @@ def ratings_view(request):
     versions = request.GET.getlist('version')
     genre = request.GET.get('genre')
     artist = request.GET.get('artist')
+    levels = request.GET.getlist('level')
     play_style = request.GET.get('style', 'SP')
     user = request.user.id
 
@@ -65,7 +66,7 @@ def ratings_view(request):
 
     chart_data = get_chart_data(versions, difficulty, play_style, user,
                                 min_difficulty, max_difficulty, title,
-                                genre, artist,
+                                genre, artist, levels,
                                 include_reviews=bool(request.GET.get('json')))
 
     if request.GET.get('json') == 'true':
@@ -319,7 +320,7 @@ def search_view(request):
                     if not query[key] or query[key] == str(form.fields[key].initial):
                         empty.append(key)
             for key in empty:
-                del(query[key])
+                del (query[key])
             response['Location'] += '?' + query.urlencode()
             return response
     else:

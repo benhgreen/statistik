@@ -125,7 +125,7 @@ def get_charts_by_ids(ids):
 
 def get_charts_by_query(versions=None, difficulty=None, play_style=None,
                         min_difficulty=None, max_difficulty=None, title=None,
-                        genre=None, artist=None):
+                        genre=None, artist=None, levels=None):
     """
     Chart lookup by game-related parameters
     :param versions:        Game versions to filter by (from VERSION_CHOICES)
@@ -153,10 +153,19 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
     if genre:
         filters['song__genre__icontains'] = genre
 
-    filters['type__in'] = {
-        'SP': [0, 1, 2],
-        'DP': [3, 4, 5]
-    }[play_style or 'SP']
+    if levels:
+        filters['type__in'] = levels
+    else:
+        filters['type__in'] = {
+            'SP': [0, 1, 2],
+            'DP': [3, 4, 5]
+        }[play_style or 'SP']
+
+    # filters['type__in'] = {
+    #     '0': [0, 3],
+    #     '1': [1, 4],
+    #     '2': [2, 5]
+    # }[level or 0]
 
     ret = Chart.objects.filter(**filters).prefetch_related('song').order_by(
         'song__game_version', 'song__title', 'type')
@@ -172,7 +181,7 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
 
 def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
                    min_difficulty=None, max_difficulty=None, title=None,
-                   genre=None, artist=None,
+                   genre=None, artist=None, levels=None,
                    include_reviews=False, ):
     """
     Retrieve chart data acc to specified params and format chart data for
@@ -188,7 +197,7 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
     """
     matched_charts = get_charts_by_query(versions, difficulty, play_style,
                                          min_difficulty, max_difficulty, title,
-                                         genre, artist)
+                                         genre, artist, levels)
     matched_chart_ids = [chart.id for chart in matched_charts]
 
     # get avg ratings for the charts in the returned queryset

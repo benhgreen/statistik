@@ -134,12 +134,6 @@ RECOMMENDED_OPTIONS_CHOICES = [
 
 ]
 
-DIFFICULTY_LEVEL_CHOICES = [
-    (0, _("Normal")),
-    (1, _("Hyper")),
-    (2, _("Another")),
-    (3, _("Black Another/Leggendaria"))
-]
 
 def localize_choices(choices):
     return [(choice[0], _(choice[1])) for choice in choices]
