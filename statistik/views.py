@@ -49,24 +49,26 @@ def ratings_view(request):
     Assemble ratings page. Possible filters include difficulty and version.
     :rtype dict: Context including chart data
     """
+
     difficulty = request.GET.get('difficulty')
-    min_difficulty = request.GET.get('min_difficulty')
-    max_difficulty = request.GET.get('max_difficulty')
-    title = request.GET.get('title')
     versions = request.GET.getlist('version')
-    genre = request.GET.get('genre')
-    artist = request.GET.get('artist')
-    levels = request.GET.getlist('level')
     play_style = request.GET.get('style', 'SP')
     user = request.user.id
 
-    # show all difficulties in searches, but only 12 when going to the page normally
+    params = {
+        'min_difficulty': request.GET.get('min_difficulty'),
+        'max_difficulty': request.GET.get('max_difficulty'),
+        'title': request.GET.get('title'),
+        'genre': request.GET.get('genre'),
+        'artist': request.GET.get('artist'),
+        'levels': request.GET.getlist('level')
+    }
+
+    # if not a search and nothing was specified, show 12a
     if not request.GET.get('submit') and not (difficulty or versions):
         difficulty = 12
 
-    chart_data = get_chart_data(versions, difficulty, play_style, user,
-                                min_difficulty, max_difficulty, title,
-                                genre, artist, levels,
+    chart_data = get_chart_data(versions, difficulty, play_style, user, params,
                                 include_reviews=bool(request.GET.get('json')))
 
     if request.GET.get('json') == 'true':
@@ -309,7 +311,6 @@ def search_view(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             # pass on the search filters to the ratings view
-            # TODO: remove any unused filters to clean up the query string
             response = redirect('ratings')
             # delete any filters left empty or at the default to clean up the URL
             query = request.GET.copy()

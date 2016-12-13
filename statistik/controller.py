@@ -124,80 +124,73 @@ def get_charts_by_ids(ids):
 
 
 def get_charts_by_query(versions=None, difficulty=None, play_style=None,
-                        min_difficulty=None, max_difficulty=None, title=None,
-                        genre=None, artist=None, levels=None):
+                        params=None):
     """
     Chart lookup by game-related parameters
     :param versions:        Game versions to filter by (from VERSION_CHOICES)
     :param difficulty:      Difficulty to filter by (1-12)
     :param str play_style:  Play style to filter by (from PLAYSIDE_CHOICES)
-    :param min_difficulty:  Minimum difficulty to filter by (1-12)
-    :param max_difficulty:  Maximum difficulty to filter by (1-12)
-    :param str title:           Song title to filter by
+    :param params           Extra search parameters to filter by
     :rtype Queryset: Queryset of matched Chart objects
     """
+    if not params:
+        params = {}
 
-    filters = {}
     # create filters for songlist based off params
+    filters = {}
     if versions:
         filters['song__game_version__in'] = versions
-    if min_difficulty:
-        if max_difficulty:
-            filters['difficulty__in'] = range(int(min_difficulty), int(max_difficulty) + 1)
-        else:
-            filters['difficulty__in'] = range(int(min_difficulty), 13)
-    elif max_difficulty:
-        filters['difficulty__in'] = range(1, int(max_difficulty) + 1)
-    elif difficulty:
-        filters['difficulty'] = difficulty
-    if genre:
-        filters['song__genre__icontains'] = genre
-
-    if levels:
-        filters['type__in'] = levels
+    minimum = '1'
+    maximum = '12'
+    if difficulty:
+        minimum = difficulty
+        maximum = difficulty
+    else:
+        if 'min_difficulty' in params and params['min_difficulty']:
+            minimum = params['min_difficulty']
+        if 'max_difficulty' in params and params['max_difficulty']:
+            maximum = params['max_difficulty']
+    filters['difficulty__gte'] = minimum
+    filters['difficulty__lte'] = maximum
+    if 'genre' in params and params['genre']:
+        filters['song__genre__icontains'] = params['genre']
+    if 'levels' in params and params['levels']:
+        filters['type__in'] = params['levels']
     else:
         filters['type__in'] = {
             'SP': [0, 1, 2],
             'DP': [3, 4, 5]
         }[play_style or 'SP']
 
-    # filters['type__in'] = {
-    #     '0': [0, 3],
-    #     '1': [1, 4],
-    #     '2': [2, 5]
-    # }[level or 0]
-
     ret = Chart.objects.filter(**filters).prefetch_related('song').order_by(
         'song__game_version', 'song__title', 'type')
     # if searching for a title, check if it's in either main or alt title
-    if title:
-        title_query = Q(song__title__icontains=title) | Q(song__alt_title__icontains=title)
+    if 'title' in params and params['title']:
+        title_query = Q(song__title__icontains=params['title']) | \
+                      Q(song__alt_title__icontains=params['title'])
         ret = ret.filter(title_query)
-    if artist:
-        artist_query = Q(song__artist__icontains=artist) | Q(song__alt_artist__icontains=artist)
+    if 'artist' in params and params['artist']:
+        artist_query = Q(song__artist__icontains=params['artist']) | \
+                       Q(song__alt_artist__icontains=params['artist'])
         ret = ret.filter(artist_query)
     return ret
 
 
 def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
-                   min_difficulty=None, max_difficulty=None, title=None,
-                   genre=None, artist=None, levels=None,
-                   include_reviews=False, ):
+                   params=None, include_reviews=False, ):
     """
     Retrieve chart data acc to specified params and format chart data for
     usage in templates.
-    :param int versions:     Game versions to filter by (from VERSION_CHOICES)
+    :param int versions:    Game versions to filter by (from VERSION_CHOICES)
     :param int difficulty:  Difficulty to filter by (1-12)
     :param str play_style:  Play style to filter by (from PLAYSIDE_CHOICES)
     :param int user:        Mark charts that have been rated by this user
-    :param min_difficulty:  Minimum difficulty to filter by (1-12)
-    :param max_difficulty:  Maximum difficulty to filter by (1-12)
-    :param str title:           Song title to filter by
+    :param params           Extra search parameters to filter by
     :rtype list:            List of dicts containing chart data
     """
-    matched_charts = get_charts_by_query(versions, difficulty, play_style,
-                                         min_difficulty, max_difficulty, title,
-                                         genre, artist, levels)
+    if not params:
+        params = {}
+    matched_charts = get_charts_by_query(versions, difficulty, play_style, params)
     matched_chart_ids = [chart.id for chart in matched_charts]
 
     # get avg ratings for the charts in the returned queryset
