@@ -157,6 +157,16 @@ class SearchForm(forms.Form):
                            validators=RATING_VALIDATORS,
                            initial=MAX_RATING,
                            required=False)
+    min_score = RatingField(label=_("MIN SCORE RATING"),
+                           choices=RATING_CHOICES,
+                           validators=RATING_VALIDATORS,
+                           initial=MIN_RATING,
+                           required=False)
+    max_score = RatingField(label=_("MAX SCORE RATING"),
+                            choices=RATING_CHOICES,
+                            validators=RATING_VALIDATORS,
+                            initial=MAX_RATING,
+                            required=False)
     level = forms.MultipleChoiceField(label=_("LEVEL"),
                                       choices=CHART_TYPE_CHOICES,
                                       widget=forms.CheckboxSelectMultiple,
@@ -172,7 +182,8 @@ class SearchForm(forms.Form):
         for (minimum, maximum) in [('min_difficulty', 'max_difficulty'),
                                    ('min_nc', 'max_nc'),
                                    ('min_hc', 'max_hc'),
-                                   ('min_exhc', 'max_exhc')]:
+                                   ('min_exhc', 'max_exhc'),
+                                   ('min_score', 'max_score')]:
             min_difficulty = data.get(minimum)
             max_difficulty = data.get(maximum)
             if min_difficulty and max_difficulty and float(max_difficulty) < float(min_difficulty):

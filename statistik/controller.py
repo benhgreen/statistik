@@ -240,17 +240,13 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
         else:
             data['has_reviewed'] = avg_ratings[chart.id].get('has_reviewed')
 
-
-        # TODO: add score rating
         # need to filter by avg ratings here since it isn't stored in the database
-        # if any(x in params and params[x] for x in ['min_nc', 'max_nc', 'min_hc',
-        #                                            'max_hc', 'min_exhc', 'max_exhc']):
-
         if params:
             for (min_rating, max_rating, rating) in [
                 ('min_nc', 'max_nc', 'avg_clear_rating'),
                 ('min_hc', 'max_hc', 'avg_hc_rating'),
-                ('min_exhc', 'max_exhc', 'avg_exhc_rating')
+                ('min_exhc', 'max_exhc', 'avg_exhc_rating'),
+                ['min_score', 'max_score', 'avg_score_rating']
             ]:
                 if min_rating in params and params[min_rating]:
                     if data[rating] == '' or float(params[min_rating]) > float(data[rating]):

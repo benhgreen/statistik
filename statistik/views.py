@@ -67,7 +67,9 @@ def ratings_view(request):
         'min_hc': request.GET.get('min_hc'),
         'max_hc': request.GET.get('max_hc'),
         'min_exhc': request.GET.get('min_exhc'),
-        'max_exhc': request.GET.get('max_exhc')
+        'max_exhc': request.GET.get('max_exhc'),
+        'min_score': request.GET.get('min_score'),
+        'max_score': request.GET.get('max_score')
     }
 
     # if not a search and nothing was specified, show 12a
