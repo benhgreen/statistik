@@ -21,7 +21,7 @@ from statistik.controller import (get_chart_data, generate_review_form,
                                   get_elo_rankings, make_elo_matchup,
                                   create_page_title, make_nav_links,
                                   generate_user_form, delete_review)
-from statistik.forms import RegisterForm
+from statistik.forms import RegisterForm, SearchForm
 
 
 def index(request):
@@ -34,7 +34,8 @@ def index(request):
         'index_links': [
             (_('STANDARD RATINGS'), reverse('ratings')),
             (_('ELO RATINGS'), reverse('elo')),
-            (_('USER LIST'), reverse('users'))
+            (_('USER LIST'), reverse('users')),
+            (_('SEARCH'), reverse('search'))
         ],
 
         'title': 'STATISTIK // ' + _('INDEX'),
@@ -48,12 +49,35 @@ def ratings_view(request):
     Assemble ratings page. Possible filters include difficulty and version.
     :rtype dict: Context including chart data
     """
+
     difficulty = request.GET.get('difficulty')
-    version = request.GET.get('version')
+    versions = request.GET.getlist('version')
     play_style = request.GET.get('style', 'SP')
     user = request.user.id
 
-    chart_data = get_chart_data(version, difficulty, play_style, user,
+    params = {
+        'min_difficulty': request.GET.get('min_difficulty'),
+        'max_difficulty': request.GET.get('max_difficulty'),
+        'title': request.GET.get('title'),
+        'genre': request.GET.get('genre'),
+        'artist': request.GET.get('artist'),
+        'levels': request.GET.getlist('level'),
+        'min_nc': request.GET.get('min_nc'),
+        'max_nc': request.GET.get('max_nc'),
+        'min_hc': request.GET.get('min_hc'),
+        'max_hc': request.GET.get('max_hc'),
+        'min_exhc': request.GET.get('min_exhc'),
+        'max_exhc': request.GET.get('max_exhc'),
+        'min_score': request.GET.get('min_score'),
+        'max_score': request.GET.get('max_score'),
+        'techs': request.GET.getlist('techs')
+    }
+
+    # if not a search and nothing was specified, show 12a
+    if not request.GET.get('submit') and not (difficulty or versions):
+        difficulty = 12
+
+    chart_data = get_chart_data(versions, difficulty, play_style, user, params,
                                 include_reviews=bool(request.GET.get('json')))
 
     if request.GET.get('json') == 'true':
@@ -67,11 +91,15 @@ def ratings_view(request):
 
     # assemble page title
     title_elements = []
-    if version:
-        title_elements.append(FULL_VERSION_NAMES[int(version)].upper())
-    if difficulty or not (difficulty or version):
-        title_elements.append('LV. ' + str(difficulty or 12))
-    title_elements.append(play_style)
+    # if we got here from doing a search
+    if request.GET.get('submit'):
+        title_elements.append('SEARCH RESULTS')
+    else:
+        if versions:
+            title_elements.append(FULL_VERSION_NAMES[int(versions[0])].upper())
+        if difficulty or not (difficulty or versions):
+            title_elements.append('LV. ' + str(difficulty or 12))
+        title_elements.append(play_style)
     create_page_title(context, title_elements)
 
     # create version/level navigator to display above songlist
@@ -103,7 +131,7 @@ def chart_view(request):
 
     # truncate long song title
     song_title = chart.song.title if len(
-            chart.song.title) <= 15 else chart.song.title[:15] + '...'
+        chart.song.title) <= 15 else chart.song.title[:15] + '...'
 
     # assemble page title
     title_elements = [song_title,
@@ -116,7 +144,7 @@ def chart_view(request):
 
     form_data = request.POST if request.method == 'POST' else None
     context['form'], context['review_exists'] = generate_review_form(
-            request.user, chart_id, form_data)
+        request.user, chart_id, form_data)
 
     # get reviews for this chart, cache users for username and playside lookup
     context['reviews'] = get_reviews_for_chart(chart_id)
@@ -142,8 +170,8 @@ def elo_view(request):
 
     if not (display_list or request.user.is_authenticated()):
         return HttpResponseRedirect(
-                reverse('elo') + '?level=%s&type=%d&list=true' %
-                (level, clear_type))
+            reverse('elo') + '?level=%s&type=%d&list=true' %
+            (level, clear_type))
 
     # TODO extend to accommodate exhc and score types
     rate_type_column = 'elo_rating_hc' if clear_type == 1 else 'elo_rating'
@@ -178,9 +206,9 @@ def elo_view(request):
     context['is_hc_display'] = type_display
     context['level_links'] = generate_elo_level_urls()
     context['nav_links'] = make_nav_links(
-            level=int(level),
-            elo='list' if display_list else 'match',
-            clear_type=clear_type)
+        level=int(level),
+        elo='list' if display_list else 'match',
+        clear_type=clear_type)
     return render(request, 'elo_rating.html', context)
 
 
@@ -281,3 +309,32 @@ def logout_view(request):
     """
     logout(request)
     return redirect('index')
+
+
+def search_view(request):
+    """
+    GET only, gives the user a search form
+    :param request: Request to handle
+    """
+    if 'submit' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            # pass on the search filters to the ratings view
+            response = redirect('ratings')
+            # delete any filters left empty or at the default to clean up the URL
+            query = request.GET.copy()
+            empty = []
+            # can't delete while iterating over the query so mark them
+            for key in query:
+                if key != 'submit':
+                    if not query[key] or query[key] == str(form.fields[key].initial):
+                        empty.append(key)
+            for key in empty:
+                del (query[key])
+            response['Location'] += '?' + query.urlencode()
+            return response
+    else:
+        form = SearchForm()
+    context = {'form': form,
+               'nav_links': make_nav_links()}
+    return render(request, 'search.html', context)

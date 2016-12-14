@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load bootstrap3 %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+    <h1 style="text-align: center;width: 1100px;">
+        Search
+    </h1>
+    <br><br><br>
+    <form action="{% url 'search' %}" method="get">
+        {{ form.as_p }}
+        <input type="submit" name="submit" value="Search">
+    </form>
+    <br>
+    <br>
+{% endblock %}

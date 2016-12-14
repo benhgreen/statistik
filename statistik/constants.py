@@ -4,9 +4,12 @@ Constants, choices, and methods that are directly related to them
 from django.core.urlresolvers import reverse
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import ugettext_lazy as _
+from numpy import arange
 
 MAX_RATING = 14.0
 MIN_RATING = 1.0
+
+RATING_CHOICES = [(i, str(i)) for i in arange(MIN_RATING, MAX_RATING+.1, 0.1)]
 
 RATING_VALIDATORS = [MaxValueValidator(MAX_RATING),
                      MinValueValidator(MIN_RATING)]

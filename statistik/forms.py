@@ -2,7 +2,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
     RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING, \
-    localize_choices, DIFFICULTY_SPIKE_CHOICES
+    localize_choices, DIFFICULTY_SPIKE_CHOICES, FULL_VERSION_NAMES, RATING_CHOICES, \
+    CHART_TYPE_CHOICES
 
 
 class RegisterForm(forms.Form):
@@ -96,5 +97,101 @@ class ReviewForm(forms.Form):
             if rating is not None and not min_rating <= rating <= max_rating:
                 self.add_error(field,
                                _('Please rate within 2.0 of actual difficulty.'))
+                return False
+        return True
+
+
+class SearchForm(forms.Form):
+    class RatingField(forms.ChoiceField):
+        def to_python(self, value):
+            if not value:
+                return None
+            return float(value)
+
+    title = forms.CharField(label=_("TITLE"),
+                            max_length=100,
+                            required=False)
+    artist = forms.CharField(label=_("ARTIST"),
+                             max_length=50,
+                             required=False)
+    genre = forms.CharField(label=_("GENRE"),
+                            max_length=50,
+                            required=False)
+    min_difficulty = RatingField(label=_("MIN DIFFICULTY"),
+                                 choices=[(i, str(i)) for i in range(1, 13)],
+                                 validators=RATING_VALIDATORS,
+                                 initial=1,
+                                 required=False)
+    max_difficulty = RatingField(label=_("MAX DIFFICULTY"),
+                                 choices=[(i, str(i)) for i in range(1, 13)],
+                                 validators=RATING_VALIDATORS,
+                                 initial=12,
+                                 required=False)
+    min_nc = RatingField(label=_("MIN NC RATING"),
+                         choices=RATING_CHOICES,
+                         validators=RATING_VALIDATORS,
+                         initial=MIN_RATING,
+                         required=False)
+    max_nc = RatingField(label=_("MAX NC RATING"),
+                         choices=RATING_CHOICES,
+                         validators=RATING_VALIDATORS,
+                         initial=MAX_RATING,
+                         required=False)
+    min_hc = RatingField(label=_("MIN HC RATING"),
+                         choices=RATING_CHOICES,
+                         validators=RATING_VALIDATORS,
+                         initial=MIN_RATING,
+                         required=False)
+    max_hc = RatingField(label=_("MAX HC RATING"),
+                         choices=RATING_CHOICES,
+                         validators=RATING_VALIDATORS,
+                         initial=MAX_RATING,
+                         required=False)
+    min_exhc = RatingField(label=_("MIN EXHC RATING"),
+                           choices=RATING_CHOICES,
+                           validators=RATING_VALIDATORS,
+                           initial=MIN_RATING,
+                           required=False)
+    max_exhc = RatingField(label=_("MAX EXHC RATING"),
+                           choices=RATING_CHOICES,
+                           validators=RATING_VALIDATORS,
+                           initial=MAX_RATING,
+                           required=False)
+    min_score = RatingField(label=_("MIN SCORE RATING"),
+                           choices=RATING_CHOICES,
+                           validators=RATING_VALIDATORS,
+                           initial=MIN_RATING,
+                           required=False)
+    max_score = RatingField(label=_("MAX SCORE RATING"),
+                            choices=RATING_CHOICES,
+                            validators=RATING_VALIDATORS,
+                            initial=MAX_RATING,
+                            required=False)
+    level = forms.MultipleChoiceField(label=_("LEVEL"),
+                                      choices=CHART_TYPE_CHOICES,
+                                      widget=forms.CheckboxSelectMultiple,
+                                      required=False)
+    version = forms.MultipleChoiceField(label=_("VERSION"),
+                                        choices=[(i, FULL_VERSION_NAMES[i]) for i in FULL_VERSION_NAMES],
+                                        widget=forms.CheckboxSelectMultiple(),
+                                        required=False)
+    techs = forms.MultipleChoiceField(label=_("TECHNIQUES"),
+                                                choices=TECHNIQUE_CHOICES,
+                                                widget=forms.CheckboxSelectMultiple,
+                                                required=False)
+
+    def is_valid(self):
+        super(SearchForm, self).is_valid()
+        data = self.cleaned_data
+        for (minimum, maximum) in [('min_difficulty', 'max_difficulty'),
+                                   ('min_nc', 'max_nc'),
+                                   ('min_hc', 'max_hc'),
+                                   ('min_exhc', 'max_exhc'),
+                                   ('min_score', 'max_score')]:
+            min_difficulty = data.get(minimum)
+            max_difficulty = data.get(maximum)
+            if min_difficulty and max_difficulty and float(max_difficulty) < float(min_difficulty):
+                for field in [minimum, maximum]:
+                    self.add_error(field, '%s cannot be lower than %s.' % (maximum, minimum))
                 return False
         return True
