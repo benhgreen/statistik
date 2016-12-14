@@ -175,6 +175,10 @@ class SearchForm(forms.Form):
                                         choices=[(i, FULL_VERSION_NAMES[i]) for i in FULL_VERSION_NAMES],
                                         widget=forms.CheckboxSelectMultiple(),
                                         required=False)
+    techs = forms.MultipleChoiceField(label=_("TECHNIQUES"),
+                                                choices=TECHNIQUE_CHOICES,
+                                                widget=forms.CheckboxSelectMultiple,
+                                                required=False)
 
     def is_valid(self):
         super(SearchForm, self).is_valid()

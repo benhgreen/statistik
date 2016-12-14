@@ -173,6 +173,11 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
         artist_query = Q(song__artist__icontains=params['artist']) | \
                        Q(song__alt_artist__icontains=params['artist'])
         ret = ret.filter(artist_query)
+    if 'techs' in params and params['techs']:
+        for tech in params['techs']:
+            tech_query = Q(review__characteristics__icontains=tech)
+            ret = ret.filter(tech_query)
+
     return ret
 
 
