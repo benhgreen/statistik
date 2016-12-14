@@ -14,7 +14,7 @@ from django.utils.translation import ugettext as _
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
                                  FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES,
-                                 localize_choices)
+                                 localize_choices, MIN_RATING, MAX_RATING)
 from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile, EloReview
 
@@ -188,8 +188,7 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
     :param params           Extra search parameters to filter by
     :rtype list:            List of dicts containing chart data
     """
-    if not params:
-        params = {}
+
     matched_charts = get_charts_by_query(versions, difficulty, play_style, params)
     matched_chart_ids = [chart.id for chart in matched_charts]
 
@@ -241,7 +240,28 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
         else:
             data['has_reviewed'] = avg_ratings[chart.id].get('has_reviewed')
 
-        chart_data.append(data)
+
+        # TODO: add score rating
+        # need to filter by avg ratings here since it isn't stored in the database
+        # if any(x in params and params[x] for x in ['min_nc', 'max_nc', 'min_hc',
+        #                                            'max_hc', 'min_exhc', 'max_exhc']):
+
+        if params:
+            for (min_rating, max_rating, rating) in [
+                ('min_nc', 'max_nc', 'avg_clear_rating'),
+                ('min_hc', 'max_hc', 'avg_hc_rating'),
+                ('min_exhc', 'max_exhc', 'avg_exhc_rating')
+            ]:
+                if min_rating in params and params[min_rating]:
+                    if data[rating] == '' or float(params[min_rating]) > float(data[rating]):
+                        break
+                if max_rating in params and params[max_rating]:
+                    if data[rating] == '' or float(params[max_rating]) < float(data[rating]):
+                        break
+            else:
+                chart_data.append(data)
+        else:
+            chart_data.append(data)
     return chart_data
 
 

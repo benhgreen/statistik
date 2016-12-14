@@ -61,7 +61,13 @@ def ratings_view(request):
         'title': request.GET.get('title'),
         'genre': request.GET.get('genre'),
         'artist': request.GET.get('artist'),
-        'levels': request.GET.getlist('level')
+        'levels': request.GET.getlist('level'),
+        'min_nc': request.GET.get('min_nc'),
+        'max_nc': request.GET.get('max_nc'),
+        'min_hc': request.GET.get('min_hc'),
+        'max_hc': request.GET.get('max_hc'),
+        'min_exhc': request.GET.get('min_exhc'),
+        'max_exhc': request.GET.get('max_exhc')
     }
 
     # if not a search and nothing was specified, show 12a
@@ -325,8 +331,7 @@ def search_view(request):
             response['Location'] += '?' + query.urlencode()
             return response
     else:
-        form = SearchForm(initial={'min_level': 0,
-                                   'max_level': 12})
+        form = SearchForm()
     context = {'form': form,
                'nav_links': make_nav_links()}
     return render(request, 'search.html', context)
