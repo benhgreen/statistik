@@ -80,7 +80,8 @@ VERSION_CHOICES = [
     (20, 'TRI'),
     (21, 'SPD'),
     (22, 'PEN'),
-    (23, 'COP')
+    (23, 'COP'),
+    (24, 'SIN')
 ]
 
 FULL_VERSION_NAMES = {
@@ -106,7 +107,8 @@ FULL_VERSION_NAMES = {
     20: 'Tricoro',
     21: 'Spada',
     22: 'Pendual',
-    23: 'Copula'
+    23: 'Copula',
+    24: 'Sinobuz'
 }
 
 PLAYSIDE_CHOICES = [
