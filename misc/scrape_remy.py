@@ -2,8 +2,8 @@ from bs4 import BeautifulSoup
 import urllib.request
 import unicodecsv
 
-SITE = 'https://remywiki.com/AC_copula'
-VERSION = 23
+SITE = 'https://remywiki.com/AC_SINOBUZ'
+VERSION = 24
 
 soup = BeautifulSoup(urllib.request.urlopen(SITE), 'html.parser')
 

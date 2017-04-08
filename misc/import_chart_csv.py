@@ -5,7 +5,7 @@ import psycopg2
 
 from statistik.models import Song, Chart
 
-with open('misc/chart.csv', encoding='utf-8') as csvfile:
+with open('chart.csv', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
 
