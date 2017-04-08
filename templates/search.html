@@ -4,14 +4,39 @@
 {% load static %}
 {% load i18n %}
 
+{% block bootstrap3_extra_head %}
+    <script src="{% static "js/sorttable.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+{% endblock %}
+
 {% block content %}
     <h1 style="text-align: center;width: 1100px;">
         Search
     </h1>
     <br><br><br>
     <form action="{% url 'search' %}" method="get">
-        {{ form.as_p }}
-        <input type="submit" name="submit" value="Search">
+    <div align="center">
+{#        {% for field in form %}#}
+{#            <div class="form-group">#}
+{#                <span class="form-name">#}
+{#                    {{ field.label_tag }}#}
+{#                </span>#}
+{#                <span class="form-options">#}
+{#                    {{ field }}#}
+{#                </span>#}
+{#            </div>#}
+{#        {% endfor %}#}
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="submit" value="Search">
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
     </form>
     <br>
     <br>
