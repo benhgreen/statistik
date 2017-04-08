@@ -317,6 +317,9 @@ def search_view(request):
     GET only, gives the user a search form
     :param request: Request to handle
     """
+    context = {}
+    title_elements = ['SEARCH']
+    create_page_title(context, title_elements)
     if 'submit' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
@@ -336,6 +339,6 @@ def search_view(request):
             return response
     else:
         form = SearchForm()
-    context = {'form': form,
-               'nav_links': make_nav_links()}
+    context['form'] = form
+    context['nav_links'] = make_nav_links()
     return render(request, 'search.html', context)
