@@ -194,4 +194,9 @@ class SearchForm(forms.Form):
                 for field in [minimum, maximum]:
                     self.add_error(field, '%s cannot be lower than %s.' % (maximum, minimum))
                 return False
+        # have to have at least one search filter
+        if not self.changed_data:
+            self.add_error('title', 'must have at least one search filter')
+            return False
+
         return True
