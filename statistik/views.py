@@ -55,7 +55,8 @@ def ratings_view(request):
     play_style = request.GET.get('style', 'SP')
     user = request.user.id
 
-    params = {
+    # remove any None keys to avoid having to check for them later
+    params = {k: v for k, v in {
         'min_difficulty': request.GET.get('min_difficulty'),
         'max_difficulty': request.GET.get('max_difficulty'),
         'title': request.GET.get('title'),
@@ -71,7 +72,7 @@ def ratings_view(request):
         'min_score': request.GET.get('min_score'),
         'max_score': request.GET.get('max_score'),
         'techs': request.GET.getlist('techs')
-    }
+    }.items() if v}
 
     # if not a search and nothing was specified, show 12a
     if not request.GET.get('submit') and not (difficulty or versions):
@@ -131,7 +132,7 @@ def chart_view(request):
 
     # truncate long song title
     song_title = chart.song.title if len(
-        chart.song.title) <= 15 else chart.song.title[:15] + '...'
+            chart.song.title) <= 15 else chart.song.title[:15] + '...'
 
     # assemble page title
     title_elements = [song_title,
@@ -144,7 +145,7 @@ def chart_view(request):
 
     form_data = request.POST if request.method == 'POST' else None
     context['form'], context['review_exists'] = generate_review_form(
-        request.user, chart_id, form_data)
+            request.user, chart_id, form_data)
 
     # get reviews for this chart, cache users for username and playside lookup
     context['reviews'] = get_reviews_for_chart(chart_id)
@@ -170,8 +171,8 @@ def elo_view(request):
 
     if not (display_list or request.user.is_authenticated()):
         return HttpResponseRedirect(
-            reverse('elo') + '?level=%s&type=%d&list=true' %
-            (level, clear_type))
+                reverse('elo') + '?level=%s&type=%d&list=true' %
+                (level, clear_type))
 
     # TODO extend to accommodate exhc and score types
     rate_type_column = 'elo_rating_hc' if clear_type == 1 else 'elo_rating'
@@ -206,9 +207,9 @@ def elo_view(request):
     context['is_hc_display'] = type_display
     context['level_links'] = generate_elo_level_urls()
     context['nav_links'] = make_nav_links(
-        level=int(level),
-        elo='list' if display_list else 'match',
-        clear_type=clear_type)
+            level=int(level),
+            elo='list' if display_list else 'match',
+            clear_type=clear_type)
     return render(request, 'elo_rating.html', context)
 
 

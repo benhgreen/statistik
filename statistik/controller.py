@@ -102,8 +102,8 @@ def get_avg_ratings(chart_ids, user_id=None, include_reviews=False):
                             for x in review.characteristics],
 
                         'recommended_options': ', '.join([
-                                                             _(RECOMMENDED_OPTIONS_CHOICES[x][1])
-                                                             for x in review.recommended_options])
+                            _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                            for x in review.recommended_options])
                     } for review in specific_reviews]
 
         # winding up here means no reviews were found for one of the charts
@@ -146,15 +146,15 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
         minimum = difficulty
         maximum = difficulty
     else:
-        if 'min_difficulty' in params and params['min_difficulty']:
+        if 'min_difficulty' in params:
             minimum = params['min_difficulty']
-        if 'max_difficulty' in params and params['max_difficulty']:
+        if 'max_difficulty' in params:
             maximum = params['max_difficulty']
     filters['difficulty__gte'] = minimum
     filters['difficulty__lte'] = maximum
-    if 'genre' in params and params['genre']:
+    if 'genre' in params:
         filters['song__genre__icontains'] = params['genre']
-    if 'levels' in params and params['levels']:
+    if 'levels' in params:
         filters['type__in'] = params['levels']
     else:
         filters['type__in'] = {
@@ -165,15 +165,15 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
     ret = Chart.objects.filter(**filters).prefetch_related('song').order_by(
         'song__game_version', 'song__title', 'type')
     # if searching for a title, check if it's in either main or alt title
-    if 'title' in params and params['title']:
+    if 'title' in params:
         title_query = Q(song__title__icontains=params['title']) | \
                       Q(song__alt_title__icontains=params['title'])
         ret = ret.filter(title_query)
-    if 'artist' in params and params['artist']:
+    if 'artist' in params:
         artist_query = Q(song__artist__icontains=params['artist']) | \
                        Q(song__alt_artist__icontains=params['artist'])
         ret = ret.filter(artist_query)
-    if 'techs' in params and params['techs']:
+    if 'techs' in params:
         for tech in params['techs']:
             tech_query = Q(review__characteristics__icontains=tech)
             ret = ret.filter(tech_query)
@@ -246,6 +246,7 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
             data['has_reviewed'] = avg_ratings[chart.id].get('has_reviewed')
 
         # need to filter by avg ratings here since it isn't stored in the database
+        to_add = True
         if params:
             for (min_rating, max_rating, rating) in [
                 ('min_nc', 'max_nc', 'avg_clear_rating'),
@@ -255,13 +256,11 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
             ]:
                 if min_rating in params and params[min_rating]:
                     if data[rating] == '' or float(params[min_rating]) > float(data[rating]):
-                        break
+                        to_add = False
                 if max_rating in params and params[max_rating]:
                     if data[rating] == '' or float(params[max_rating]) < float(data[rating]):
-                        break
-            else:
-                chart_data.append(data)
-        else:
+                        to_add = False
+        if to_add:
             chart_data.append(data)
     return chart_data
 
@@ -395,8 +394,8 @@ def get_reviews_for_chart(chart_id):
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                                                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
-                                                 for x in review.recommended_options])
+                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                for x in review.recommended_options])
         })
         if review.difficulty_spike:
             review_data[-1]['characteristics'].append(
@@ -437,8 +436,8 @@ def get_reviews_for_user(user_id):
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                                                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
-                                                 for x in review.recommended_options])
+                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                 for x in review.recommended_options])
         })
 
         if review.difficulty_spike:
@@ -467,8 +466,8 @@ def get_user_list():
 
             'playside': user.userprofile.get_play_side_display(),
             'best_techniques': ', '.join([
-                                             _(TECHNIQUE_CHOICES[x][1])
-                                             for x in user.userprofile.best_techniques]),
+                 _(TECHNIQUE_CHOICES[x][1])
+                 for x in user.userprofile.best_techniques]),
 
             'location': user.userprofile.location
         })
@@ -573,10 +572,10 @@ def make_elo_matchup(level):
 
     # assemble display info for these two charts
     return [{
-                'title': chart.song.title,
-                'type': chart.get_type_display(),
-                'id': chart.id
-            } for chart in [chart1, chart2]]
+        'title': chart.song.title,
+        'type': chart.get_type_display(),
+        'id': chart.id
+    } for chart in [chart1, chart2]]
 
 
 def create_page_title(context, title_elements):

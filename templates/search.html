@@ -16,16 +16,6 @@
     <br><br><br>
     <form action="{% url 'search' %}" method="get">
     <div align="center">
-{#        {% for field in form %}#}
-{#            <div class="form-group">#}
-{#                <span class="form-name">#}
-{#                    {{ field.label_tag }}#}
-{#                </span>#}
-{#                <span class="form-options">#}
-{#                    {{ field }}#}
-{#                </span>#}
-{#            </div>#}
-{#        {% endfor %}#}
         <table>
             {{ form.as_table }}
             <tr>
