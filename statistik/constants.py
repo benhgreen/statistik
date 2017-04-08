@@ -57,6 +57,11 @@ CHART_TYPE_CHOICES = [
     (5, 'DPA')
 ]
 
+PLAY_STYLE_CHOICES = [
+    (0, 'SP'),
+    (1, 'DP')
+]
+
 VERSION_CHOICES = [
     (1, '1st'),
     (2, '2nd'),

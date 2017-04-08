@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from statistik.constants import PLAYSIDE_CHOICES, TECHNIQUE_CHOICES, \
     RECOMMENDED_OPTIONS_CHOICES, RATING_VALIDATORS, MAX_RATING, MIN_RATING, \
     localize_choices, DIFFICULTY_SPIKE_CHOICES, FULL_VERSION_NAMES, RATING_CHOICES, \
-    CHART_TYPE_CHOICES
+    CHART_TYPE_CHOICES, VERSION_CHOICES, PLAY_STYLE_CHOICES
 
 
 class RegisterForm(forms.Form):
@@ -167,12 +167,12 @@ class SearchForm(forms.Form):
                             validators=RATING_VALIDATORS,
                             initial=MAX_RATING,
                             required=False)
-    level = forms.MultipleChoiceField(label=_("LEVEL"),
-                                      choices=CHART_TYPE_CHOICES,
-                                      widget=forms.CheckboxSelectMultiple,
-                                      required=False)
+    level = forms.ChoiceField(label=_("LEVEL"),
+                              choices=PLAY_STYLE_CHOICES,
+                              widget=forms.RadioSelect(),
+                              required=False)
     version = forms.MultipleChoiceField(label=_("VERSION"),
-                                        choices=[(i, FULL_VERSION_NAMES[i]) for i in FULL_VERSION_NAMES],
+                                        choices=[(i, n) for i, n in VERSION_CHOICES],
                                         widget=forms.CheckboxSelectMultiple(),
                                         required=False)
     techs = forms.MultipleChoiceField(label=_("TECHNIQUES"),
@@ -196,7 +196,7 @@ class SearchForm(forms.Form):
                 return False
         # have to have at least one search filter
         if not self.changed_data:
-            self.add_error('title', 'must have at least one search filter')
+            # self.add_error(None, 'must have at least one search filter')
             return False
 
         return True

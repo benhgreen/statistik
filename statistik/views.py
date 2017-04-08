@@ -62,7 +62,7 @@ def ratings_view(request):
         'title': request.GET.get('title'),
         'genre': request.GET.get('genre'),
         'artist': request.GET.get('artist'),
-        'levels': request.GET.getlist('level'),
+        'level': request.GET.getlist('level'),
         'min_nc': request.GET.get('min_nc'),
         'max_nc': request.GET.get('max_nc'),
         'min_hc': request.GET.get('min_hc'),
