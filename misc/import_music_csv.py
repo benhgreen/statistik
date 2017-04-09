@@ -6,7 +6,7 @@ from django.conf import settings
 from statistik.models import Song
 
 
-with open('music.csv', encoding='utf-8') as csvfile:
+with open('misc/music.csv', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile)
     songs = []
     for row in reader:
