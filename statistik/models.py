@@ -34,7 +34,7 @@ class Chart(models.Model):
         MaxValueValidator(12),
         MinValueValidator(1)
     ])
-    note_count = models.SmallIntegerField(null=True)
+    note_count = models.SmallIntegerField()
     elo_rating = models.FloatField(default=1000)
     elo_rating_hc = models.FloatField(default=1000)
 
