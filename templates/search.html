@@ -10,20 +10,37 @@
 {% endblock %}
 
 {% block content %}
-    <h1 style="text-align: center;width: 1100px;">
-        Search
-    </h1>
     <br><br><br>
     <form action="{% url 'search' %}" method="get">
     <div align="center">
-        <table>
-            {{ form.as_table }}
-            <tr>
-                <td colspan="2">
-                    <input type="submit" name="submit" value="Search">
-                </td>
+    <table>
+        {% for field in form %}
+            <tr class="form-row">
+            <td class="form-label">
+                {{ field.label_tag }}
+            </td>
+            {% if 'RATING' in field.label_tag or 'DIFFICULTY' in field.label_tag %}
+                <td class="form-field-selector">{{ field }}</td>
+            {% else %}
+                <td class="form-field">{{ field }}</td>
+            {% endif %}
+
             </tr>
-        </table>
+        {% endfor %}
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="submit" value="Search">
+            </td>
+        </tr>
+    </table>
+{#        <table>#}
+{#            {{ form.as_table }}#}
+{#            <tr>#}
+{#                <td colspan="2">#}
+{#                    <input type="submit" name="submit" value="Search">#}
+{#                </td>#}
+{#            </tr>#}
+{#        </table>#}
 
 
     </div>
