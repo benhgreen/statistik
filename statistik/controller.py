@@ -157,7 +157,7 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
     if 'level' in params:
         filters['type__in'] = {'0': ['0', '1', '2'], '1': ['3', '4', '5']}[params['level'][0]]
     else:
-        filters['type__in'] = ['0', '1', '2']
+        filters['type__in'] = {'SP': ['0', '1', '2'], 'DP': ['3', '4', '5']}[play_style or 'SP']
     ret = Chart.objects.filter(**filters).prefetch_related('song').order_by(
         'song__game_version', 'song__title', 'type')
     # if searching for a title, check if it's in either main or alt title
