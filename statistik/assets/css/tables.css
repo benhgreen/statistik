@@ -67,3 +67,22 @@ table, th, td {
         width: 3em;
         font-weight: 600;
     }
+
+    .form-label label {
+        display: block;
+        text-align: left;
+    }
+
+    .form-field {
+        vertical-align: top;
+        text-align: left;
+        padding-right: 2em;;
+    }
+
+    .form-field-selector {
+        vertical-align: top;
+        text-align: left;
+        padding-left: 3em;
+    }
+
+

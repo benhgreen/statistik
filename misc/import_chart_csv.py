@@ -1,7 +1,11 @@
 import csv
+
+import django
+import psycopg2
+
 from statistik.models import Song, Chart
 
-with open('misc/chart.csv', encoding='utf-8') as csvfile:
+with open('chart.csv', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
 
@@ -10,7 +14,6 @@ with open('misc/chart.csv', encoding='utf-8') as csvfile:
         difficulty = int(row[4])
         note_count = int(row[5])
 
-        print('importing chart %d:%d' % (music_id, type))
 
         chart = Chart(
             song=Song.objects.get(music_id=music_id),
@@ -19,4 +22,9 @@ with open('misc/chart.csv', encoding='utf-8') as csvfile:
             note_count=note_count
         )
 
-        chart.save()
+        try:
+            chart.save()
+            print('importing chart %d:%d' % (music_id, type))
+        except (psycopg2.IntegrityError, django.db.utils.IntegrityError):
+            print('chart %d:%d already in database' % (music_id, type))
+            continue

@@ -27,7 +27,8 @@ urlpatterns = [
     url(r'^elo$', views.elo_view, name='elo'),
     url(r'^login$', views.login_view, name='login'),
     url(r'^logout$', views.logout_view, name='logout'),
-    url(r'^register$', views.register_view, name='register')
+    url(r'^register$', views.register_view, name='register'),
+    url(r'^search$', views.search_view, name='search')
 ]
 
 urlpatterns += staticfiles_urlpatterns()

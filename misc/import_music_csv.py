@@ -1,9 +1,12 @@
 import csv
+
+import django
+import psycopg2
 from django.conf import settings
 from statistik.models import Song
 
 
-with open('misc/music.csv', encoding='utf-8') as csvfile:
+with open('music.csv', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile)
     songs = []
     for row in reader:
@@ -27,11 +30,14 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
         if title not in songs:
             game_version = None
             songs.append(title)
+        # TODO: remove this after using it, it's just for avoiding copula duplicates
         else:
-            game_version = Song.objects.get(title=title).game_version
-            print('creating black another for song %s' % title)
-            title += '†'
-            alt_title += '†'
+            continue
+        # else:
+        #     game_version = Song.objects.get(title=title).game_version
+        #     print('creating black another for song %s' % title)
+        #     title += '†'
+        #     alt_title += '†'
 
 
 
@@ -46,4 +52,9 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
             alt_title=alt_title,
             game_version=game_version or music_id//1000
         )
-        new_song.save()
+        try:
+            new_song.save()
+            print('Added song %s' % title)
+        except (psycopg2.IntegrityError, django.db.utils.IntegrityError):
+            print('%s already in database' % title)
+            continue

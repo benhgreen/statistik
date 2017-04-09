@@ -8,13 +8,16 @@ import elo
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import transaction
+from django.db.models import Q
 from django.utils.translation import ugettext as _
+
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
                                  FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES,
-                                 localize_choices)
+                                 localize_choices, MIN_RATING, MAX_RATING)
 from statistik.forms import ReviewForm, RegisterForm
 from statistik.models import Chart, Review, UserProfile, EloReview
+
 
 def organize_reviews(matched_reviews, user_id):
     """
@@ -101,7 +104,7 @@ def get_avg_ratings(chart_ids, user_id=None, include_reviews=False):
                         'recommended_options': ', '.join([
                             _(RECOMMENDED_OPTIONS_CHOICES[x][1])
                             for x in review.recommended_options])
-                                                     } for review in specific_reviews]
+                    } for review in specific_reviews]
 
         # winding up here means no reviews were found for one of the charts
         # which means the template will just use '--' for all the ratings
@@ -120,45 +123,74 @@ def get_charts_by_ids(ids):
     return Chart.objects.filter(pk__in=ids)
 
 
-def get_charts_by_query(version=None, difficulty=None, play_style=None):
+def get_charts_by_query(versions=None, difficulty=None, play_style=None,
+                        params=None):
     """
     Chart lookup by game-related parameters
-    :param version:         Game version to filter by (from VERSION_CHOICES)
+    :param versions:        Game versions to filter by (from VERSION_CHOICES)
     :param difficulty:      Difficulty to filter by (1-12)
     :param str play_style:  Play style to filter by (from PLAYSIDE_CHOICES)
+    :param params           Extra search parameters to filter by
     :rtype Queryset: Queryset of matched Chart objects
     """
+    if not params:
+        params = {}
 
-    filters = {}
     # create filters for songlist based off params
-    if version:
-        filters['song__game_version'] = int(version)
+    filters = {}
+    if versions:
+        filters['song__game_version__in'] = versions
+    minimum = '1'
+    maximum = '12'
     if difficulty:
-        filters['difficulty'] = int(difficulty)
-    if not (version or difficulty):
-        filters['difficulty'] = 12
-
-    filters['type__in'] = {
-        'SP': [0, 1, 2],
-        'DP': [3, 4, 5]
-    }[play_style or 'SP']
-
-    return Chart.objects.filter(**filters).prefetch_related('song').order_by(
+        minimum = difficulty
+        maximum = difficulty
+    else:
+        if 'min_difficulty' in params:
+            minimum = params['min_difficulty']
+        if 'max_difficulty' in params:
+            maximum = params['max_difficulty']
+    filters['difficulty__gte'] = minimum
+    filters['difficulty__lte'] = maximum
+    if 'genre' in params:
+        filters['song__genre__icontains'] = params['genre']
+    if 'level' in params:
+        filters['type__in'] = {'0': ['0', '1', '2'], '1': ['3', '4', '5']}[params['level'][0]]
+    else:
+        filters['type__in'] = ['0', '1', '2']
+    ret = Chart.objects.filter(**filters).prefetch_related('song').order_by(
         'song__game_version', 'song__title', 'type')
+    # if searching for a title, check if it's in either main or alt title
+    if 'title' in params:
+        title_query = Q(song__title__icontains=params['title']) | \
+                      Q(song__alt_title__icontains=params['title'])
+        ret = ret.filter(title_query)
+    if 'artist' in params:
+        artist_query = Q(song__artist__icontains=params['artist']) | \
+                       Q(song__alt_artist__icontains=params['artist'])
+        ret = ret.filter(artist_query)
+    if 'techs' in params:
+        for tech in params['techs']:
+            tech_query = Q(review__characteristics__icontains=tech)
+            ret = ret.filter(tech_query)
+
+    return ret
 
 
-def get_chart_data(version=None, difficulty=None, play_style=None, user=None,
-                   include_reviews=False):
+def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
+                   params=None, include_reviews=False, ):
     """
     Retrieve chart data acc to specified params and format chart data for
     usage in templates.
-    :param int version:     Game version to filter by (from VERSION_CHOICES)
+    :param int versions:    Game versions to filter by (from VERSION_CHOICES)
     :param int difficulty:  Difficulty to filter by (1-12)
     :param str play_style:  Play style to filter by (from PLAYSIDE_CHOICES)
     :param int user:        Mark charts that have been rated by this user
+    :param params           Extra search parameters to filter by
     :rtype list:            List of dicts containing chart data
     """
-    matched_charts = get_charts_by_query(version, difficulty, play_style)
+
+    matched_charts = get_charts_by_query(versions, difficulty, play_style, params)
     matched_chart_ids = [chart.id for chart in matched_charts]
 
     # get avg ratings for the charts in the returned queryset
@@ -209,7 +241,23 @@ def get_chart_data(version=None, difficulty=None, play_style=None, user=None,
         else:
             data['has_reviewed'] = avg_ratings[chart.id].get('has_reviewed')
 
-        chart_data.append(data)
+        # need to filter by avg ratings here since it isn't stored in the database
+        to_add = True
+        if params:
+            for (min_rating, max_rating, rating) in [
+                ('min_nc', 'max_nc', 'avg_clear_rating'),
+                ('min_hc', 'max_hc', 'avg_hc_rating'),
+                ('min_exhc', 'max_exhc', 'avg_exhc_rating'),
+                ['min_score', 'max_score', 'avg_score_rating']
+            ]:
+                if min_rating in params and params[min_rating]:
+                    if data[rating] == '' or float(params[min_rating]) > float(data[rating]):
+                        to_add = False
+                if max_rating in params and params[max_rating]:
+                    if data[rating] == '' or float(params[max_rating]) < float(data[rating]):
+                        to_add = False
+        if to_add:
+            chart_data.append(data)
     return chart_data
 
 
@@ -265,6 +313,7 @@ def generate_review_form(user, chart_id, form_data=None):
                 form.fields.get('recommended_options').choices = localize_choices(RECOMMENDED_OPTIONS_CHOICES[5:])
             return form, has_reviewed
     return None, None
+
 
 # TODO fix this garbage up
 def generate_user_form(user, form_data=None):
@@ -341,13 +390,13 @@ def get_reviews_for_chart(chart_id):
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
                 for x in review.recommended_options])
         })
         if review.difficulty_spike:
             review_data[-1]['characteristics'].append(
-                    (_('Difficult ' + review.get_difficulty_spike_display()),
-                     '#000'))
+                (_('Difficult ' + review.get_difficulty_spike_display()),
+                 '#000'))
 
     return review_data
 
@@ -383,14 +432,14 @@ def get_reviews_for_user(user_id):
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                _(RECOMMENDED_OPTIONS_CHOICES[x][1])
-                for x in review.recommended_options])
+                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                 for x in review.recommended_options])
         })
 
         if review.difficulty_spike:
             review_data[-1]['characteristics'].append(
-                    (_('Difficult ' + review.get_difficulty_spike_display()),
-                     '#000'))
+                (_('Difficult ' + review.get_difficulty_spike_display()),
+                 '#000'))
 
     return review_data
 
@@ -413,8 +462,8 @@ def get_user_list():
 
             'playside': user.userprofile.get_play_side_display(),
             'best_techniques': ', '.join([
-                _(TECHNIQUE_CHOICES[x][1])
-                for x in user.userprofile.best_techniques]),
+                 _(TECHNIQUE_CHOICES[x][1])
+                 for x in user.userprofile.best_techniques]),
 
             'location': user.userprofile.location
         })
@@ -452,29 +501,29 @@ def elo_rate_charts(chart1_id, chart2_id, user, draw=False, rate_type=0):
     """
     rate_type_display = 'elo_rating_hc' if rate_type else 'elo_rating'
     with transaction.atomic():
-            win_chart = Chart.objects.get(pk=chart1_id)
-            lose_chart = Chart.objects.get(pk=chart2_id)
+        win_chart = Chart.objects.get(pk=chart1_id)
+        lose_chart = Chart.objects.get(pk=chart2_id)
 
-            # elo magic happens here
-            elo_env = elo.Elo(k_factor=20)
-            win_chart_elo = getattr(win_chart, rate_type_display)
-            lose_chart_elo = getattr(lose_chart, rate_type_display)
-            win_rating, lose_rating = elo_env.rate_1vs1(win_chart_elo,
-                                                        lose_chart_elo,
-                                                        drawn=draw)
+        # elo magic happens here
+        elo_env = elo.Elo(k_factor=20)
+        win_chart_elo = getattr(win_chart, rate_type_display)
+        lose_chart_elo = getattr(lose_chart, rate_type_display)
+        win_rating, lose_rating = elo_env.rate_1vs1(win_chart_elo,
+                                                    lose_chart_elo,
+                                                    drawn=draw)
 
-            # update charts with new elo ratings
-            setattr(win_chart, rate_type_display, win_rating)
-            setattr(lose_chart, rate_type_display, lose_rating)
-            win_chart.save()
-            lose_chart.save()
+        # update charts with new elo ratings
+        setattr(win_chart, rate_type_display, win_rating)
+        setattr(lose_chart, rate_type_display, lose_rating)
+        win_chart.save()
+        lose_chart.save()
 
-            # record review in case ratings need to be regenerated
-            EloReview.objects.create(first=win_chart,
-                                     second=lose_chart,
-                                     drawn=draw,
-                                     type=rate_type,
-                                     created_by=user)
+        # record review in case ratings need to be regenerated
+        EloReview.objects.create(first=win_chart,
+                                 second=lose_chart,
+                                 drawn=draw,
+                                 type=rate_type,
+                                 created_by=user)
 
 
 def get_elo_rankings(level, rate_type):
@@ -484,7 +533,7 @@ def get_elo_rankings(level, rate_type):
     :param str rate_type:   Rating type (refer to Chart model for options)
     :rtype list:            List of dicts containing chart/ranking data
     """
-    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3)\
+    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3) \
         .prefetch_related('song').order_by('-' + rate_type)
 
     # assemble displayed elo info for matched charts
@@ -515,7 +564,7 @@ def make_elo_matchup(level):
     # only return closely-matched charts for better rankings
     while elo_diff > 50:
         [chart1, chart2] = random.sample(charts, 2)
-        elo_diff = abs(chart1.elo_rating-chart2.elo_rating)
+        elo_diff = abs(chart1.elo_rating - chart2.elo_rating)
 
     # assemble display info for these two charts
     return [{
@@ -548,7 +597,8 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
     :param int clear_type:  Rating type (refer to Chart model for options)
     :rtype list:            List of tuples of format (link text, link)
     """
-    ret = [(_('INDEX'), reverse('index'))]
+    ret = [(_('INDEX'), reverse('index')),
+           (_('SEARCH'), reverse('search'))]
     if not elo:
         if level:
             ret.append((_('ALL %(level)d☆ %(style)s') % {'level': level,
@@ -559,12 +609,12 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
             version_display = FULL_VERSION_NAMES[version].upper()
             ret.append((_('ALL %(version)s %(style)s') % {'version': version_display,
                                                           'style': style},
-                       reverse('ratings') + "?version=%d&style=%s" % (
+                        reverse('ratings') + "?version=%d&style=%s" % (
                             version, style)))
 
         if user:
             ret.append((_('USER LIST'),
-                       reverse('users')))
+                        reverse('users')))
 
     else:
         type_display = SCORE_CATEGORY_CHOICES[int(clear_type)][1]
@@ -574,7 +624,7 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
                         reverse('elo') + '?level=%d&type=%d&list=true' % (
                             level, clear_type)))
         elif elo == 'list':
-            ret.append(('ELO %d☆ %s' % (level, type_display)  +  _(' MATCHING'),
+            ret.append(('ELO %d☆ %s' % (level, type_display) + _(' MATCHING'),
                         reverse('elo') + '?level=%d&type=%d' % (
                             level, clear_type)))
 
