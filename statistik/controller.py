@@ -221,7 +221,7 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
             if chart.song.alt_title
             else chart.song.title,
 
-            'note_count': chart.note_count,
+            'note_count': chart.note_count or '???',
             'difficulty': chart.difficulty,
 
             'avg_clear_rating': str(avg_ratings[chart.id].get(
