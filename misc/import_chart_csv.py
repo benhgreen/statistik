@@ -12,7 +12,10 @@ with open('misc/chart.csv', encoding='utf-8') as csvfile:
         music_id = int(row[1])
         type = int(row[2])
         difficulty = int(row[4])
-        note_count = int(row[5])
+        try:
+            note_count = int(row[5])
+        except ValueError:
+            note_count = None
 
 
         chart = Chart(
