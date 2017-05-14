@@ -587,11 +587,10 @@ def get_elo_rankings(game, level, rate_type):
     :param str rate_type:   Rating type (refer to Chart model for options)
     :rtype list:            List of dicts containing chart/ranking data
     """
-    versions = [str(v[0]) for v in VERSION_CHOICES[game]]
     # singles difficulties only
     singles = [str(i) for i in SINGLES_LEVELS[game]]
-    matched_charts = Chart.objects.filter(difficulty=int(level), type__in=singles[game],
-                                          song__game_version__in=versions).prefetch_related('song').order_by(
+    matched_charts = Chart.objects.filter(difficulty=int(level), type__in=singles,
+                                          song__game=game).prefetch_related('song').order_by(
                                           '-' + rate_type)
 
     # assemble displayed elo info for matched charts
