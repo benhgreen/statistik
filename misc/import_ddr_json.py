@@ -8,7 +8,7 @@ from statistik.models import Song, Chart
 
 
 def main():
-    with open('ddr.json', 'r') as ddr_file:
+    with open('misc/ddr.json', 'r') as ddr_file:
         data = json.load(ddr_file)
         for song in data:
             music_id = song['music_id']
