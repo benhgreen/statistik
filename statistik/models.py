@@ -32,7 +32,7 @@ class Chart(models.Model):
     song = models.ForeignKey(Song)
     type = models.SmallIntegerField(choices=[t for g in GAME_CHOICES for t in CHART_TYPE_CHOICES[g[0]]])
     difficulty = models.SmallIntegerField(validators=[
-        MaxValueValidator(12),
+        MaxValueValidator(20),
         MinValueValidator(1)
     ])
     note_count = models.SmallIntegerField(null=True)
