@@ -278,14 +278,14 @@ class DDRSearchForm(forms.Form):
                              max_length=50,
                              required=False)
     min_difficulty = RatingField(label=_("MIN DIFFICULTY"),
-                                 choices=[(i, str(i)) for i in range(1, 13)],
+                                 choices=[(i, str(i)) for i in range(1, 20)],
                                  validators=RATING_VALIDATORS[DDR],
                                  initial=1,
                                  required=False)
     max_difficulty = RatingField(label=_("MAX DIFFICULTY"),
-                                 choices=[(i, str(i)) for i in range(1, 13)],
+                                 choices=[(i, str(i)) for i in range(1, 20)],
                                  validators=RATING_VALIDATORS[DDR],
-                                 initial=12,
+                                 initial=19,
                                  required=False)
     min_nc = RatingField(label=_("MIN CLEAR RATING"),
                          choices=RATING_CHOICES[DDR],
