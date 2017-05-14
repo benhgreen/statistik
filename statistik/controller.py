@@ -14,8 +14,8 @@ from django.utils.translation import ugettext as _
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
                                  FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES,
-                                 localize_choices, MIN_RATING, MAX_RATING)
-from statistik.forms import ReviewForm, RegisterForm
+                                 localize_choices, VERSION_CHOICES, IIDX, DDR, GAMES, GAME_CHOICES, SINGLES_LEVELS)
+from statistik.forms import RegisterForm, DDRReviewForm, IIDXReviewForm
 from statistik.models import Chart, Review, UserProfile, EloReview
 
 
@@ -43,7 +43,7 @@ def organize_reviews(matched_reviews, user_id):
     return review_dict, user_reviewed
 
 
-def get_avg_ratings(chart_ids, user_id=None, include_reviews=False):
+def get_avg_ratings(chart_ids, game=IIDX, user_id=None, include_reviews=False):
     """
     Get average ratings for all charts.
     :param list chart_ids:  List of chart ids to retrieve ratings for
@@ -66,7 +66,7 @@ def get_avg_ratings(chart_ids, user_id=None, include_reviews=False):
         specific_reviews = organized_reviews.get(chart)
         if specific_reviews:
             # for each rating type, average the scores in matched reviews
-            for rating_type in SCORE_CATEGORY_NAMES:
+            for rating_type in SCORE_CATEGORY_NAMES[game]:
                 avg_rating = "%.1f" % round(statistics.mean(
                     [getattr(review, rating_type)
                      for review in specific_reviews
@@ -96,9 +96,9 @@ def get_avg_ratings(chart_ids, user_id=None, include_reviews=False):
                         'score_rating': review.score_rating,
 
                         'characteristics': [
-                            (_(TECHNIQUE_CHOICES[x][1]), '#187638')
+                            (_(TECHNIQUE_CHOICES[game][x][1]), '#187638')
                             if x in review.user.userprofile.best_techniques
-                            else (_(TECHNIQUE_CHOICES[x][1]), '#000')
+                            else (_(TECHNIQUE_CHOICES[game][x][1]), '#000')
                             for x in review.characteristics],
 
                         'recommended_options': ', '.join([
@@ -123,7 +123,7 @@ def get_charts_by_ids(ids):
     return Chart.objects.filter(pk__in=ids)
 
 
-def get_charts_by_query(versions=None, difficulty=None, play_style=None,
+def get_charts_by_query(game=IIDX, versions=None, difficulty=None, play_style=None,
                         params=None):
     """
     Chart lookup by game-related parameters
@@ -138,10 +138,11 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
 
     # create filters for songlist based off params
     filters = {}
+    filters['song__game'] = str(game)
     if versions:
         filters['song__game_version__in'] = versions
     minimum = '1'
-    maximum = '12'
+    maximum = {IIDX: '12', DDR: '20'}[game]
     if difficulty:
         minimum = difficulty
         maximum = difficulty
@@ -152,12 +153,21 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
             maximum = params['max_difficulty']
     filters['difficulty__gte'] = minimum
     filters['difficulty__lte'] = maximum
-    if 'genre' in params:
+    if game == IIDX and 'genre' in params:
         filters['song__genre__icontains'] = params['genre']
-    if 'level' in params:
-        filters['type__in'] = {'0': ['0', '1', '2'], '1': ['3', '4', '5']}[params['level'][0]]
+    # play type, SP or DP
+    if 'play_style' in params:
+        filters['type__in'] = {IIDX:
+                                   {'0': ['0', '1', '2'],
+                                    '1': ['3', '4', '5']},
+                               DDR: {'0': ['100', '101', '102', '103', '104'],
+                                     '1': ['105', '106', '107', '108']}}[game][params['play_style']]
     else:
-        filters['type__in'] = {'SP': ['0', '1', '2'], 'DP': ['3', '4', '5']}[play_style or 'SP']
+        filters['type__in'] = {IIDX:
+                                   {'SP': ['0', '1', '2'],
+                                    'DP': ['3', '4', '5']},
+                               DDR: {'SP': ['100', '101', '102', '103', '104'],
+                                     'DP': ['105', '106', '107', '108']}}[game][play_style or 'SP']
     ret = Chart.objects.filter(**filters).prefetch_related('song').order_by(
         'song__game_version', 'song__title', 'type')
     # if searching for a title, check if it's in either main or alt title
@@ -177,7 +187,7 @@ def get_charts_by_query(versions=None, difficulty=None, play_style=None,
     return ret
 
 
-def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
+def get_chart_data(game=IIDX, versions=None, difficulty=None, play_style=None, user=None,
                    params=None, include_reviews=False, ):
     """
     Retrieve chart data acc to specified params and format chart data for
@@ -190,11 +200,11 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
     :rtype list:            List of dicts containing chart data
     """
 
-    matched_charts = get_charts_by_query(versions, difficulty, play_style, params)
+    matched_charts = get_charts_by_query(game, versions, difficulty, play_style, params)
     matched_chart_ids = [chart.id for chart in matched_charts]
 
     # get avg ratings for the charts in the returned queryset
-    avg_ratings = get_avg_ratings(matched_chart_ids, user, include_reviews)
+    avg_ratings = get_avg_ratings(matched_chart_ids, game, user, include_reviews)
 
     chart_data = []
     for chart in matched_charts:
@@ -218,6 +228,8 @@ def get_chart_data(versions=None, difficulty=None, play_style=None, user=None,
             else chart.song.title,
 
             'note_count': chart.note_count or '--',
+            'bpm_min': chart.song.bpm_min or '--',
+            'bpm_max': chart.song.bpm_max or '--',
             'difficulty': chart.difficulty,
 
             'avg_clear_rating': str(avg_ratings[chart.id].get(
@@ -270,7 +282,7 @@ def generate_review_form(user, chart_id, form_data=None):
     :rtype tuple:           (ReviewForm, bool indicating if user reviewed chart)
     """
     chart = Chart.objects.get(pk=chart_id)
-
+    game = chart.song.game
     # if user is authenticated and can review this chart, display review form
     if user.is_authenticated():
         user_profile = UserProfile.objects.filter(user=user).first()
@@ -279,7 +291,10 @@ def generate_review_form(user, chart_id, form_data=None):
 
             # handle incoming reviews
             if form_data:
-                form = ReviewForm(form_data)
+                if game == IIDX:
+                    form = IIDXReviewForm(form_data)
+                else:
+                    form = DDRReviewForm(form_data)
                 if form.is_valid(difficulty=chart.difficulty):
                     Review.objects.update_or_create(chart=chart,
                                                     user=user,
@@ -292,25 +307,45 @@ def generate_review_form(user, chart_id, form_data=None):
                     user=user, chart=chart).first()
                 # if they do, pre-populate the form fields with this review
                 if user_review:
-                    data = {key: getattr(user_review, key)
-                            for key in ['text',
-                                        'clear_rating',
-                                        'hc_rating',
-                                        'exhc_rating',
-                                        'score_rating',
-                                        'characteristics',
-                                        'difficulty_spike',
-                                        'recommended_options']}
-                    form = ReviewForm(data)
+                    if game == IIDX:
+                        data = {key: getattr(user_review, key)
+                                for key in ['text',
+                                            'clear_rating',
+                                            'hc_rating',
+                                            'exhc_rating',
+                                            'score_rating',
+                                            'characteristics',
+                                            'difficulty_spike',
+                                            'recommended_options']}
+                        form = IIDXReviewForm(data)
+                    elif game == DDR:
+                        data = {key: getattr(user_review, key)
+                                for key in ['text',
+                                            'clear_rating',
+                                            'score_rating',
+                                            'characteristics',
+                                            'difficulty_spike',
+                                            'recommended_options']}
+                        # ddr has one speed mod instead of multiple options
+                        if data['recommended_options']:
+                            data['recommended_options'] = data['recommended_options'][0]
+                        form = DDRReviewForm(data)
                     has_reviewed = True
 
                 # if they don't, create a blank form
                 else:
-                    form = ReviewForm()
-            if chart.type < 3:
-                form.fields.get('recommended_options').choices = localize_choices(RECOMMENDED_OPTIONS_CHOICES[:5])
-            else:
-                form.fields.get('recommended_options').choices = localize_choices(RECOMMENDED_OPTIONS_CHOICES[5:])
+                    if game == IIDX:
+                        form = IIDXReviewForm()
+                    else:
+                        form = DDRReviewForm()
+            # iidx has doubles-exclusive options
+            if game == IIDX:
+                if chart.type < 3:
+                    form.fields.get('recommended_options').choices = localize_choices(
+                        RECOMMENDED_OPTIONS_CHOICES[game][:5])
+                else:
+                    form.fields.get('recommended_options').choices = localize_choices(
+                        RECOMMENDED_OPTIONS_CHOICES[game][5:])
             return form, has_reviewed
     return None, None
 
@@ -369,6 +404,8 @@ def get_reviews_for_chart(chart_id):
     chart_reviews = Review.objects.filter(chart=chart_id).prefetch_related(
         'user__userprofile')
 
+    game = Chart.objects.get(id=chart_id).song.game
+
     # collect info to display for each review
     review_data = []
     for review in chart_reviews:
@@ -384,13 +421,13 @@ def get_reviews_for_chart(chart_id):
             'score_rating': str(review.score_rating or ""),
 
             'characteristics': [
-                (_(TECHNIQUE_CHOICES[x][1]), '#187638')
+                (_(TECHNIQUE_CHOICES[game][x % 100][1]), '#187638')
                 if x in review.user.userprofile.best_techniques
-                else (_(TECHNIQUE_CHOICES[x][1]), '#000')
+                else (_(TECHNIQUE_CHOICES[game][x % 100][1]), '#000')
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                 _(RECOMMENDED_OPTIONS_CHOICES[game][x][1])
                 for x in review.recommended_options])
         })
         if review.difficulty_spike:
@@ -413,7 +450,9 @@ def get_reviews_for_user(user_id):
     # assemble display info for these reviews
     review_data = []
     for review in matched_reviews:
+        game = review.chart.song.game
         review_data.append({
+            'game': GAME_CHOICES[game][1],
             'title': review.chart.song.title,
             'text': review.text,
             'chart_id': review.chart.id,
@@ -426,13 +465,13 @@ def get_reviews_for_user(user_id):
             'score_rating': str(review.score_rating or ""),
 
             'characteristics': [
-                (TECHNIQUE_CHOICES[x][1], '#187638')
+                (TECHNIQUE_CHOICES[game][x % 100][1], '#187638')
                 if x in review.user.userprofile.best_techniques
-                else (_(TECHNIQUE_CHOICES[x][1]), '#000')
+                else (_(TECHNIQUE_CHOICES[game][x % 100][1]), '#000')
                 for x in review.characteristics],
 
             'recommended_options': ', '.join([
-                 _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                 _(RECOMMENDED_OPTIONS_CHOICES[game][x][1])
                  for x in review.recommended_options])
         })
 
@@ -455,18 +494,30 @@ def get_user_list():
     # assemble display info for users
     user_data = []
     for user in users:
-        user_data.append({
-            'user_id': user.id,
-            'username': user.username,
-            'dj_name': user.userprofile.dj_name,
+        try:
+            techs = {}
+            for game in GAMES:
+                # make sure the tech is actually for the right game, each game has 100 added to its indices
+                game_techs = (', '.join([
+                         _(TECHNIQUE_CHOICES[GAMES[game]][x % 100][1])
+                         for x in user.userprofile.best_techniques
+                         if TECHNIQUE_CHOICES[GAMES[game]][x % 100][0] == x]))
+                if game_techs is not '':
+                    techs[game] = game_techs
 
-            'playside': user.userprofile.get_play_side_display(),
-            'best_techniques': ', '.join([
-                 _(TECHNIQUE_CHOICES[x][1])
-                 for x in user.userprofile.best_techniques]),
+            data = {'user_id': user.id,
+                    'username': user.username,
+                    'dj_name': user.userprofile.dj_name,
 
-            'location': user.userprofile.location
-        })
+                    'playside': user.userprofile.get_play_side_display(),
+                    'best_techniques': techs,
+
+                    'location': user.userprofile.location
+                    }
+            user_data.append(data)
+
+        except UserProfile.DoesNotExist:
+            continue
     return user_data
 
 
@@ -484,7 +535,9 @@ def create_new_user(user_data):
                                location=user_data.get('location'),
                                play_side=user_data.get('playside'),
                                best_techniques=user_data.get(
-                                   'best_techniques'),
+                                   'best_techniques_iidx') + user_data.get(
+                                   'best_techniques_ddr'
+                               ),
                                max_reviewable=0)
     user_profile.save()
     return user
@@ -526,15 +579,20 @@ def elo_rate_charts(chart1_id, chart2_id, user, draw=False, rate_type=0):
                                  created_by=user)
 
 
-def get_elo_rankings(level, rate_type):
+def get_elo_rankings(game, level, rate_type):
     """
     Get songs ranked by Elo ranking, formatted for template usage
-    :param int level:       Level to sort by (1-12)
+    :param int game:        The game to get songs from (0-1)
+    :param int level:       Level of songs to sort by (1-12) for IIDX, (1-19) for DDR
     :param str rate_type:   Rating type (refer to Chart model for options)
     :rtype list:            List of dicts containing chart/ranking data
     """
-    matched_charts = Chart.objects.filter(difficulty=int(level), type__lt=3) \
-        .prefetch_related('song').order_by('-' + rate_type)
+    versions = [str(v[0]) for v in VERSION_CHOICES[game]]
+    # singles difficulties only
+    singles = [str(i) for i in SINGLES_LEVELS[game]]
+    matched_charts = Chart.objects.filter(difficulty=int(level), type__in=singles[game],
+                                          song__game_version__in=versions).prefetch_related('song').order_by(
+                                          '-' + rate_type)
 
     # assemble displayed elo info for matched charts
     # TODO add link to 'normal' chart reviews
@@ -546,20 +604,23 @@ def get_elo_rankings(level, rate_type):
             'title': chart.song.title,
             'type': chart.get_type_display(),
             'rating': round(getattr(chart, rate_type), 3),
-            'link': reverse('chart') + '?id=' + str(chart.id)
+            'link': reverse('chart', kwargs={'chart_id': chart.id})
         })
     return chart_data
 
 
-def make_elo_matchup(level):
+def make_elo_matchup(game, level):
     """
     Match two charts for an Elo ranking and format the data for template usage
-    :param int level:   Level of songs to match (1-12)
+    :param int game:    The game to match songs from (0-1)
+    :param int level:   Level of songs to match (1-12) for IIDX, (1-19) for DDR
     :rtype list:        List of dicts of chart info
     """
     elo_diff = 9001
     chart1 = chart2 = None
-    charts = list(Chart.objects.filter(difficulty=int(level), type__lt=3))
+    # singles difficulties only
+    sng = {IIDX: [str(i) for i in range(0, 3)], DDR: [str(i) for i in range(100, 105)]}
+    charts = list(Chart.objects.filter(difficulty=int(level), type__in=sng[game], song__game=game))
 
     # only return closely-matched charts for better rankings
     while elo_diff > 50:
@@ -585,10 +646,11 @@ def create_page_title(context, title_elements):
     context['page_title'] = ' // '.join(['STATISTIK', context['title']])
 
 
-def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
+def make_nav_links(game=IIDX, level=None, style='SP', version=None, user=None, elo=None,
                    clear_type=None):
     """
     Create nav links to display underneath page title
+    :param int game:        The game that links should lead to
     :param int level:       Add a link to all songs of this level
     :param str style:       'SP' or 'DP'
     :param int version:     Add a link too all song from this version
@@ -597,19 +659,21 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
     :param int clear_type:  Rating type (refer to Chart model for options)
     :rtype list:            List of tuples of format (link text, link)
     """
-    ret = [(_('INDEX'), reverse('index')),
-           (_('SEARCH'), reverse('search'))]
+    game_name = GAME_CHOICES[game][1]
+    reverse_kwargs = {'game': game_name}
+    ret = [(_('INDEX'), reverse('index', kwargs=reverse_kwargs)),
+           (_('SEARCH'), reverse('search', kwargs=reverse_kwargs))]
     if not elo:
         if level:
             ret.append((_('ALL %(level)d☆ %(style)s') % {'level': level,
                                                          'style': style},
-                        reverse('ratings') + "?difficulty=%d&style=%s" % (
+                        reverse('ratings', kwargs=reverse_kwargs) + "?difficulty=%d&style=%s" % (
                             level, style)))
         if version:
-            version_display = FULL_VERSION_NAMES[version].upper()
+            version_display = FULL_VERSION_NAMES[game][version].upper()
             ret.append((_('ALL %(version)s %(style)s') % {'version': version_display,
                                                           'style': style},
-                        reverse('ratings') + "?version=%d&style=%s" % (
+                        reverse('ratings', kwargs=reverse_kwargs) + "?version=%d&style=%s" % (
                             version, style)))
 
         if user:
@@ -617,17 +681,30 @@ def make_nav_links(level=None, style='SP', version=None, user=None, elo=None,
                         reverse('users')))
 
     else:
-        type_display = SCORE_CATEGORY_CHOICES[int(clear_type)][1]
+        type_display = SCORE_CATEGORY_CHOICES[game][int(clear_type)][1]
 
         if elo == 'match':
-            ret.append(('ELO %d☆ %s' % (level, type_display) + _(' LIST'),
-                        reverse('elo') + '?level=%d&type=%d&list=true' % (
+            ret.append(('ELO %s %d☆ %s' % (GAME_CHOICES[game][1], level, type_display) + _(' LIST'),
+                        reverse('elo', kwargs=reverse_kwargs) + '?&level=%d&type=%d&list=true' % (
                             level, clear_type)))
         elif elo == 'list':
-            ret.append(('ELO %d☆ %s' % (level, type_display) + _(' MATCHING'),
-                        reverse('elo') + '?level=%d&type=%d' % (
+            ret.append(('ELO %s %d☆ %s' % (GAME_CHOICES[game][1], level, type_display) + _(' MATCHING'),
+                        reverse('elo', kwargs=reverse_kwargs) + '?level=%d&type=%d' % (
                             level, clear_type)))
 
+    return ret
+
+
+def make_game_links(game=IIDX):
+    """
+    Create links to other games to be displayed on the index page
+    :param game: The current game, which should not be displayed
+    :rtype list: List of tuples of format (link text, link)
+    """
+    ret = []
+    for g in GAMES:
+        if GAMES[g] != game:
+            ret.append((g, reverse('index', kwargs={'game': g})))
     return ret
 
 

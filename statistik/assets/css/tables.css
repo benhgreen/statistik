@@ -44,6 +44,10 @@ table, th, td {
         width: 15px;
     }
 
+    .bpm_col {
+        width: 15px;
+    }
+
     .nc_col {
         background-color: #2df0ff;
         width: 3em;

@@ -14,7 +14,7 @@
             <br>
             <h5 style="float: right;">
             {% if user.is_authenticated %}
-                {% trans 'welcome' %}, <a style="color: #000;text-decoration: underline" href="{% url 'users' %}?id={{ user.id }}"> {{ user.username }}</a> | <a style="text-decoration: underline" href="{% url 'logout' %}">{% trans 'logout' %}</a>
+                {% trans 'welcome' %}, <a style="color: #000;text-decoration: underline" href="{% url 'users' user_id=user.id %}"> {{ user.username }}</a> | <a style="text-decoration: underline" href="{% url 'logout' %}">{% trans 'logout' %}</a>
             {% else %}
                 <form style="display: inline;" action="{% url 'login' %}" method="post">
                     {% csrf_token %}
@@ -36,6 +36,16 @@
             <div style="float: left">
                 {% for link in nav_links %}
                     <a style="color: #000;padding-right: 10px;font-weight: 600;text-decoration: underline" href="{{ link.1 }}">// {{ link.0 }} </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% if game_links %}
+            <br>
+            <br>
+            <br>
+            <div style="float: left">
+                {% for link in game_links %}
+                    <a style="color: #000;padding-right: 10px;font-weight: 600;text-decoration: underline" href="{{ link.1 }}">//SWITCH TO {{ link.0 }} </a>
                 {% endfor %}
             </div>
         {% endif %}

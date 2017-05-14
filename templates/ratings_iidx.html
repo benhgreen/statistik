@@ -1,0 +1,60 @@
+{% extends 'ratings.html' %}
+
+{% load i18n %}
+
+{% block chart_table %}
+<div align="center" style="width: 1100px; font-weight: 500;line-height: 1.5em">
+        {% trans 'songs are rated from 1.0 to 14.0 (13.0 = 12.11)' %}
+        <br>{% trans "click a song's title for more info, or click table headers to sort." %}
+        <br>{% trans 'red ratings indicate clickagain as default' %}
+    </div>
+
+    <br>
+
+    <table class="sortable" border="1" align="center" style="width:1100px">
+        <tr style="line-height: 15px;font-size: small;
+        color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
+            <td style="background-color: #3d393f;width: 5%">VER</td>
+            <td class="sorttable_numeric" style="background-color: #3d393f;width: 5%">LV</td>
+            <td class="sortable_alpha" style="background-color: #3d393f;width: 41%">{% trans 'SONG TITLE' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'NOTE COUNT ' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{%  trans 'NC RATING ' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'HC RATING ' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'EXHC RATING ' %}</td>
+            <td style="background-color: #3d393f;width: 7%">{% trans 'SCORE RATING ' %}</td>
+        </tr>
+    {% for chart in charts %}
+        <tr>
+            <td class="ver_col" sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
+            {% if 'N' in chart.type_display %}
+                <td class="lv_col" style="color: #1822d6;">
+            {% elif 'H' in chart.type_display %}
+                <td class="lv_col" style="color: #a69b43;">
+            {% else %}
+                <td class="lv_col" style="color: #c62c4a;">
+            {% endif %}
+            {% if chart.has_reviewed %}
+                    <b>{{ chart.difficulty }}★</b>
+            {% else %}
+                    <b>{{ chart.difficulty }}☆</b>
+            {% endif %}
+                </td>
+            <td class="title_col" sorttable_customkey="{{ chart.alt_title }}"><a style="color: #000;" href="{% url 'chart' chart_id=chart.id %}"> {{ chart.title }}</a></td>
+            <td class="notecount_col">{{ chart.note_count }}</td>
+            {% if chart.clickagain_nc %}
+                <td class="nc_col" style="color: #f11137;;">{{ chart.avg_clear_rating | default:"--" }}</td>
+            {% else %}
+                <td class="nc_col">{{ chart.avg_clear_rating | default:"--" }}</td>
+            {% endif %}
+            {% if chart.clickagain_hc %}
+                <td class="hc_col" style="color: #f11137;;">{{ chart.avg_hc_rating | default:"--" }}</td>
+            {% else %}
+                <td class="hc_col">{{ chart.avg_hc_rating | default:"--" }}</td>
+            {% endif %}
+            <td class="exhc_col">{{ chart.avg_exhc_rating | default:"--" }}</td>
+            <td class="score_col">{{ chart.avg_score_rating | default:"--" }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}

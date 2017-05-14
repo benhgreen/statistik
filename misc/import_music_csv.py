@@ -3,6 +3,8 @@ import csv
 import django
 import psycopg2
 from django.conf import settings
+
+from statistik.constants import IIDX
 from statistik.models import Song
 
 
@@ -19,6 +21,7 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
         artist=row[5]
         genre=row[6]
         alt_artist = row[8]
+        game=IIDX
 
         if int(row[1]) >= 917505 or music_id > 21216:
             title = row[4]
@@ -50,7 +53,8 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
             alt_artist=alt_artist,
             genre=genre,
             alt_title=alt_title,
-            game_version=game_version or music_id//1000
+            game_version=game_version or music_id//1000,
+            game=game or game_version // 100
         )
         try:
             new_song.save()

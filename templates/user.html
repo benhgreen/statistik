@@ -18,6 +18,7 @@
 <table class="sortable" border="1" align="center" style="width:1100px;table-layout: fixed;word-wrap: break-word">
         <tr style="line-height: 15px;font-size: small;
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
+            <td style="background-color: #3d393f;width: 7%;">{% trans 'GAME' %}</td>
             <td style="background-color: #3d393f;width: 20%;">{% trans 'SONG TITLE' %}</td>
             <td style="background-color: #3d393f;width: 5%;">LV</td>
             <td style="background-color: #3d393f;width: 25%">{% trans 'REVIEW TEXT' %}</td>
@@ -29,7 +30,8 @@
         </tr>
     {% for review in reviews %}
         <tr style="line-height: 150%">
-            <td style="width: 14em"><a style="color: #000" href="{% url 'chart' %}?id={{ review.chart_id }}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
+            <td style="width: 3em">{{ review.game }}</td>
+            <td style="width: 14em"><a style="color: #000" href="{% url 'chart' chart_id=review.chart_id%}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
 
             {% if 'N' in review.type_display %}
                 <td class="lv_col" style="color: #1822d6;">

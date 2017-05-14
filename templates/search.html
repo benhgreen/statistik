@@ -11,7 +11,7 @@
 
 {% block content %}
     <br><br><br>
-    <form action="{% url 'search' %}" method="get">
+    <form action="{% url 'search' game=game %}" method="get">
     <div align="center">
     <table>
         {% for field in form %}
