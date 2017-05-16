@@ -664,7 +664,8 @@ def make_nav_links(game=IIDX, level=None, style='SP', version=None, user=None, e
            (_('SEARCH'), reverse('search', kwargs=reverse_kwargs))]
     if not elo:
         if level:
-            ret.append((_('ALL %(level)d☆ %(style)s') % {'level': level,
+            ret.append((_('ALL %(game)s %(level)d☆ %(style)s') % {'game': GAME_CHOICES[game][1],
+                                                                  'level': level,
                                                          'style': style},
                         reverse('ratings', kwargs=reverse_kwargs) + "?difficulty=%d&style=%s" % (
                             level, style)))
