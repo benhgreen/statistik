@@ -140,6 +140,7 @@ class DDRReviewForm(forms.Form):
     recommended_options = forms.ChoiceField(
         label=_("RECOMMENDED SPEED MOD"),
         choices=localize_choices(RECOMMENDED_OPTIONS_CHOICES[DDR]),
+        initial=RECOMMENDED_OPTIONS_CHOICES[DDR][3][0],
         required=False,
     )
 
