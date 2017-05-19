@@ -112,7 +112,7 @@ class IIDXReviewForm(forms.Form):
 
 class DDRReviewForm(forms.Form):
 
-    RANGE_HELP_TEXT = _("Range: 1.0-20.0.")
+    RANGE_HELP_TEXT = _("Range: 1.0-21.0.")
 
     text = forms.CharField(label=_("REVIEW TEXT"),
                            help_text=_("Optional, limit 256 characters."),
