@@ -443,7 +443,7 @@ def get_reviews_for_user(user_id):
     """
     Get reviews written by a user and format for use in template
     :param int user_id:     User to query reviews by
-    :rtype list:            A list containing a list of review dicts for each game
+    :rtype dict:            A dict mapping each game to a list of dicts containing user's reviews for that game
     """
     # get all reviews created by this user
     matched_reviews = Review.objects.filter(user=user_id).prefetch_related(
