@@ -497,15 +497,8 @@ def get_user_list():
         try:
             techs = {}
             for game in GAMES:
-                game_techs = []
-                for x in user.userprofile.best_techniques:
-                    try:
-                        # make sure the technique is actually for the right game, each game has 100 added to its indices
-                        if TECHNIQUE_CHOICES[GAMES[game]][x % 100][0] == x:
-                            game_techs.append( _(TECHNIQUE_CHOICES[GAMES[game]][x % 100][1]))
-                    # different games have different amounts of techniques
-                    except IndexError:
-                        continue
+                game_techs = [_(x[1]) for x in TECHNIQUE_CHOICES[GAMES[game]]
+                              if x[0] in user.userprofile.best_techniques]
                 if len(game_techs) > 0:
                     techs[game] = ', '.join(game_techs)
 
