@@ -453,7 +453,6 @@ def get_reviews_for_user(user_id):
     for review in matched_reviews:
         game = review.chart.song.game
         review_data[game].append({
-            'game': game,
             'title': review.chart.song.title,
             'text': review.text,
             'chart_id': review.chart.id,
