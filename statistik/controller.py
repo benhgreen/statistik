@@ -5,6 +5,7 @@ import random
 import statistics
 
 import elo
+from collections import defaultdict
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -442,17 +443,17 @@ def get_reviews_for_user(user_id):
     """
     Get reviews written by a user and format for use in template
     :param int user_id:     User to query reviews by
-    :rtype list:            List of dicts containing user's reviews
+    :rtype list:            A list containing a list of review dicts for each game
     """
     # get all reviews created by this user
     matched_reviews = Review.objects.filter(user=user_id).prefetch_related(
         'chart__song')
     # assemble display info for these reviews
-    review_data = []
+    review_data = defaultdict(list)
     for review in matched_reviews:
         game = review.chart.song.game
-        review_data.append({
-            'game': GAME_CHOICES[game][1],
+        review_data[game].append({
+            'game': game,
             'title': review.chart.song.title,
             'text': review.text,
             'chart_id': review.chart.id,
@@ -476,7 +477,7 @@ def get_reviews_for_user(user_id):
         })
 
         if review.difficulty_spike:
-            review_data[-1]['characteristics'].append(
+            review_data[game][-1]['characteristics'].append(
                 (_('Difficult ' + review.get_difficulty_spike_display()),
                  '#000'))
 

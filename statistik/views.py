@@ -13,7 +13,7 @@ from django.shortcuts import redirect, render
 from django.utils.translation import ugettext as _
 from statistik.constants import (FULL_VERSION_NAMES, generate_version_urls,
                                  generate_level_urls, SCORE_CATEGORY_CHOICES,
-                                 generate_elo_level_urls, IIDX, DDR, GAMES)
+                                 generate_elo_level_urls, IIDX, DDR, GAMES, GAME_CHOICES)
 from statistik.controller import (get_chart_data, generate_review_form,
                                   get_charts_by_ids, get_reviews_for_chart,
                                   get_reviews_for_user, get_user_list,
@@ -252,8 +252,12 @@ def user_view(request, user_id=None):
         user = User.objects.filter(pk=user_id).first()
         if not user:
             return HttpResponseBadRequest()
-        # TODO: maybe have a separate review table for each game
-        context['reviews'] = get_reviews_for_user(user.id)
+
+        user_reviews = get_reviews_for_user(user.id)
+        if IIDX in user_reviews:
+            context['iidx_reviews'] = user_reviews[IIDX]
+        if DDR in user_reviews:
+            context['ddr_reviews'] = user_reviews[DDR]
 
         # if user is the logged in user, let them edit their options
         if request.user.id == int(user_id):
