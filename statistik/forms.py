@@ -47,9 +47,6 @@ class RegisterForm(forms.Form):
                 return False
         return True
 
-# TODO: see if this can be made back into just ReviewForm, wasn't letting me just have a game parameter
-# because form fields are set when the class is imported and game isn't known until an instance is made much later
-
 
 class IIDXReviewForm(forms.Form):
 
