@@ -497,13 +497,10 @@ def get_user_list():
         try:
             techs = {}
             for game in GAMES:
-                # make sure the tech is actually for the right game, each game has 100 added to its indices
-                game_techs = (', '.join([
-                         _(TECHNIQUE_CHOICES[GAMES[game]][x % 100][1])
-                         for x in user.userprofile.best_techniques
-                         if TECHNIQUE_CHOICES[GAMES[game]][x % 100][0] == x]))
-                if game_techs is not '':
-                    techs[game] = game_techs
+                game_techs = [_(x[1]) for x in TECHNIQUE_CHOICES[GAMES[game]]
+                              if x[0] in user.userprofile.best_techniques]
+                if len(game_techs) > 0:
+                    techs[game] = ', '.join(game_techs)
 
             data = {'user_id': user.id,
                     'username': user.username,
