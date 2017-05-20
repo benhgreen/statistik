@@ -13,7 +13,8 @@ class RegisterForm(forms.Form):
     password = forms.CharField(label=_("PASSWORD"), widget=forms.PasswordInput)
     reenter_password = forms.CharField(label=_("RE-ENTER PASSWORD"),
                                        widget=forms.PasswordInput)
-    dj_name = forms.CharField(label="DJ NAME", max_length=6)
+    dj_name = forms.CharField(label="DJ NAME", max_length=6, required=False)
+    dancer_name = forms.CharField(label="DANCER NAME", max_length=8, required=False)
     location = forms.CharField(label=_("LOCATION"), max_length=64)
     playside = forms.ChoiceField(label=_("PLAYSIDE"), choices=PLAYSIDE_CHOICES)
     best_techniques_iidx = forms.MultipleChoiceField(label=_("MOST INSANE IIDX TECHNIQUES"),
@@ -33,6 +34,11 @@ class RegisterForm(forms.Form):
         if data.get('password') != data.get('reenter_password'):
             self.add_error('password', _('Passwords do not match.'))
             self.add_error('reenter_password', _('Passwords do not match.'))
+            return False
+        # make sure at least one name is set
+        if not data.get('dj_name') and not data.get('dancer_name'):
+            self.add_error('dj_name', _('Please enter at least one name.'))
+            self.add_error('dancer_name', _('Please enter at least one name.'))
             return False
 
         for techniques_field in ['best_techniques_iidx', 'best_techniques_ddr']:
