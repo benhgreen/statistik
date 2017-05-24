@@ -488,7 +488,8 @@ def get_user_list():
     Get data for all registered users and format for template usage
     :rtype list:    List of dicts containing user info
     """
-    users = User.objects.filter(is_superuser=False).prefetch_related(
+    # Show superusers who aren't admin since they can still be normal users
+    users = User.objects.filter(~Q(username='admin')).prefetch_related(
         'userprofile').order_by('username')
 
     # assemble display info for users
