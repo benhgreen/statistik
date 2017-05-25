@@ -31,7 +31,7 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
             alt_title = row[4]
 
         if title not in songs:
-            game_version = None
+            game_version = music_id//1000
             songs.append(title)
         # TODO: remove this after using it, it's just for avoiding copula duplicates
         else:
@@ -53,7 +53,7 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
             alt_artist=alt_artist,
             genre=genre,
             alt_title=alt_title,
-            game_version=game_version or music_id//1000,
+            game_version=game_version,
             game=game or game_version // 100
         )
         try:
