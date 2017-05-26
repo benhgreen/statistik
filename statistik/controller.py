@@ -14,7 +14,8 @@ from django.utils.translation import ugettext as _
 from statistik.constants import (SCORE_CATEGORY_NAMES, TECHNIQUE_CHOICES,
                                  RECOMMENDED_OPTIONS_CHOICES,
                                  FULL_VERSION_NAMES, SCORE_CATEGORY_CHOICES,
-                                 localize_choices, VERSION_CHOICES, IIDX, DDR, GAMES, GAME_CHOICES, SINGLES_LEVELS)
+                                 localize_choices, VERSION_CHOICES, IIDX, DDR, GAMES, GAME_CHOICES, SINGLES_LEVELS,
+                                 RATING_AVERAGE_THRESHOLD)
 from statistik.forms import RegisterForm, DDRReviewForm, IIDXReviewForm
 from statistik.models import Chart, Review, UserProfile, EloReview
 
@@ -67,10 +68,19 @@ def get_avg_ratings(chart_ids, game=IIDX, user_id=None, include_reviews=False):
         if specific_reviews:
             # for each rating type, average the scores in matched reviews
             for rating_type in SCORE_CATEGORY_NAMES[game]:
-                avg_rating = "%.1f" % round(statistics.mean(
-                    [getattr(review, rating_type)
-                     for review in specific_reviews
-                     if getattr(review, rating_type) is not None] or [0]), 1)
+                # Attempt to ignore outlier reviews by calculating the average, then removing reviews
+                # with a score beyond some threshold away from that average
+                rating_reviews = [getattr(review, rating_type)
+                                  for review in specific_reviews
+                                  if getattr(review, rating_type) is not None] or [0]
+                # If there are fewer than three reviews, don't bother eliminating outliers
+                if len(rating_reviews) < 3:
+                    avg_rating = "%.1f" % round(statistics.mean(rating_reviews), 1)
+                else:
+                    initial_avg_rating = round(statistics.mean(rating_reviews), 1)
+                    filtered_reviews = [review for review in rating_reviews
+                                        if abs(review - initial_avg_rating) < RATING_AVERAGE_THRESHOLD]
+                    avg_rating = "%.1f" % round(statistics.mean(filtered_reviews), 1)
 
                 # if average is '0.0', normalize that to 0
                 if avg_rating != "0.0":
