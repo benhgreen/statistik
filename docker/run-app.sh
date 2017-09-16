@@ -13,4 +13,6 @@ do
 done
 
 python3 manage.py migrate
+python3 misc/import_music_csv.py
+# python3 misc/import_chart_csv.py
 python3 manage.py runserver 0.0.0.0:8000

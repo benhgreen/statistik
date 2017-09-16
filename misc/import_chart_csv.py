@@ -1,7 +1,7 @@
-import csv
+import csv, sys, django, psycopg2
 
-import django
-import psycopg2
+root_directory = str(Path(__file__).resolve().parents[1])
+sys.path.append(root_directory)
 
 from statistik.models import Song, Chart
 

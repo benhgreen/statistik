@@ -1,12 +1,12 @@
-import csv
-
-import django
-import psycopg2
+import csv, sys, django, psycopg2
 from django.conf import settings
+from pathlib import Path
+
+root_directory = str(Path(__file__).resolve().parents[1])
+sys.path.append(root_directory)
 
 from statistik.constants import IIDX
 from statistik.models import Song
-
 
 with open('misc/music.csv', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile)
@@ -21,7 +21,6 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
         artist=row[5]
         genre=row[6]
         alt_artist = row[8]
-        game=IIDX
 
         if int(row[1]) >= 917505 or music_id > 21216:
             title = row[4]
@@ -41,8 +40,6 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
         #     print('creating black another for song %s' % title)
         #     title += '†'
         #     alt_title += '†'
-
-
 
         new_song = Song(
             music_id=music_id,
