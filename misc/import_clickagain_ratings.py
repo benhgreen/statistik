@@ -1,13 +1,17 @@
-import csv
+import csv, django
+from pathlib import Path
+
+root_directory = str(Path(__file__).resolve().parents[1])
+sys.path.append(root_directory)
+
 from statistik.models import Chart
 
-import django
 django.setup()
-
 
 with open('misc/iidxfm_db.csv') as csvfile:
     reader = csv.reader(csvfile)
 
+    print("Importing Clickagain Ratings...")
     for line in reader:
         if len(line) > 6:
             chart = Chart.objects.filter(song__music_id=int(line[0]), type=int(line[1])-1).first()
