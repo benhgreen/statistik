@@ -21,6 +21,7 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
         artist=row[5]
         genre=row[6]
         alt_artist = row[8]
+        game=IIDX
 
         if int(row[1]) >= 917505 or music_id > 21216:
             title = row[4]
