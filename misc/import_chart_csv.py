@@ -1,4 +1,7 @@
-import csv, sys, django, psycopg2
+import csv
+import sys
+import django
+import psycopg2
 from pathlib import Path
 
 root_directory = str(Path(__file__).resolve().parents[1])

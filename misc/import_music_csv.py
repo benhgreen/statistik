@@ -1,4 +1,7 @@
-import csv, sys, django, psycopg2
+import csv
+import sys
+import django
+import psycopg2
 from django.conf import settings
 from pathlib import Path
 

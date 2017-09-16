@@ -85,7 +85,6 @@ import os
 from pathlib import Path
 
 BASE_DIR = str(Path(__file__).resolve().parents[1] / 'statistik')
-print(BASE_DIR)
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),

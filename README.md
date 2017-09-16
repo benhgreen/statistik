@@ -21,7 +21,7 @@ To populate the song database, run the included `import_music_csv.py` and
 
 ## Running the app locally with Docker
 
-Build the requirements image: `docker build -f docker/Dockerfile --tag statistik-requirements .'
+Build the requirements image: `docker build -f docker/Dockerfile.requirements --tag statistik-requirements .'
 Build the app: `docker-compose build`
 Run the app: `docker-compose up`
 
