@@ -1,6 +1,6 @@
 # STATISTIK
 
-##Description
+## Description
 
 Review tracker for [beatmania IIDX](https://en.wikipedia.org/wiki/Beatmania_IIDX) chart difficulties. Supports traditional [ClickAgain-style reviews](http://clickagain.sakura.ne.jp/cgi-bin/sort11/data.cgi?level12=1) as well as Elo-based, [Textage-style reviews](http://textage.cc/banner/sortrank.html?3).
 
@@ -18,6 +18,12 @@ Note that a user's `UserProfile` must be modified to 'enable' reviewing on their
 
 To populate the song database, run the included `import_music_csv.py` and
 `import_chart_csv.py` scripts from the root directory.
+
+## Running the app locally with Docker
+
+Build the requirements image: `docker build -f docker/Dockerfile --tag statistik-requirements .'
+Build the app: `docker-compose build`
+Run the app: `docker-compose up`
 
 ## Primary TODOs
 - cleanup code (especially frontend)
