@@ -1,4 +1,6 @@
-import csv, django
+import csv
+import django
+import sys
 from pathlib import Path
 
 root_directory = str(Path(__file__).resolve().parents[1])
