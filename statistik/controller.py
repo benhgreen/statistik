@@ -75,18 +75,18 @@ def get_avg_ratings(chart_ids, game=IIDX, user_id=None, include_reviews=False):
                                   if getattr(review, rating_type) is not None] or [0]
                 # If there are fewer than three reviews, don't bother eliminating outliers
                 if len(rating_reviews) < 3:
-                    avg_rating = "%.1f" % round(statistics.mean(rating_reviews), 1)
+                    filtered_reviews = rating_reviews
                 else:
                     initial_avg_rating = round(statistics.mean(rating_reviews), 1)
                     filtered_reviews = [review for review in rating_reviews
                                         if abs(review - initial_avg_rating) < RATING_AVERAGE_THRESHOLD]
-                    avg_rating = "%.1f" % round(statistics.mean(filtered_reviews), 1)
+                avg_rating = round(statistics.mean(filtered_reviews), 1)
 
                 # if average is '0.0', normalize that to 0
-                if avg_rating != "0.0":
-                    ret[chart][rating_type] = avg_rating
+                if avg_rating != 0:
+                    ret[chart][rating_type] = "%.1f" % avg_rating
                 else:
-                    ret[chart][rating_type] = 0
+                    ret[chart][rating_type] = avg_rating
 
             # set 'has_reviewed' if the user has reviewed this chart
             ret[chart]['has_reviewed'] = (chart in reviewed_charts)
