@@ -378,7 +378,7 @@ def generate_user_form(user, form_data=None):
 
     data = {
         'dj_name': up.dj_name,
-        'dancer_name': up.dancer_name ,
+        'dancer_name': up.dancer_name,
         'playside': up.play_side,
         'email': user.email,
         'location': up.location,
