@@ -5,7 +5,6 @@ import random
 import statistics
 
 import elo
-from collections import defaultdict
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -450,7 +449,7 @@ def get_reviews_for_user(user_id):
     matched_reviews = Review.objects.filter(user=user_id).prefetch_related(
         'chart__song')
     # assemble display info for these reviews
-    review_data = defaultdict(list)
+    review_data = {game: list() for game in GAMES.values()}
     for review in matched_reviews:
         game = review.chart.song.game
         review_data[game].append({

@@ -89,7 +89,7 @@
         {% for review in ddr_reviews %}
             <tr style="line-height: 150%">
                 <td style="width: 14em"><a style="color: #000" href="{% url 'chart' chart_id=review.chart_id%}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
-
+                {# Get color based on difficulty - BEG, BSP, DSP, ESP, CSP/DP #}
                 {% if 'G' in review.type_display %}
                     <td class="lv_col" style="color: #1822d6;">
                 {% elif 'B' in review.type_display %}

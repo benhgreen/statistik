@@ -25,6 +25,7 @@
     {% for chart in charts %}
         <tr>
             <td class="ver_col" sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
+            {# Get color based on difficulty - BEG, BSP, DSP, ESP, CSP/DP #}
             {% if 'G' in chart.type_display %}
                 <td class="lv_col" style="color: #1822d6;">
             {% elif 'B' in chart.type_display %}
