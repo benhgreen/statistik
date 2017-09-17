@@ -23,6 +23,9 @@ RATING_CHOICES = [[(i, str(i)) for i in arange(MIN_RATING, MAX_RATING[game[0]]+.
 RATING_VALIDATORS = {game[0]: [MaxValueValidator(MAX_RATING[game[0]]),
                             MinValueValidator(MIN_RATING)] for game in GAME_CHOICES}
 
+# A threshold beyond which scores should be considered outliers and not counted in the average rating
+RATING_AVERAGE_THRESHOLD = 0.5
+
 TECHNIQUE_CHOICES = {IIDX: [
         (0, _('Scratching')),
         (1, _('Jacks')),
