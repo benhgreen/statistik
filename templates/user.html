@@ -15,60 +15,121 @@
 
 {% block content %}
 
-<table class="sortable" border="1" align="center" style="width:1100px;table-layout: fixed;word-wrap: break-word">
-        <tr style="line-height: 15px;font-size: small;
-        color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td style="background-color: #3d393f;width: 7%;">{% trans 'GAME' %}</td>
-            <td style="background-color: #3d393f;width: 20%;">{% trans 'SONG TITLE' %}</td>
-            <td style="background-color: #3d393f;width: 5%;">LV</td>
-            <td style="background-color: #3d393f;width: 25%">{% trans 'REVIEW TEXT' %}</td>
-            <td style="background-color: #3d393f;width: 12%;">{% trans 'RECOMMENDED OPTIONS' %}</td>
-            <td style="background-color: #3d393f;width: 7%;">{% trans 'NC RATING ' %}</td>
-            <td style="background-color: #3d393f;width: 7%;">{% trans 'HC RATING ' %}</td>
-            <td style="background-color: #3d393f;width: 7%;">{% trans 'EXHC RATING ' %}</td>
-            <td style="background-color: #3d393f;width: 7%;">{% trans 'SCORE RATING ' %}</td>
-        </tr>
-    {% for review in reviews %}
-        <tr style="line-height: 150%">
-            <td style="width: 3em">{{ review.game }}</td>
-            <td style="width: 14em"><a style="color: #000" href="{% url 'chart' chart_id=review.chart_id%}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
+{% if iidx_reviews %}
+    <div style="width: 1100px; clear: both">
+        <h1>IIDX REVIEWS</h1>
+        <table class="sortable" border="1" align="center" style="width:1100px;table-layout: fixed;word-wrap: break-word">
+                <tr style="line-height: 15px;font-size: small;
+                color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
+                    <td style="background-color: #3d393f;width: 20%;">{% trans 'SONG TITLE' %}</td>
+                    <td style="background-color: #3d393f;width: 5%;">LV</td>
+                    <td style="background-color: #3d393f;width: 25%">{% trans 'REVIEW TEXT' %}</td>
+                    <td style="background-color: #3d393f;width: 12%;">{% trans 'RECOMMENDED OPTIONS' %}</td>
+                    <td style="background-color: #3d393f;width: 7%;">{% trans 'NC RATING ' %}</td>
+                    <td style="background-color: #3d393f;width: 7%;">{% trans 'HC RATING ' %}</td>
+                    <td style="background-color: #3d393f;width: 7%;">{% trans 'EXHC RATING ' %}</td>
+                    <td style="background-color: #3d393f;width: 7%;">{% trans 'SCORE RATING ' %}</td>
+                </tr>
+            {% for review in iidx_reviews %}
+                <tr style="line-height: 150%">
+                    <td style="width: 14em"><a style="color: #000" href="{% url 'chart' chart_id=review.chart_id%}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
 
-            {% if 'N' in review.type_display %}
-                <td class="lv_col" style="color: #1822d6;">
-            {% elif 'H' in review.type_display%}
-                <td class="lv_col" style="color: #a69b43;">
-            {% else %}
-                <td class="lv_col" style="color: #c62c4a;">
-            {% endif %}
-            <b>{{ review.difficulty }}★</b>
-                </td>
-            <td class="reviewtext_col">
-                {{ review.text }}
-                    {% if review.characteristics %}
-                        {% if review.text %}
-                            <br>
-                        {% endif %}
-                        {% for item in review.characteristics %}
-                            {% if forloop.first and forloop.last %}
-                                <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
-                            {% elif forloop.last %}
-                                <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
-                            {% elif forloop.first%}
-                                <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
-                            {% else %}
-                                <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
-                            {% endif %}
-                        {% endfor %}
+                    {% if 'N' in review.type_display %}
+                        <td class="lv_col" style="color: #1822d6;">
+                    {% elif 'H' in review.type_display%}
+                        <td class="lv_col" style="color: #a69b43;">
+                    {% else %}
+                        <td class="lv_col" style="color: #c62c4a;">
                     {% endif %}
-            </td>
-            <td class="options_col">{{ review.recommended_options }}</td>
-            <td class="nc_col">{{ review.clear_rating | default:"--" }}</td>
-            <td class="hc_col">{{ review.hc_rating | default:"--" }}</td>
-            <td class="exhc_col">{{ review.exhc_rating | default:"--" }}</td>
-            <td class="score_col">{{ review.score_rating | default:"--" }}</td>
-        </tr>
-    {% endfor %}
-</table>
+                    <b>{{ review.difficulty }}★</b>
+                        </td>
+                    <td class="reviewtext_col">
+                        {{ review.text }}
+                            {% if review.characteristics %}
+                                {% if review.text %}
+                                    <br>
+                                {% endif %}
+                                {% for item in review.characteristics %}
+                                    {% if forloop.first and forloop.last %}
+                                        <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
+                                    {% elif forloop.last %}
+                                        <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
+                                    {% elif forloop.first%}
+                                        <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
+                                    {% else %}
+                                        <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                    </td>
+                    <td class="options_col">{{ review.recommended_options }}</td>
+                    <td class="nc_col">{{ review.clear_rating | default:"--" }}</td>
+                    <td class="hc_col">{{ review.hc_rating | default:"--" }}</td>
+                    <td class="exhc_col">{{ review.exhc_rating | default:"--" }}</td>
+                    <td class="score_col">{{ review.score_rating | default:"--" }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}
+
+{% if ddr_reviews %}
+    <div style="width: 1100px;clear: both">
+        <h1>DDR REVIEWS</h1>
+        <table class="sortable" border="1" align="center" style="width:1100px;table-layout: fixed;word-wrap: break-word">
+            <tr style="line-height: 15px;font-size: small;
+            color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
+                <td style="background-color: #3d393f;width: 20%;">{% trans 'SONG TITLE' %}</td>
+                <td style="background-color: #3d393f;width: 5%;">LV</td>
+                <td style="background-color: #3d393f;width: 25%">{% trans 'REVIEW TEXT' %}</td>
+                <td style="background-color: #3d393f;width: 9%;">{% trans 'RECOMMENDED SPEED MOD' %}</td>
+                <td style="background-color: #3d393f;width: 7%;">{% trans 'CLEAR RATING ' %}</td>
+                <td style="background-color: #3d393f;width: 7%;">{% trans 'SCORE RATING ' %}</td>
+            </tr>
+        {% for review in ddr_reviews %}
+            <tr style="line-height: 150%">
+                <td style="width: 14em"><a style="color: #000" href="{% url 'chart' chart_id=review.chart_id%}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
+                {# Get color based on difficulty - BEG, BSP, DSP, ESP, CSP/DP #}
+                {% if 'G' in review.type_display %}
+                    <td class="lv_col" style="color: #1822d6;">
+                {% elif 'B' in review.type_display %}
+                    <td class="lv_col" style="color: #a69b43;">
+                {% elif 'C' in review.type_display %}
+                    <td class="lv_col" style="color: #551a8b;">
+                {% elif 'E' in review.type_display %}
+                    <td class="lv_col" style="color: #228B22;">
+                {% else %}
+                    <td class="lv_col" style="color: #c62c4a;">
+                {% endif %}
+                <b>{{ review.difficulty }}★</b>
+                    </td>
+                <td class="reviewtext_col">
+                    {{ review.text }}
+                        {% if review.characteristics %}
+                            {% if review.text %}
+                                <br>
+                            {% endif %}
+                            {% for item in review.characteristics %}
+                                {% if forloop.first and forloop.last %}
+                                    <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
+                                {% elif forloop.last %}
+                                    <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
+                                {% elif forloop.first%}
+                                    <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
+                                {% else %}
+                                    <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                </td>
+                <td class="options_col">{{ review.recommended_options }}</td>
+                <td class="nc_col">{{ review.clear_rating | default:"--" }}</td>
+                <td class="score_col">{{ review.score_rating | default:"--" }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+{% endif %}
 
     {% if form %}
         <br>

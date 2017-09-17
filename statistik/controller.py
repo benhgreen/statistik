@@ -367,7 +367,7 @@ def generate_user_form(user, form_data=None):
             user.email = form_data.get('email')
         user.save()
 
-        for field in ['dj_name', 'location']:
+        for field in ['dj_name', 'dancer_name', 'location']:
             if form_data.get(field):
                 setattr(up, field, form_data.get(field))
         if form_data.get('playside'):
@@ -378,6 +378,7 @@ def generate_user_form(user, form_data=None):
 
     data = {
         'dj_name': up.dj_name,
+        'dancer_name': up.dancer_name,
         'playside': up.play_side,
         'email': user.email,
         'location': up.location,
@@ -442,17 +443,16 @@ def get_reviews_for_user(user_id):
     """
     Get reviews written by a user and format for use in template
     :param int user_id:     User to query reviews by
-    :rtype list:            List of dicts containing user's reviews
+    :rtype dict:            A dict mapping each game to a list of dicts containing user's reviews for that game
     """
     # get all reviews created by this user
     matched_reviews = Review.objects.filter(user=user_id).prefetch_related(
         'chart__song')
     # assemble display info for these reviews
-    review_data = []
+    review_data = {game: list() for game in GAMES.values()}
     for review in matched_reviews:
         game = review.chart.song.game
-        review_data.append({
-            'game': GAME_CHOICES[game][1],
+        review_data[game].append({
             'title': review.chart.song.title,
             'text': review.text,
             'chart_id': review.chart.id,
@@ -476,7 +476,7 @@ def get_reviews_for_user(user_id):
         })
 
         if review.difficulty_spike:
-            review_data[-1]['characteristics'].append(
+            review_data[game][-1]['characteristics'].append(
                 (_('Difficult ' + review.get_difficulty_spike_display()),
                  '#000'))
 
@@ -505,6 +505,7 @@ def get_user_list():
             data = {'user_id': user.id,
                     'username': user.username,
                     'dj_name': user.userprofile.dj_name,
+                    'dancer_name': user.userprofile.dancer_name,
 
                     'playside': user.userprofile.get_play_side_display(),
                     'best_techniques': techs,
@@ -529,6 +530,7 @@ def create_new_user(user_data):
     user.save()
     user_profile = UserProfile(user_id=user.id,
                                dj_name=user_data.get('dj_name').upper(),
+                               dancer_name=user_data.get('dancer_name').upper(),
                                location=user_data.get('location'),
                                play_side=user_data.get('playside'),
                                best_techniques=user_data.get(
@@ -661,7 +663,8 @@ def make_nav_links(game=IIDX, level=None, style='SP', version=None, user=None, e
            (_('SEARCH'), reverse('search', kwargs=reverse_kwargs))]
     if not elo:
         if level:
-            ret.append((_('ALL %(level)d☆ %(style)s') % {'level': level,
+            ret.append((_('ALL %(game)s %(level)d☆ %(style)s') % {'game': GAME_CHOICES[game][1],
+                                                                  'level': level,
                                                          'style': style},
                         reverse('ratings', kwargs=reverse_kwargs) + "?difficulty=%d&style=%s" % (
                             level, style)))

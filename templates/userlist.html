@@ -24,6 +24,7 @@
         color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
             <td style="width: 15%;background-color: #3d393f">{% trans 'USERNAME' %}</td>
             <td style="width: 10%;background-color: #3d393f">DJ NAME</td>
+            <td style="width: 10%;background-color: #3d393f">DANCER NAME</td>
             <td style="width: 15%;background-color: #3d393f">{% trans 'PLAYSIDE' %}</td>
             <td style="background-color: #3d393f">{% trans 'MOST INSANE TECHNIQUES' %}</td>
             <td style="background-color: #3d393f">{% trans 'LOCATION' %}</td>
@@ -32,6 +33,7 @@
         <tr style="line-height: 150%">
             <td><a style="color: #000;" href="{% url 'users' user_id=user_item.user_id %}">{{ user_item.username }}</a></td>
             <td>{{ user_item.dj_name }}</td>
+            <td>{{ user_item.dancer_name }}</td>
             <td>{{ user_item.playside }}</td>
             <td>
                 {% for game, techs in user_item.best_techniques.items %}

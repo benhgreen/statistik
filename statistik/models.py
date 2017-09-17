@@ -87,7 +87,8 @@ class Review(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
-    dj_name = models.CharField(max_length=6)
+    dj_name = models.CharField(max_length=6, null=True)
+    dancer_name = models.CharField(max_length=8, null=True)
     location = models.CharField(max_length=64)
     play_side = models.SmallIntegerField(choices=PLAYSIDE_CHOICES)
     best_techniques = ArrayField(
@@ -98,4 +99,8 @@ class UserProfile(models.Model):
     ])
 
     def __str__(self):
-        return 'DJ %s' % self.dj_name
+        if self.dancer_name:
+            return self.dancer_name
+        else:
+            return 'DJ %s' % self.dj_name
+
