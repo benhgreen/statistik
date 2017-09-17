@@ -1,0 +1,19 @@
+@media(min-width: 769px) {
+    .login-form-control {
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+}
+
+@media(max-width: 768px) {
+    .login-form-control {
+        margin-bottom: 10px;
+    }
+}
+
+.nav-link {
+    color: #000;
+    padding-right: 10px;
+    font-weight: 600;
+    text-decoration: underline
+}
