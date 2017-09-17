@@ -89,7 +89,7 @@ def ratings_view(request, game='IIDX'):
     chart_data = get_chart_data(GAMES[game], versions, difficulty, play_style, user, params,
                                 include_reviews=bool(request.GET.get('json')))
 
-    if request.GET.get('json') == 'true':
+    if request.GET.get('json'):
         return HttpResponse(
             json.dumps({'data': chart_data}, indent=4, ensure_ascii=False))
 
@@ -139,7 +139,7 @@ def chart_view(request, chart_id=None):
 
     if request.GET.get('delete') == 'true' and request.user.is_authenticated():
         delete_review(request.user.id, chart_id)
-        return HttpResponseRedirect(reverse('chart') + '?id=%s' % chart_id)
+        return HttpResponseRedirect(reverse('chart', kwargs={'chart_id': chart_id}))
 
     # TODO remove all direct interaction with chart
     chart = get_charts_by_ids([chart_id])[0]

@@ -102,7 +102,7 @@ def get_avg_ratings(chart_ids, game=IIDX, user_id=None, include_reviews=False):
                             for x in review.characteristics],
 
                         'recommended_options': ', '.join([
-                            _(RECOMMENDED_OPTIONS_CHOICES[x][1])
+                            _(RECOMMENDED_OPTIONS_CHOICES[game][x][1])
                             for x in review.recommended_options])
                     } for review in specific_reviews]
 
@@ -188,7 +188,7 @@ def get_charts_by_query(game=IIDX, versions=None, difficulty=None, play_style=No
 
 
 def get_chart_data(game=IIDX, versions=None, difficulty=None, play_style=None, user=None,
-                   params=None, include_reviews=False, ):
+                   params=None, include_reviews=False):
     """
     Retrieve chart data acc to specified params and format chart data for
     usage in templates.
@@ -221,12 +221,8 @@ def get_chart_data(game=IIDX, versions=None, difficulty=None, play_style=None, u
 
         data = {
             'id': chart.id,
-
             'title': chart.song.title,
-            'alt_title': chart.song.alt_title
-            if chart.song.alt_title
-            else chart.song.title,
-
+            'alt_title': chart.song.alt_title or chart.song.title,
             'note_count': chart.note_count or '--',
             'bpm_min': chart.song.bpm_min or '--',
             'bpm_max': chart.song.bpm_max or '--',
@@ -504,8 +500,8 @@ def get_user_list():
 
             data = {'user_id': user.id,
                     'username': user.username,
-                    'dj_name': user.userprofile.dj_name,
-                    'dancer_name': user.userprofile.dancer_name,
+                    'dj_name': user.userprofile.dj_name or '',
+                    'dancer_name': user.userprofile.dancer_name or '',
 
                     'playside': user.userprofile.get_play_side_display(),
                     'best_techniques': techs,

@@ -24,7 +24,7 @@
             {% trans 'submit' %}
         </button>
         {% if review_exists %}
-        <input class="btn btn-danger" type="button" onclick="location.href='{% url 'chart' chart_id=chart_id%}&delete=true';" value="{% trans 'delete' %}" />
+        <input class="btn btn-danger" type="button" onclick="location.href='{% url 'chart' chart_id=chart_id%}?delete=true';" value="{% trans 'delete' %}" />
         {% endif %}
     {% endbuttons %}
 </form>
