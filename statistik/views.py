@@ -139,7 +139,7 @@ def chart_view(request, chart_id=None):
 
     if request.GET.get('delete') == 'true' and request.user.is_authenticated():
         delete_review(request.user.id, chart_id)
-        return HttpResponseRedirect(reverse('chart') + '?id=%s' % chart_id)
+        return HttpResponseRedirect(reverse('chart', kwargs={'chart_id': chart_id}))
 
     # TODO remove all direct interaction with chart
     chart = get_charts_by_ids([chart_id])[0]

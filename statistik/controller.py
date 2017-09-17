@@ -378,7 +378,7 @@ def generate_user_form(user, form_data=None):
 
     data = {
         'dj_name': up.dj_name,
-        'dancer_name': up.dancer_name,
+        'dancer_name': up.dancer_name ,
         'playside': up.play_side,
         'email': user.email,
         'location': up.location,
@@ -504,8 +504,8 @@ def get_user_list():
 
             data = {'user_id': user.id,
                     'username': user.username,
-                    'dj_name': user.userprofile.dj_name,
-                    'dancer_name': user.userprofile.dancer_name,
+                    'dj_name': user.userprofile.dj_name or '',
+                    'dancer_name': user.userprofile.dancer_name or '',
 
                     'playside': user.userprofile.get_play_side_display(),
                     'best_techniques': techs,
