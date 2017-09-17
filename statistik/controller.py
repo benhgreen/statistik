@@ -80,7 +80,7 @@ def get_avg_ratings(chart_ids, game=IIDX, user_id=None, include_reviews=False):
                     initial_avg_rating = round(statistics.mean(rating_reviews), 1)
                     filtered_reviews = [review for review in rating_reviews
                                         if abs(review - initial_avg_rating) < RATING_AVERAGE_THRESHOLD]
-                avg_rating = round(statistics.mean(filtered_reviews), 1)
+                avg_rating = round(statistics.mean(filtered_reviews or [0]), 1)
 
                 # if average is '0.0', normalize that to 0
                 if avg_rating != 0:
