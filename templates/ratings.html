@@ -5,41 +5,43 @@
 {% load i18n %}
 
 {% block bootstrap3_extra_head %}
+    {{ block.super }}
     <script src="{% static "js/sorttable.js" %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/ratings.css' %}">
 {% endblock %}
 
 {% block content %}
 
-    <div align="center" style="width: 1100px;word-spacing: .5em">
+    <div align="center" class="version-level-heading">
         SP |&nbsp;
     {% for version in versions %}
-        <a style="color: #000;" href="{{ version.1 }}"><b>{{ version.0 }}</b></a>
+        <a class="version-level-link" href="{{ version.1 }}"><b>{{ version.0 }}</b></a>
     {% endfor %}
     </div>
 
-    <div align="center" style="width: 1100px;word-spacing: .5em">
+    <div align="center" class="version-level-heading">
         DP |&nbsp;
     {% for version in versions %}
-        <a style="color: #000;" href="{{ version.1 }}&style=DP"><b>{{ version.0 }}</b></a>
+        <a class="version-level-link" href="{{ version.1 }}&style=DP"><b>{{ version.0 }}</b></a>
     {% endfor %}
     </div>
 
-    <br>
+    <br />
 
-    <div align="center" style="width: 1100px;word-spacing: .5em">
+    <div align="center" class="version-level-heading">
     SP |&nbsp;
     {% for level in levels %}
-        <a style="color: #000;" href="{{ level.1 }}"><b>{{ level.0 }}</b></a>
+        <a class="version-level-link" href="{{ level.1 }}"><b>{{ level.0 }}</b></a>
     {% endfor %}
      &nbsp; DP |&nbsp;
     {% for level in levels %}
-        <a style="color: #000;" href="{{ level.1 }}&style=DP"><b>{{ level.0 }}</b></a>
+        <a class="version-level-link" href="{{ level.1 }}&style=DP"><b>{{ level.0 }}</b></a>
     {% endfor %}
     </div>
 
-    <br>
-    <br>
+    <br />
+    <br />
 
     {% block chart_table %}
     {% endblock %}

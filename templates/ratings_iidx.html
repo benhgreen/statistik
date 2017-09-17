@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block chart_table %}
-<div align="center" style="width: 1100px; font-weight: 500;line-height: 1.5em">
+<div align="center">
         {% trans 'songs are rated from 1.0 to 14.0 (13.0 = 12.11)' %}
         <br>{% trans "click a song's title for more info, or click table headers to sort." %}
         <br>{% trans 'red ratings indicate clickagain as default' %}
@@ -11,18 +11,20 @@
 
     <br>
 
-    <table class="sortable" border="1" align="center" style="width:1100px">
-        <tr style="line-height: 15px;font-size: small;
-        color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td style="background-color: #3d393f;width: 5%">VER</td>
-            <td class="sorttable_numeric" style="background-color: #3d393f;width: 5%">LV</td>
-            <td class="sortable_alpha" style="background-color: #3d393f;width: 41%">{% trans 'SONG TITLE' %}</td>
-            <td style="background-color: #3d393f;width: 7%">{% trans 'NOTE COUNT ' %}</td>
-            <td style="background-color: #3d393f;width: 7%">{%  trans 'NC RATING ' %}</td>
-            <td style="background-color: #3d393f;width: 7%">{% trans 'HC RATING ' %}</td>
-            <td style="background-color: #3d393f;width: 7%">{% trans 'EXHC RATING ' %}</td>
-            <td style="background-color: #3d393f;width: 7%">{% trans 'SCORE RATING ' %}</td>
-        </tr>
+    <div class="table-responsive">
+    <table class="table table-bordered sortable">
+        <thead>
+            <tr class="table-header-row">
+                <th>VER</td>
+                <th>LV</td>
+                <th>{% trans 'SONG TITLE' %}</td>
+                <th>{% trans 'NOTE COUNT ' %}</td>
+                <th>{%  trans 'NC RATING ' %}</td>
+                <th>{% trans 'HC RATING ' %}</td>
+                <th>{% trans 'EXHC RATING ' %}</td>
+                <th>{% trans 'SCORE RATING ' %}</th>
+            </tr>
+        </thead>
     {% for chart in charts %}
         <tr>
             <td class="ver_col" sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
@@ -56,5 +58,6 @@
         </tr>
     {% endfor %}
     </table>
+    </div>
 
 {% endblock %}
