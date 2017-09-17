@@ -454,6 +454,7 @@ def get_reviews_for_user(user_id):
     # get all reviews created by this user
     matched_reviews = Review.objects.filter(user=user_id).prefetch_related(
         'chart__song')
+    techniques = UserProfile.objects.filter(user=user_id).first().best_techniques
     # assemble display info for these reviews
     review_data = {game: list() for game in GAMES.values()}
     for review in matched_reviews:
@@ -472,7 +473,7 @@ def get_reviews_for_user(user_id):
 
             'characteristics': [
                 (TECHNIQUE_CHOICES[game][x % 100][1], '#187638')
-                if x in review.user.userprofile.best_techniques
+                if x in techniques
                 else (_(TECHNIQUE_CHOICES[game][x % 100][1]), '#000')
                 for x in review.characteristics],
 
