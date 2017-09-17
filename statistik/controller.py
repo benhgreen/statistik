@@ -454,7 +454,7 @@ def get_reviews_for_user(user_id):
     # get all reviews created by this user
     matched_reviews = Review.objects.filter(user=user_id).prefetch_related(
         'chart__song')
-    techniques = UserProfile.objects.filter(user=user_id).first().best_techniques
+    techniques = UserProfile.objects.get(user=user_id).best_techniques
     # assemble display info for these reviews
     review_data = {game: list() for game in GAMES.values()}
     for review in matched_reviews:
