@@ -89,7 +89,7 @@ def ratings_view(request, game='IIDX'):
     chart_data = get_chart_data(GAMES[game], versions, difficulty, play_style, user, params,
                                 include_reviews=bool(request.GET.get('json')))
 
-    if request.GET.get('json') == 'true':
+    if request.GET.get('json'):
         return HttpResponse(
             json.dumps({'data': chart_data}, indent=4, ensure_ascii=False))
 
