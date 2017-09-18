@@ -1,19 +1,14 @@
-@media(min-width: 769px) {
-    .login-form-control {
-        margin-top: 20px;
-        margin-bottom: 10px;
-    }
-}
+.login-form-control {
+    margin-bottom: 0.625em;
 
-@media(max-width: 768px) {
-    .login-form-control {
-        margin-bottom: 10px;
+    @media(min-width: 769px) {
+        margin-top: 1.5em
     }
 }
 
 .nav-link {
     color: #000;
-    padding-right: 10px;
+    padding-right: 0.625em;
     font-weight: 600;
     text-decoration: underline
 }

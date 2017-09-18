@@ -1,0 +1,21 @@
+@import '_table';
+td {
+    &.bpm {
+        width: 5%;
+    }
+    &.beginner {
+        color: #1822d6;
+    }
+    &.basic {
+        color: #a69b43;
+    }
+    &.difficult {
+        color: #c62c4a;
+    }
+    &.expert {
+        color: #228b22;
+    }
+    &.challenge {
+        color: #551a8b;
+    }
+}

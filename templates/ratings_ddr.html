@@ -1,6 +1,12 @@
 {% extends 'ratings.html' %}
 
 {% load i18n %}
+{% load sass_tags %}
+
+{% block bootstrap3_extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% sass_src 'css/ddr-table.scss' %}"/>
+{% endblock %}
 
 {% block chart_table %}
 <div align="center">
@@ -25,17 +31,17 @@
             <tbody>
             {% for chart in charts %}
                 <tr>
-                    <td class="ver_col" sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
+                    <td class="ver" sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
                     {% if 'G' in chart.type_display %}
-                        <td class="lv_col" class="ddr-level-beginner">
+                        <td class="lv beginner">
                     {% elif 'B' in chart.type_display %}
-                        <td class="lv_col" class="ddr-level-basic">
+                        <td class="lv basic">
                     {% elif 'C' in chart.type_display %}
-                        <td class="lv_col" class="ddr-level-challenge">
+                        <td class="lv challenge">
                     {% elif 'E' in chart.type_display %}
-                        <td class="lv_col" class="ddr-level-expert">
+                        <td class="lv expert">
                     {% else %}
-                        <td class="lv_col" class="ddr-level-difficult">
+                        <td class="lv difficult">
                     {% endif %}
                     {% if chart.has_reviewed %}
                             <b>{{ chart.difficulty }}★</b>
@@ -43,17 +49,17 @@
                             <b>{{ chart.difficulty }}☆</b>
                     {% endif %}
                         </td>
-                    <td class="title_col" sorttable_customkey="{{ chart.alt_title }}">
+                    <td class="title" sorttable_customkey="{{ chart.alt_title }}">
                         <a href="{% url 'chart' chart_id=chart.id %}"> {{ chart.title }}</a>
                     </td>
-                    <td class="notecount_col">{{ chart.note_count }}</td>
+                    <td class="notecount">{{ chart.note_count }}</td>
                     {% if chart.bpm_min == chart.bpm_max %}
-                        <td class="bpm_col">{{ chart.bpm_min | default:"--" }}</td>
+                        <td class="bpm">{{ chart.bpm_min | default:"--" }}</td>
                     {% else %}
-                        <td class="bpm_col">{{ chart.bpm_min }} - {{ chart.bpm_max }}</td>
+                        <td class="bpm">{{ chart.bpm_min }} - {{ chart.bpm_max }}</td>
                     {% endif %}
-                    <td class="nc_col">{{ chart.avg_clear_rating | default:"--" }}</td>
-                    <td class="score_col">{{  chart.avg_score_rating | default:"--" }}</td>
+                    <td class="nc">{{ chart.avg_clear_rating | default:"--" }}</td>
+                    <td class="score">{{  chart.avg_score_rating | default:"--" }}</td>
                 </tr>
             {% endfor %}
             </tbody>

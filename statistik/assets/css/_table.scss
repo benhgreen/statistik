@@ -1,32 +1,54 @@
+.clear-columns {
+    width: 5%;
+    font-weight: 600;
+}
+
 table {
     thead {
         tr {
             background: #3d393f;
             color: white;
-
             th {
                 text-align: center;
                 font-size: small;
                 font-weight: 600;
-                line-height: 15px;
+                line-height: 0.9375em;
             }
         }
     }
     tbody {
         td {
-            padding: 10px;
+            padding: 0.625em;
             text-align: center;
-
             a {
                 color: #000000;
             }
+            &.ver {
+                width: 5%;
+            }
+            &.lv {
+                width: 5%;
+                text-align: center;
+            }
+            &.title {
+                width: 41%;
+            }
+            &.notecount {
+                width: 5%;
+            }
+            &.nc {
+                @extend .clear-columns;
+                background-color: #2df0ff;
+            }
+            &.score {
+                @extend .clear-columns;
+                background-color: #d7e1ff;
+            }
         }
-
         tr:nth-child(odd) {
             background: #e1e1e1;
             text-align: center
         }
-
         tr:nth-child(even) {
             background: #FFF
         }
@@ -40,9 +62,4 @@ table {
 .table-bordered>thead>tr>td,
 .table-bordered>thead>tr>th {
     border: 1px solid black;
-}
-
-.clear-columns {
-    width: 5%;
-    font-weight: 600;
 }
