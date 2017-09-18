@@ -3,12 +3,12 @@
 {% load bootstrap3 %}
 {% load static %}
 {% load i18n %}
+{% load sass_tags %}
 
 {% block bootstrap3_extra_head %}
     {{ block.super }}
     <script src="{% static "js/sorttable.js" %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/ratings.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/rating-table.scss' %}">
 {% endblock %}
 
 {% block content %}

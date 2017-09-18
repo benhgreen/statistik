@@ -1,50 +1,4 @@
-table {
-    border-color: black;
-}
-
-tbody tr:nth-child(odd) {
-    background: #e1e1e1;
-    text-align: center
-}
-
-tbody tr:nth-child(even) {
-    background: #FFF
-}
-
-.table-bordered>tbody>tr>td,
-.table-bordered>tbody>tr>th,
-.table-bordered>tfoot>tr>td,
-.table-bordered>tfoot>tr>th,
-.table-bordered>thead>tr>td,
-.table-bordered>thead>tr>th {
-    border: 1px solid black;
-}
-
-
-/* Table Header */
-
-thead tr {
-    background: #3d393f;
-    color: white;
-}
-
-thead tr th {
-    text-align: center;
-    font-size: small;
-    font-weight: 600;
-    line-height: 15px;
-}
-
-
-/* Table Body */
-td {
-    padding: 10px;
-    text-align: center;
-}
-
-td a {
-    color: #000000;
-}
+@import '_table';
 
 .ver_col {
     width: 5%;
@@ -64,27 +18,23 @@ td a {
 }
 
 .nc_col {
+    @extend .clear-columns;
     background-color: #2df0ff;
-    width: 5%;
-    font-weight: 600;
 }
 
 .hc_col {
+    @extend .clear-columns;
     background-color: #ff99a1;
-    width: 5%;
-    font-weight: 600;
 }
 
 .exhc_col {
+    @extend .clear-columns;
     background-color: #ffee90;
-    width: 5%;
-    font-weight: 600;
 }
 
 .score_col {
+    @extend .clear-columns;
     background-color: #d7e1ff;
-    width: 5%;
-    font-weight: 600;
 }
 
 .bpm_col {
@@ -127,7 +77,7 @@ td a {
     color: #f11137;
 }
 
-/* Review page  */
+/* Review page?  */
 .username_col {
     width: 10em;
 }

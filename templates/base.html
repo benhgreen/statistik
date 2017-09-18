@@ -3,9 +3,10 @@
 {% load bootstrap3 %}
 {% load static %}
 {% load i18n %}
+{% load sass_tags %}
 
 {% block bootstrap3_extra_head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/base.scss' %}">
 {% endblock %}
 
 {% block bootstrap3_content %}
