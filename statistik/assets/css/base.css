@@ -17,3 +17,12 @@
     font-weight: 600;
     text-decoration: underline
 }
+
+.registered-user {
+    color: black;
+    text-decoration: underline;
+}
+
+.log-out {
+    text-decoration: underline;
+}

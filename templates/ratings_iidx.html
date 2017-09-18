@@ -12,52 +12,56 @@
     <br>
 
     <div class="table-responsive">
-    <table class="table table-bordered sortable">
-        <thead>
-            <tr class="table-header-row">
-                <th>VER</td>
-                <th>LV</td>
-                <th>{% trans 'SONG TITLE' %}</td>
-                <th>{% trans 'NOTE COUNT ' %}</td>
-                <th>{%  trans 'NC RATING ' %}</td>
-                <th>{% trans 'HC RATING ' %}</td>
-                <th>{% trans 'EXHC RATING ' %}</td>
-                <th>{% trans 'SCORE RATING ' %}</th>
-            </tr>
-        </thead>
-    {% for chart in charts %}
-        <tr>
-            <td class="ver_col" sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
-            {% if 'N' in chart.type_display %}
-                <td class="lv_col" style="color: #1822d6;">
-            {% elif 'H' in chart.type_display %}
-                <td class="lv_col" style="color: #a69b43;">
-            {% else %}
-                <td class="lv_col" style="color: #c62c4a;">
-            {% endif %}
-            {% if chart.has_reviewed %}
-                    <b>{{ chart.difficulty }}★</b>
-            {% else %}
-                    <b>{{ chart.difficulty }}☆</b>
-            {% endif %}
-                </td>
-            <td class="title_col" sorttable_customkey="{{ chart.alt_title }}"><a style="color: #000;" href="{% url 'chart' chart_id=chart.id %}"> {{ chart.title }}</a></td>
-            <td class="notecount_col">{{ chart.note_count }}</td>
-            {% if chart.clickagain_nc %}
-                <td class="nc_col" style="color: #f11137;;">{{ chart.avg_clear_rating | default:"--" }}</td>
-            {% else %}
-                <td class="nc_col">{{ chart.avg_clear_rating | default:"--" }}</td>
-            {% endif %}
-            {% if chart.clickagain_hc %}
-                <td class="hc_col" style="color: #f11137;;">{{ chart.avg_hc_rating | default:"--" }}</td>
-            {% else %}
-                <td class="hc_col">{{ chart.avg_hc_rating | default:"--" }}</td>
-            {% endif %}
-            <td class="exhc_col">{{ chart.avg_exhc_rating | default:"--" }}</td>
-            <td class="score_col">{{ chart.avg_score_rating | default:"--" }}</td>
-        </tr>
-    {% endfor %}
-    </table>
+        <table class="table table-bordered sortable">
+            <thead>
+                <tr>
+                    <th>VER</td>
+                    <th>LV</td>
+                    <th>{% trans 'SONG TITLE' %}</td>
+                    <th>{% trans 'NOTE COUNT ' %}</td>
+                    <th>{%  trans 'NC RATING ' %}</td>
+                    <th>{% trans 'HC RATING ' %}</td>
+                    <th>{% trans 'EXHC RATING ' %}</td>
+                    <th>{% trans 'SCORE RATING ' %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for chart in charts %}
+                <tr>
+                    <td class="ver_col" sorttable_customkey="{{ chart.game_version }}">{{ chart.game_version_display }}</td>
+                    {% if 'N' in chart.type_display %}
+                        <td class="lv_col" class="iidx-normal">
+                    {% elif 'H' in chart.type_display %}
+                        <td class="lv_col" class="iidx-hyper">
+                    {% else %}
+                        <td class="lv_col" clas="iidx-another">
+                    {% endif %}
+                    {% if chart.has_reviewed %}
+                            <b>{{ chart.difficulty }}★</b>
+                    {% else %}
+                            <b>{{ chart.difficulty }}☆</b>
+                    {% endif %}
+                        </td>
+                    <td class="title_col" sorttable_customkey="{{ chart.alt_title }}">
+                        <a href="{% url 'chart' chart_id=chart.id %}"> {{ chart.title }}</a>
+                    </td>
+                    <td class="notecount_col">{{ chart.note_count }}</td>
+                    {% if chart.clickagain_nc %}
+                        <td class="nc_col iidx-clickagain">{{ chart.avg_clear_rating | default:"--" }}</td>
+                    {% else %}
+                        <td class="nc_col">{{ chart.avg_clear_rating | default:"--" }}</td>
+                    {% endif %}
+                    {% if chart.clickagain_hc %}
+                        <td class="hc_col iidx-clickagain">{{ chart.avg_hc_rating | default:"--" }}</td>
+                    {% else %}
+                        <td class="hc_col">{{ chart.avg_hc_rating | default:"--" }}</td>
+                    {% endif %}
+                    <td class="exhc_col">{{ chart.avg_exhc_rating | default:"--" }}</td>
+                    <td class="score_col">{{ chart.avg_score_rating | default:"--" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 {% endblock %}

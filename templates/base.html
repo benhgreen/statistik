@@ -16,7 +16,7 @@
             </div>
             {% if user.is_authenticated %}
                 <div class="col-md-2 col-md-offset-2 login-form-control">
-                    {% trans 'welcome' %}, <a style="color: #000;text-decoration: underline" href="{% url 'users' user_id=user.id %}"> {{ user.username }}</a> | <a style="text-decoration: underline" href="{% url 'logout' %}">{% trans 'logout' %}</a>
+                    {% trans 'welcome' %}, <a class="registered-user" href="{% url 'users' user_id=user.id %}"> {{ user.username }}</a> | <a class="log-out" href="{% url 'logout' %}">{% trans 'logout' %}</a>
                 </div>
             {% else %}
                 <form class="form-inline" action="{% url 'login' %}" method="post">

@@ -1,6 +1,7 @@
 table {
     border-color: black;
 }
+
 tbody tr:nth-child(odd) {
     background: #e1e1e1;
     text-align: center
@@ -10,37 +11,30 @@ tbody tr:nth-child(even) {
     background: #FFF
 }
 
-.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+.table-bordered>tbody>tr>td,
+.table-bordered>tbody>tr>th,
+.table-bordered>tfoot>tr>td,
+.table-bordered>tfoot>tr>th,
+.table-bordered>thead>tr>td,
+.table-bordered>thead>tr>th {
     border: 1px solid black;
 }
 
 
 /* Table Header */
-.table-header-row {
+
+thead tr {
     background: #3d393f;
     color: white;
 }
 
-.table-header-row th {
+thead tr th {
     text-align: center;
     font-size: small;
     font-weight: 600;
     line-height: 15px;
 }
 
-.table-header-version,
-    .table-header-lvl,
-    .table-header-note-count,
-    .table-header-nc-rating,
-    .table-header-hc-rating,
-    .table-header-exhc-rating,
-    .table-header-score-rating {
-    width: 5%;
-}
-
-.table-header-song-title {
-    width: 41%;
-}
 
 /* Table Body */
 td {
@@ -48,20 +42,8 @@ td {
     text-align: center;
 }
 
-.username_col {
-    width: 10em;
-}
-
-.playside_col {
-    width: 5em;
-}
-
-.reviewtext_col {
-    width: 20em;
-}
-
-.options_col {
-    width: 14em;
+td a {
+    color: #000000;
 }
 
 .ver_col {
@@ -78,10 +60,6 @@ td {
 }
 
 .notecount_col {
-    width: 5%;
-}
-
-.bpm_col {
     width: 5%;
 }
 
@@ -107,6 +85,63 @@ td {
     background-color: #d7e1ff;
     width: 5%;
     font-weight: 600;
+}
+
+.bpm_col {
+    width: 5%;
+}
+
+.ddr-level-beginner {
+    color: #1822d6;
+}
+
+.ddr-level-basic {
+    color: #a69b43;
+}
+
+.ddr-level-difficult {
+    color: #c62c4a;
+}
+
+.ddr-level-expert {
+    color: #228b22;
+}
+
+.ddr-level-challenge {
+    color: #551a8b;
+}
+
+.iidx-normal {
+    color: #1822d6;
+}
+
+.iidx-hyper {
+    color: #a69b43;
+}
+
+.iidx-another {
+    color: #c62c4a;
+}
+
+.iidx-clickagain {
+    color: #f11137;
+}
+
+/* Review page  */
+.username_col {
+    width: 10em;
+}
+
+.playside_col {
+    width: 5em;
+}
+
+.reviewtext_col {
+    width: 20em;
+}
+
+.options_col {
+    width: 14em;
 }
 
 .form-label label {
