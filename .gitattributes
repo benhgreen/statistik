@@ -1,0 +1,2 @@
+* text=auto
+docker/run-app.sh text eol=lf
