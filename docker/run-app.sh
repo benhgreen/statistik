@@ -18,6 +18,7 @@ if [ $SONG_COUNT == 0 ]
 then
     echo "Doing one time DB import"
     python3 misc/import_music_csv.py
+    python3 misc/import_ddr_json.py
     python3 misc/import_chart_csv.py
     python3 misc/import_clickagain_ratings.py
 fi
