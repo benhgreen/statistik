@@ -12,27 +12,23 @@
 {% block bootstrap3_content %}
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-6">
                 <h1>{{ title }}</h1>
             </div>
             {% if user.is_authenticated %}
-                <div class="col-md-2 col-md-offset-2 login-form-control">
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-md-offset-2 col-lg-offset-4 login-form-control">
                     {% trans 'welcome' %}, <a class="registered-user" href="{% url 'users' user_id=user.id %}"> {{ user.username }}</a> | <a class="log-out" href="{% url 'logout' %}">{% trans 'logout' %}</a>
                 </div>
             {% else %}
-                <form class="form-inline" action="{% url 'login' %}" method="post">
-                    {% csrf_token %}
-                    <div class="col-md-2">
+                <div class="col-lg-6">
+                    <form class="form-inline" action="{% url 'login' %}" method="post">
+                        {% csrf_token %}
                         <input class="form-control login-form-control" name="username" type="text" placeholder="{% trans 'username' %}">
-                    </div>
-                    <div class="col-md-2">
                         <input class="form-control login-form-control" name="password" type="password" placeholder="{% trans 'password' %}">
-                    </div>
-                    <div class="col-md-2 btn-group">
                         <input class="btn btn-default login-form-control" type="submit" value="{% trans 'login' %}">
                         <a class="btn btn-default login-form-control" role="button" href="{% url 'register' %}">{% trans 'register' %}</a>
-                    </div>
-                </form>
+                    </form>
+                </div>
             {% endif %}
         </div>
         {% if nav_links %}
