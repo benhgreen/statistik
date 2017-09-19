@@ -1,6 +1,11 @@
 .clear-columns {
-    width: 5%;
+    width: 3em;
     font-weight: 600;
+}
+
+.table-responsive {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
 }
 
 table {
@@ -20,22 +25,24 @@ table {
         td {
             padding: 0.625em;
             text-align: center;
+            display: table-cell;
+            vertical-align: middle;
             a {
                 color: #000000;
             }
             &.ver {
-                width: 5%;
+                width: 3em;
             }
             &.lv {
-                width: 5%;
+                width: 3em;
                 text-align: center;
                 font-weight: bold;
             }
             &.title {
-                width: 41%;
+                width: 28em;
             }
             &.notecount {
-                width: 5%;
+                width: 3em;
             }
             &.nc {
                 @extend .clear-columns;
@@ -44,6 +51,15 @@ table {
             &.score {
                 @extend .clear-columns;
                 background-color: #d7e1ff;
+            }
+            &.username {
+                width: 10em;
+            }
+            &.reviewtext {
+                width: 20em;
+            }
+            &.options {
+                width: 14em;
             }
         }
         tr:nth-child(odd) {
@@ -63,4 +79,8 @@ table {
 .table-bordered>thead>tr>td,
 .table-bordered>thead>tr>th {
     border: 1px solid black;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    vertical-align: middle;
 }

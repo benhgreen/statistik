@@ -1,21 +1,3 @@
-@import '_table';
-
-.username_col {
-    width: 10em;
-}
-
-.playside_col {
-    width: 5em;
-}
-
-.reviewtext_col {
-    width: 20em;
-}
-
-.options_col {
-    width: 14em;
-}
-
 .form-label label {
     display: block;
     text-align: left;
@@ -31,4 +13,16 @@
     vertical-align: top;
     text-align: left;
     padding-left: 5%;
+}
+
+.review-form {
+    align-content: center;
+    width: 25em;
+    margin: auto;
+
+    .help-text {
+        text-align: center;
+        font-weight: 500;
+        margin-bottom: 1.5em;
+    }
 }
