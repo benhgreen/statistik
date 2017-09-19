@@ -1,0 +1,21 @@
+@import '_table';
+form {
+    margin-top: 1.5em;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    .form-label label {
+        display: block;
+        text-align: left;
+    }
+    .normal-field {
+        vertical-align: top;
+        text-align: left;
+        padding-right: 2em;
+    }
+    .selector-field {
+        vertical-align: top;
+        text-align: left;
+        padding-left: 5%;
+    }
+}
