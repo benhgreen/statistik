@@ -1,3 +1,4 @@
+# coding=UTF-8
 from django.test import TestCase
 import statistik.views
 
@@ -26,7 +27,7 @@ class ViewsTest(TestCase):
         ]
         modified_chart_data = statistik.views._generate_chart_difficulty_display(chart_data)
 
-        self.assertEqual(modified_chart_data[0]['difficulty'], '14')
+        self.assertEqual(modified_chart_data[0]['difficulty'], '14☆')
 
     def test__generate_chart_bpm_display_sets_bpm_to_min_bpm_if_only_min_bpm_value(self):
         chart_data = [

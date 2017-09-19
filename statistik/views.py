@@ -390,13 +390,10 @@ def search_view(request, game='IIDX'):
 # TODO: These don't really belong here...move them somewhere else
 def _generate_chart_difficulty_display(chart_data):
     for chart in chart_data:
-        if 'has_reviewed' in chart:
-            if chart['has_reviewed']:
-                chart['difficulty'] = str(chart['difficulty']) + "★"
-            else:
-                chart['difficulty'] = str(chart['difficulty']) + "☆"
+        if 'has_reviewed' in chart and chart['has_reviewed']:
+            chart['difficulty'] = str(chart['difficulty']) + "★"
         else:
-            chart['difficulty'] = str(chart['difficulty'])
+            chart['difficulty'] = str(chart['difficulty']) + "☆"
 
     return chart_data
 
