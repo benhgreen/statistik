@@ -32,7 +32,8 @@ INSTALLED_APPS = (
     'statistik',
     'bootstrap3',
     'debug_toolbar',
-    'sass_processor'
+    'sass_processor',
+    'jquery'
 )
 
 MIDDLEWARE_CLASSES = (

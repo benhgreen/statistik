@@ -18,3 +18,4 @@ wheel==0.24.0
 libsass
 django-compressor
 django-sass-processor
+django-jquery
