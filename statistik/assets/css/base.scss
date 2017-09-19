@@ -1,9 +1,14 @@
 .login-form-control {
     margin-bottom: 0.625em;
-
-    @media(min-width: 768px) {
+    @media(min-width: 1200px) {
         margin-top: 1.5em;
     }
+}
+
+.logged-in {
+    margin-bottom: 0.625em;
+    text-align: right;
+    margin-top: 1.5em;
 }
 
 .nav-link {

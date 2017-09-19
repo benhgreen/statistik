@@ -12,21 +12,24 @@
 {% block bootstrap3_content %}
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-6">
-                <h1>{{ title }}</h1>
+            <div class="col-xs-7 col-sm-8 col-md-9 col-lg-6">
+                <h2>{{ title }}</h2>
             </div>
             {% if user.is_authenticated %}
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-md-offset-2 col-lg-offset-4 login-form-control">
-                    {% trans 'welcome' %}, <a class="registered-user" href="{% url 'users' user_id=user.id %}"> {{ user.username }}</a> | <a class="log-out" href="{% url 'logout' %}">{% trans 'logout' %}</a>
+                <div class="col-xs-5 col-sm-4 col-md-3 col-lg-6 logged-in">
+                    {% trans 'welcome' %}, <a class="registered-user" href="{% url 'users' user_id=user.id %}"> {{ user.username }}</a> 
+                    | <a class="log-out" href="{% url 'logout' %}">{% trans 'logout' %}</a>
                 </div>
             {% else %}
-                <div class="col-lg-6">
+                <div class="col-xs-12 col-lg-6">
                     <form class="form-inline" action="{% url 'login' %}" method="post">
                         {% csrf_token %}
-                        <input class="form-control login-form-control" name="username" type="text" placeholder="{% trans 'username' %}">
-                        <input class="form-control login-form-control" name="password" type="password" placeholder="{% trans 'password' %}">
-                        <input class="btn btn-default login-form-control" type="submit" value="{% trans 'login' %}">
-                        <a class="btn btn-default login-form-control" role="button" href="{% url 'register' %}">{% trans 'register' %}</a>
+                        <input class="col-sm-2 form-control login-form-control" name="username" type="text" placeholder="{% trans 'username' %}">
+                        <input class="col-sm-2 form-control login-form-control" name="password" type="password" placeholder="{% trans 'password' %}">
+                        <div class="btn-group">
+                            <input class="btn btn-default login-form-control" type="submit" value="{% trans 'login' %}">
+                            <a class="btn btn-default login-form-control" role="button" href="{% url 'register' %}">{% trans 'register' %}</a>
+                        </div>
                     </form>
                 </div>
             {% endif %}
