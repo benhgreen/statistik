@@ -7,11 +7,13 @@
 
 {% block bootstrap3_extra_head %}
     {{ block.super }}
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/ratings.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% sass_src 'css/elo-rating.scss' %}">
 {% endblock %}
 
 {% block content %}
-    <div class="rating-selector text-center">
+    <div class="hidden-xs rating-selector text-center">
     {% if game == 'IIDX' %}
         <div class="col-xs-12 col-sm-6">
         NC |
@@ -32,6 +34,31 @@
             {% endfor %}
         </div>
     {% endif %}
+    </div>
+    <div class="visible-xs-block text-center form-inline">
+        <div class="form-group">
+            {% if game == 'IIDX' %}
+            <select class="col-xs-3 form-control">
+                <option selected disabled hidden>Normal Clear</option>
+                {% for level in level_links %}
+                    <option value="{{ level.1 }}">{{ level.0 }}</option>
+                {% endfor %}
+            </select>
+            <select class="col-xs-3 form-control">
+                <option selected disabled hidden>Hard Clear</option>
+                {% for level in level_links %}
+                    <option value="{{ level.1 }}&type=1">{{ level.0 }}</option>
+                {% endfor %}
+            </select>
+            {% else %}
+            <select class="col-xs-3 form-control">
+                <option selected disabled hidden>Clear</option>
+                {% for level in level_links %}
+                    <option value="{{ level.1 }}">{{ level.0 }}</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+        </div>
     </div>
     <div class="col-xs-12 elo-content">
         {% if chart_list %}
@@ -62,17 +89,17 @@
         <div class="help-subtext text-center">
             {% trans 'click a song title to view its ratings.' %}
         </div>
-        <table class="elo-choices table table-bordered">
-            <tbody>
-                <tr>
-                    <td class="song"><a href="{% url 'elo' game=game %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&type={{ is_hc }}">{{ chart1.title }} [{{ chart1.type }}]</a></td>
-                    <td class="other-choices"><a href="{% url 'elo' game=game %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true&type={{ is_hc }}">{% trans 'DRAW' %}</a></td>
-                    <td class="other-choices"><a href="{% url 'elo' game=game %}?level={{ level }}&type={{ is_hc }}">{% trans 'PASS' %}</a></td>
-                    <td class="song"><a href="{% url 'elo' game=game %}?level={{ level }}&win={{ chart2.id }}&lose={{ chart1.id }}&type={{ is_hc }}">{{ chart2.title }} [{{ chart2.type }}]</a></td>
-                </tr>
-            </tbody>
-        </table>
-        {% endif %}
     </div>
+    <table class="elo-choices table table-bordered">
+        <tbody>
+            <tr>
+                <td class="song"><a href="{% url 'elo' game=game %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&type={{ is_hc }}">{{ chart1.title }} [{{ chart1.type }}]</a></td>
+                <td class="other-choices"><a href="{% url 'elo' game=game %}?level={{ level }}&win={{ chart1.id }}&lose={{ chart2.id }}&draw=true&type={{ is_hc }}">{% trans 'DRAW' %}</a></td>
+                <td class="other-choices"><a href="{% url 'elo' game=game %}?level={{ level }}&type={{ is_hc }}">{% trans 'PASS' %}</a></td>
+                <td class="song"><a href="{% url 'elo' game=game %}?level={{ level }}&win={{ chart2.id }}&lose={{ chart1.id }}&type={{ is_hc }}">{{ chart2.title }} [{{ chart2.type }}]</a></td>
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
 
 {% endblock %}
