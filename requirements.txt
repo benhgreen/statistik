@@ -8,7 +8,7 @@ django-toolbelt==0.0.1
 elo==0.1
 gunicorn==19.3.0
 numpy==1.11.2
-psycopg2==2.6.1
+psycopg2==2.6.2
 sendgrid==1.4.0
 sendgrid-django==1.4.0
 smtpapi==0.2.0
