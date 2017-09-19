@@ -40,11 +40,7 @@
                     {% else %}
                         <td class="lv another">
                     {% endif %}
-                    {% if chart.has_reviewed %}
-                            <b>{{ chart.difficulty }}★</b>
-                    {% else %}
-                            <b>{{ chart.difficulty }}☆</b>
-                    {% endif %}
+                        {{ chart.difficulty }}
                         </td>
                     <td class="title" sorttable_customkey="{{ chart.alt_title }}">
                         <a href="{% url 'chart' chart_id=chart.id %}"> {{ chart.title }}</a>

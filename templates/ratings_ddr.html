@@ -8,15 +8,13 @@
     <link rel="stylesheet" href="{% sass_src 'css/ddr-table.scss' %}"/>
 {% endblock %}
 
+{% block chart_help %}
+    {% trans 'songs are rated from 1.0 to 21.0' %}
+    <br>{% trans "click a song's title for more info, or click table headers to sort." %}
+    {#        <br>{% trans 'red ratings indicate ddr community as default' %}#}
+{% endblock %}
+
 {% block chart_table %}
-<div align="center">
-        {% trans 'songs are rated from 1.0 to 21.0' %}
-        <br>{% trans "click a song's title for more info, or click table headers to sort." %}
-{#        <br>{% trans 'red ratings indicate ddr community as default' %}#}
-    </div>
-
-    <br>
-
     <div class="table-responsive">
         <table class="table table-bordered sortable">
             <thead>
@@ -43,21 +41,13 @@
                     {% else %}
                         <td class="lv difficult">
                     {% endif %}
-                    {% if chart.has_reviewed %}
-                            <b>{{ chart.difficulty }}★</b>
-                    {% else %}
-                            <b>{{ chart.difficulty }}☆</b>
-                    {% endif %}
+                        {{ chart.difficulty }}
                         </td>
                     <td class="title" sorttable_customkey="{{ chart.alt_title }}">
                         <a href="{% url 'chart' chart_id=chart.id %}"> {{ chart.title }}</a>
                     </td>
                     <td class="notecount">{{ chart.note_count }}</td>
-                    {% if chart.bpm_min == chart.bpm_max %}
-                        <td class="bpm">{{ chart.bpm_min | default:"--" }}</td>
-                    {% else %}
-                        <td class="bpm">{{ chart.bpm_min }} - {{ chart.bpm_max }}</td>
-                    {% endif %}
+                    <td class="bpm">{{ chart.bpm }}</td>
                     <td class="nc">{{ chart.avg_clear_rating | default:"--" }}</td>
                     <td class="score">{{  chart.avg_score_rating | default:"--" }}</td>
                 </tr>
