@@ -12,7 +12,11 @@
 {% block bootstrap3_content %}
     <div class="container">
         <div class="row">
-            <div class="col-xs-7 col-sm-8 col-md-9 col-lg-6">
+            {% if user.is_authenticated %}
+                <div class="col-xs-7 col-sm-8 col-md-9 col-lg-6">
+            {% else %}
+                <div class="col-xs-12 col-sm-8 col-md-9 col-lg-6">
+            {% endif %}
                 <h2>{{ title }}</h2>
             </div>
             {% if user.is_authenticated %}
