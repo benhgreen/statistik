@@ -8,15 +8,13 @@
     <link rel="stylesheet" type="text/css" href="{% sass_src 'css/iidx-table.scss' %}">
 {% endblock %}
 
+{% block chart_help %}
+    {% trans 'songs are rated from 1.0 to 14.0 (13.0 = 12.11)' %}
+    <br>{% trans "click a song's title for more info, or click table headers to sort." %}
+    <br>{% trans 'red ratings indicate clickagain as default' %}
+{% endblock %}
+
 {% block chart_table %}
-<div align="center">
-        {% trans 'songs are rated from 1.0 to 14.0 (13.0 = 12.11)' %}
-        <br>{% trans "click a song's title for more info, or click table headers to sort." %}
-        <br>{% trans 'red ratings indicate clickagain as default' %}
-    </div>
-
-    <br>
-
     <div class="table-responsive">
         <table class="table table-bordered sortable">
             <thead>
