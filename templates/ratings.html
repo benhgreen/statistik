@@ -14,7 +14,31 @@
 {% endblock %}
 
 {% block content %}
-    <div class="form-inline">
+    <div class="hidden-xs">
+        <div class="version-level">
+            SP |&nbsp;
+        {% for version in versions %}
+            <a href="{{ version.1 }}"><b>{{ version.0 }}</b></a>
+        {% endfor %}
+        </div>
+        <div class="version-level">
+            DP |&nbsp;
+        {% for version in versions %}
+            <a href="{{ version.1 }}&style=DP"><b>{{ version.0 }}</b></a>
+        {% endfor %}
+        </div>
+        <div class="version-level">
+        SP |&nbsp;
+        {% for level in levels %}
+            <a href="{{ level.1 }}"><b>{{ level.0 }}</b></a>
+        {% endfor %}
+        &nbsp; DP |&nbsp;
+        {% for level in levels %}
+            <a href="{{ level.1 }}&style=DP"><b>{{ level.0 }}</b></a>
+        {% endfor %}
+        </div>
+    </div>
+    <div class="visible-xs-block form-inline">
         <div class="form-group">
             <select class="col-xs-3 form-control">
                 <option selected disabled hidden>SP - Version</option>
