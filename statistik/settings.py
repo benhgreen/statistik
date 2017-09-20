@@ -40,7 +40,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'statistik',
     'bootstrap3',
-    'debug_toolbar'
+    'debug_toolbar',
+    'sass_processor',
+    'jquery'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,6 +117,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
+SASS_PROCESSOR_INCLUDE_DIRS = [
+    os.path.join(BASE_DIR, 'assets')
+]
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 BOOTSTRAP3 = {
