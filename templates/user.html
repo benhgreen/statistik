@@ -33,7 +33,7 @@
     <tbody>
         {% for review in iidx_reviews %}
         <tr>
-            <td>
+            <td class="title">
                 <a href="{% url 'chart' chart_id=review.chart_id%}">{{ review.title }}<b> [{{ review.type_display }}]</b></a>
             </td>
 
@@ -79,17 +79,20 @@
 {% if ddr_reviews %}
 <h1>DDR REVIEWS</h1>
 <table class="sortable table table-bordered">
+    <thead>
+        <tr>
+            <th>{% trans 'SONG TITLE' %}</th>
+            <th>LV</th>
+            <th>{% trans 'REVIEW TEXT' %}</th>
+            <th>{% trans 'RECOMMENDED SPEED MOD' %}</th>
+            <th>{% trans 'CLEAR RATING ' %}</th>
+            <th>{% trans 'SCORE RATING ' %}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for review in ddr_reviews %}
     <tr>
-        <th>{% trans 'SONG TITLE' %}</th>
-        <th>LV</th>
-        <th>{% trans 'REVIEW TEXT' %}</th>
-        <th>{% trans 'RECOMMENDED SPEED MOD' %}</th>
-        <th>{% trans 'CLEAR RATING ' %}</th>
-        <th>{% trans 'SCORE RATING ' %}</th>
-    </tr>
-{% for review in ddr_reviews %}
-    <tr>
-        <td><a href="{% url 'chart' chart_id=review.chart_id%}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
+        <td class="title"><a href="{% url 'chart' chart_id=review.chart_id%}">{{ review.title }}<b> [{{ review.type_display }}]</b></a></td>
         {# Get color based on difficulty - BEG, BSP, DSP, ESP, CSP/DP #}
         {% if 'G' in review.type_display %}
             <td class="lv beginner">
@@ -127,12 +130,12 @@
         <td class="nc">{{ review.clear_rating | default:"--" }}</td>
         <td class="score">{{ review.score_rating | default:"--" }}</td>
     </tr>
-{% endfor %}
+    {% endfor %}
+    </tbody>
 </table>
 {% endif %}
 
 {% if form %}
-<br>
 <form class="user-details-form" action="{% url 'users' %}?id={{ request.user.id }}" method="post">
     {% csrf_token %}
         <div class="user-help-text">{% trans 'edit your info here.' %}</div><br>
