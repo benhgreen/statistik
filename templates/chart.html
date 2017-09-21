@@ -13,23 +13,23 @@
 
 {% block content %}
 
-    {% block reviews_table %}
-    {% endblock %}
+{% block reviews_table %}
+{% endblock %}
 
-    {% if form %}
-    <form class="review-form" action="{{ request.get_full_path }}" method="post">
-        <div class="help-text">{% trans 'please only rate clears you have achieved.' %}</div>
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        {% buttons %}
-            <button type="submit" class="btn btn-primary">
-                {% trans 'submit' %}
-            </button>
-            {% if review_exists %}
-            <input class="btn btn-danger" type="button" onclick="location.href='{% url 'chart' chart_id=chart_id%}?delete=true';" value="{% trans 'delete' %}" />
-            {% endif %}
-        {% endbuttons %}
-    </form>
-    {% endif %}
+{% if form %}
+<form class="review-form" action="{{ request.get_full_path }}" method="post">
+    <div class="help-text">{% trans 'please only rate clears you have achieved.' %}</div>
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% trans 'submit' %}
+        </button>
+        {% if review_exists %}
+        <input class="btn btn-danger" type="button" onclick="location.href='{% url 'chart' chart_id=chart_id%}?delete=true';" value="{% trans 'delete' %}" />
+        {% endif %}
+    {% endbuttons %}
+</form>
+{% endif %}
 
 {% endblock %}

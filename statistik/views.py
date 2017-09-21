@@ -347,8 +347,6 @@ def logout_view(request):
 
 
 def search_view(request, game='IIDX'):
-
-
     """
     GET only, gives the user a search form
     :param request: Request to handle
