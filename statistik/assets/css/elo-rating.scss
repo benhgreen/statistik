@@ -1,10 +1,8 @@
 @import '_table';
-
 .rating-selector {
     word-spacing: .5em;
     margin-top: 1.5em;
     margin-bottom: 1.5em;
-
     a {
         color: black;
         font-weight: bold;
@@ -32,7 +30,6 @@
         tr {
             td {
                 color: black;
-
                 &.song {
                     width: 35%;
                     font-size: larger;
