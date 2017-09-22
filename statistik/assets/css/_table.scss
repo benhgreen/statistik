@@ -3,9 +3,16 @@
     font-weight: 600;
 }
 
+.table-bordered {
+    border: 1px solid black;
+}
+
 .table-responsive {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
+    @media screen and (max-width: 767px) {
+        border: 1px solid black;
+    }
 }
 
 table {
