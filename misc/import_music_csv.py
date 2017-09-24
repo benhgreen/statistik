@@ -1,12 +1,15 @@
 import csv
-
+import sys
 import django
 import psycopg2
 from django.conf import settings
+from pathlib import Path
+
+root_directory = str(Path(__file__).resolve().parents[1])
+sys.path.append(root_directory)
 
 from statistik.constants import IIDX
 from statistik.models import Song
-
 
 with open('misc/music.csv', encoding='utf-8') as csvfile:
     reader = csv.reader(csvfile)
@@ -41,8 +44,6 @@ with open('misc/music.csv', encoding='utf-8') as csvfile:
         #     print('creating black another for song %s' % title)
         #     title += '†'
         #     alt_title += '†'
-
-
 
         new_song = Song(
             music_id=music_id,

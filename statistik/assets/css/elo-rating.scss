@@ -1,0 +1,44 @@
+@import '_table';
+.rating-selector {
+    word-spacing: .5em;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    a {
+        color: black;
+        font-weight: bold;
+    }
+}
+
+.help-text {
+    font-size: large;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.help-subtext {
+    font-weight: 500;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.elo-content {
+    margin-bottom: 1.5em;
+}
+
+.elo-choices {
+    tbody {
+        tr {
+            td {
+                color: black;
+                &.song {
+                    width: 35%;
+                    font-size: larger;
+                    font-weight: 500;
+                }
+                &.other-choices {
+                    width: 10%;
+                }
+            }
+        }
+    }
+}

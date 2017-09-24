@@ -3,13 +3,15 @@
 {% load bootstrap3 %}
 {% load static %}
 {% load i18n %}
+{% load sass_tags %}
 
-{% block title %}
-    <a style="color: #000;" href="{% url 'ratings' %}">{{ title }}</a>
+{% block bootstrap3_extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/register.scss' %}">
 {% endblock %}
 
 {% block content %}
-<form style="width: 40%;margin: auto;padding-top: 2em" action="{% url 'register' %}" method="post">
+<form class="register-form" action="{% url 'register' %}" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}

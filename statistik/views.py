@@ -93,6 +93,9 @@ def ratings_view(request, game='IIDX'):
         return HttpResponse(
             json.dumps({'data': chart_data}, indent=4, ensure_ascii=False))
 
+    _generate_chart_difficulty_display(chart_data)
+    _generate_chart_bpm_display(chart_data)
+
     # assemble displayed info for each of the charts
     context = {
         'charts': chart_data
@@ -381,3 +384,25 @@ def search_view(request, game='IIDX'):
     context['nav_links'] = make_nav_links(game=GAMES[game])
     context['game'] = game
     return render(request, 'search.html', context)
+
+# TODO: These don't really belong here...move them somewhere else
+def _generate_chart_difficulty_display(chart_data):
+    for chart in chart_data:
+        if 'has_reviewed' in chart and chart['has_reviewed']:
+            chart['difficulty'] = str(chart['difficulty']) + "★"
+        else:
+            chart['difficulty'] = str(chart['difficulty']) + "☆"
+
+    return chart_data
+
+def _generate_chart_bpm_display(chart_data):
+    for chart in chart_data:
+        if 'bpm_min' in chart:
+            if 'bpm_max' in chart and chart['bpm_min'] != chart['bpm_max']:
+                chart['bpm'] = "{0} - {1}".format(chart['bpm_min'], chart['bpm_max'])
+            else:
+                chart['bpm'] = str(chart['bpm_min']) 
+        else:
+            chart['bpm'] = '--'
+    
+    return chart_data

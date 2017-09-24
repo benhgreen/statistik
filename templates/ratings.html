@@ -3,43 +3,73 @@
 {% load bootstrap3 %}
 {% load static %}
 {% load i18n %}
+{% load sass_tags %}
 
 {% block bootstrap3_extra_head %}
-    <script src="{% static "js/sorttable.js" %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+    {{ block.super }}
+    <script src="{% static 'js/sorttable.js' %}"></script>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/ratings.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/ratings.scss' %}">
 {% endblock %}
 
 {% block content %}
-
-    <div align="center" style="width: 1100px;word-spacing: .5em">
+    <div class="hidden-xs">
+        <div class="version-level">
+            SP |&nbsp;
+        {% for version in versions %}
+            <a href="{{ version.1 }}"><b>{{ version.0 }}</b></a>
+        {% endfor %}
+        </div>
+        <div class="version-level">
+            DP |&nbsp;
+        {% for version in versions %}
+            <a href="{{ version.1 }}&style=DP"><b>{{ version.0 }}</b></a>
+        {% endfor %}
+        </div>
+        <div class="version-level">
         SP |&nbsp;
-    {% for version in versions %}
-        <a style="color: #000;" href="{{ version.1 }}"><b>{{ version.0 }}</b></a>
-    {% endfor %}
+        {% for level in levels %}
+            <a href="{{ level.1 }}"><b>{{ level.0 }}</b></a>
+        {% endfor %}
+        &nbsp; DP |&nbsp;
+        {% for level in levels %}
+            <a href="{{ level.1 }}&style=DP"><b>{{ level.0 }}</b></a>
+        {% endfor %}
+        </div>
     </div>
-
-    <div align="center" style="width: 1100px;word-spacing: .5em">
-        DP |&nbsp;
-    {% for version in versions %}
-        <a style="color: #000;" href="{{ version.1 }}&style=DP"><b>{{ version.0 }}</b></a>
-    {% endfor %}
+    <div class="visible-xs-block form-inline">
+        <div class="form-group">
+            <select class="col-xs-3 form-control">
+                <option selected disabled hidden>SP - Version</option>
+                {% for version in versions %}
+                    <option value="{{ version.1 }}">{{ version.0 }}</option>
+                {% endfor %}
+            </select>
+            <select class="col-xs-3 form-control">
+                <option selected disabled hidden>SP - Level</option>
+                {% for level in levels %}
+                    <option value="{{ level.1 }}">{{ level.0 }}</option>
+                {% endfor %}
+            </select>
+            <select class="col-xs-3 form-control">
+                <option selected disabled hidden>DP - Version</option>
+                {% for version in versions %}
+                    <option value="{{ version.1 }}&style=DP">{{ version.0 }}</option>
+                {% endfor %}
+            </select>
+            <select class="col-xs-3 form-control">
+                <option selected disabled hidden>DP - Level</option>
+                {% for level in levels %}
+                    <option value="{{ level.1 }}&style=DP">{{ level.0 }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
-
-    <br>
-
-    <div align="center" style="width: 1100px;word-spacing: .5em">
-    SP |&nbsp;
-    {% for level in levels %}
-        <a style="color: #000;" href="{{ level.1 }}"><b>{{ level.0 }}</b></a>
-    {% endfor %}
-     &nbsp; DP |&nbsp;
-    {% for level in levels %}
-        <a style="color: #000;" href="{{ level.1 }}&style=DP"><b>{{ level.0 }}</b></a>
-    {% endfor %}
+    <div class="chart-help">
+        {% block chart_help %}
+        {% endblock %}
     </div>
-
-    <br>
-    <br>
 
     {% block chart_table %}
     {% endblock %}

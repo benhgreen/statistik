@@ -1,0 +1,33 @@
+.login-form-control {
+    margin-bottom: 0.625em;
+    @media(min-width: 1200px) {
+        margin-top: 1.5em;
+    }
+}
+
+.logged-in {
+    margin-bottom: 0.625em;
+    margin-top: 1.5em;
+    @media(min-width: 1200px) {
+        text-align: right;
+    }
+    @media(max-width: 768px) {
+        margin-top: 0;
+    }
+}
+
+.nav-link {
+    color: #000;
+    padding-right: 0.625em;
+    font-weight: 600;
+    text-decoration: underline
+}
+
+.registered-user {
+    color: black;
+    text-decoration: underline;
+}
+
+.log-out {
+    text-decoration: underline;
+}

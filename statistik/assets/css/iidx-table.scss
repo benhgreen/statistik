@@ -1,0 +1,26 @@
+@import '_table';
+td {
+    &.normal {
+        color: #1822d6;
+    }
+    &.hyper {
+        color: #a69b43;
+    }
+    &.another {
+        color: #c62c4a;
+    }
+    &.clickagain {
+        color: #f11137;
+    }
+    &.hc {
+        @extend .clear-columns;
+        background-color: #ff99a1;
+    }
+    &.exhc {
+        @extend .clear-columns;
+        background-color: #ffee90;
+    }
+    &.playside {
+        width: 5em;
+    }
+}

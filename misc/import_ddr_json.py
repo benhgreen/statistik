@@ -1,7 +1,11 @@
 import json
-
+import sys
 import django
 import psycopg2
+from pathlib import Path
+
+root_directory = str(Path(__file__).resolve().parents[1])
+sys.path.append(root_directory)
 
 from statistik.constants import DDR
 from statistik.models import Song, Chart

@@ -1,65 +1,57 @@
 {% extends 'bootstrap.html' %}
 
 {% load bootstrap3 %}
+{% load static %}
 {% load i18n %}
+{% load sass_tags %}
+
+{% block bootstrap3_extra_head %}
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/base.scss' %}">
+{% endblock %}
 
 {% block bootstrap3_content %}
-    <div style="width: 1100px;clear: both" class="container" xmlns="http://www.w3.org/1999/html">
-        <h1 style="float: left">
-            {{ title }}
-        </h1>
-
-
-        <div id="userinfo">
-            <br>
-            <h5 style="float: right;">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-6">
+                <h2>{{ title }}</h2>
+            </div>
             {% if user.is_authenticated %}
-                {% trans 'welcome' %}, <a style="color: #000;text-decoration: underline" href="{% url 'users' user_id=user.id %}"> {{ user.username }}</a> | <a style="text-decoration: underline" href="{% url 'logout' %}">{% trans 'logout' %}</a>
+                <div class="col-xs-5 col-sm-4 col-md-3 col-lg-6 logged-in">
+                    {% trans 'welcome' %}, <a class="registered-user" href="{% url 'users' user_id=user.id %}"> {{ user.username }}</a> 
+                    | <a class="log-out" href="{% url 'logout' %}">{% trans 'logout' %}</a>
+                </div>
             {% else %}
-                <form style="display: inline;" action="{% url 'login' %}" method="post">
-                    {% csrf_token %}
-                    <input name="username" type="text" placeholder="{% trans 'username' %}">
-                    <input name="password" type="password" placeholder="{% trans 'password' %}">
-                    <input type="submit" value="{% trans 'login' %}">
-                </form>
-                <a href="{% url 'register' %}"><button style="color: #000;">{% trans 'register' %}</button></a>
-
-
+                <div class="col-xs-12 col-lg-6">
+                    <form class="form-inline" action="{% url 'login' %}" method="post">
+                        {% csrf_token %}
+                        <input class="col-sm-2 form-control login-form-control" name="username" type="text" placeholder="{% trans 'username' %}">
+                        <input class="col-sm-2 form-control login-form-control" name="password" type="password" placeholder="{% trans 'password' %}">
+                        <div class="btn-group">
+                            <input class="btn btn-default login-form-control" type="submit" value="{% trans 'login' %}">
+                            <a class="btn btn-default login-form-control" role="button" href="{% url 'register' %}">{% trans 'register' %}</a>
+                        </div>
+                    </form>
+                </div>
             {% endif %}
-            </h5>
         </div>
-
         {% if nav_links %}
-            <br>
-            <br>
-            <br>
-            <div style="float: left">
+            <div>
                 {% for link in nav_links %}
-                    <a style="color: #000;padding-right: 10px;font-weight: 600;text-decoration: underline" href="{{ link.1 }}">// {{ link.0 }} </a>
+                    <a class="nav-link" href="{{ link.1 }}">// {{ link.0 }} </a>
                 {% endfor %}
             </div>
         {% endif %}
-    {% if game_links %}
-            <br>
-            <br>
-            <br>
-            <div style="float: left">
+        {% if game_links %}
+            <div>
                 {% for link in game_links %}
-                    <a style="color: #000;padding-right: 10px;font-weight: 600;text-decoration: underline" href="{{ link.1 }}">//SWITCH TO {{ link.0 }} </a>
+                    <a class="nav-link" href="{{ link.1 }}">//SWITCH TO {{ link.0 }} </a>
                 {% endfor %}
             </div>
         {% endif %}
-
     </div>
 
     <div class="container">
-
     {% bootstrap_messages %}
-
-    <br>
-
     {% block content %}(no content){% endblock %}
-
     </div>
-
 {% endblock %}

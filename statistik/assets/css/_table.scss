@@ -1,0 +1,98 @@
+.clear-columns {
+    width: 3em;
+    font-weight: 600;
+}
+
+.table-bordered {
+    border: 1px solid black;
+}
+
+.table-responsive {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    @media screen and (max-width: 767px) {
+        border: 1px solid black;
+    }
+}
+
+table {
+    thead {
+        tr {
+            background: #3d393f;
+            color: white;
+            th {
+                text-align: center;
+                font-size: small;
+                font-weight: 600;
+                line-height: 0.9375em;
+            }
+        }
+    }
+    tbody {
+        td {
+            padding: 0.625em;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+            a {
+                color: #000000;
+            }
+            &.ver {
+                width: 3em;
+            }
+            &.lv {
+                width: 3em;
+                text-align: center;
+                font-weight: bold;
+            }
+            &.title {
+                width: 28em;
+            }
+            &.notecount {
+                width: 3em;
+            }
+            &.nc {
+                @extend .clear-columns;
+                background-color: #2df0ff;
+            }
+            &.score {
+                @extend .clear-columns;
+                background-color: #d7e1ff;
+            }
+            &.username {
+                width: 10em;
+            }
+            &.reviewtext {
+                width: 20em;
+            }
+            &.options {
+                width: 14em;
+            }
+        }
+        tr:nth-child(odd) {
+            background: #e1e1e1;
+            text-align: center
+        }
+        tr:nth-child(even) {
+            background: #FFF
+        }
+    }
+}
+
+.table-bordered>tbody>tr>td,
+.table-bordered>tbody>tr>th,
+.table-bordered>tfoot>tr>td,
+.table-bordered>tfoot>tr>th,
+.table-bordered>thead>tr>td,
+.table-bordered>thead>tr>th {
+    border: 1px solid black;
+}
+
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+    vertical-align: middle;
+}

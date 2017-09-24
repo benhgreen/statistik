@@ -3,15 +3,18 @@
 {% load bootstrap3 %}
 {% load static %}
 {% load i18n %}
+{% load sass_tags %}
+
+{% block bootstrap3_extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/index.scss' %}">
+{% endblock %}
 
 {% block content %}
-    <br><br><br>
-    <div style="text-align: center;width: 1100px;">
-    {% for link in index_links %}
-        <a href="{{ link.1 }}" style="color: #000;font-weight: 600;font-size: x-large;text-decoration: underline">//{{ link.0 }}</a><br><br><br><br>
-    {% endfor %}
+    <div class="index-div">
+        {% for link in index_links %}
+            <a href="{{ link.1 }}" class="index-link">//{{ link.0 }}</a><br/><br/>
+        {% endfor %}
     </div>
-    <br>
-    <br>
-    <div align="center" style="width: 1100px">{% trans 'please direct questions/suggestions to dybbuk or jagman1x3 via PM or IRC' %}</div>
+    <div align="center">{% trans 'please direct questions/suggestions to dybbuk or jagman1x3 via PM or IRC' %}</div>
 {% endblock %}

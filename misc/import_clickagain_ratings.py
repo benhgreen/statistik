@@ -1,9 +1,14 @@
 import csv
+import django
+import sys
+from pathlib import Path
+
+root_directory = str(Path(__file__).resolve().parents[1])
+sys.path.append(root_directory)
+
 from statistik.models import Chart
 
-import django
 django.setup()
-
 
 with open('misc/iidxfm_db.csv') as csvfile:
     reader = csv.reader(csvfile)

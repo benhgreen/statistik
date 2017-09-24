@@ -3,10 +3,12 @@
 {% load bootstrap3 %}
 {% load static %}
 {% load i18n %}
+{% load sass_tags %}
 
 {% block bootstrap3_extra_head %}
+    {{ block.super }}
     <script src="{% static "js/sorttable.js" %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/chart.scss' %}">
 {% endblock %}
 
 {% block content %}
@@ -15,8 +17,8 @@
 {% endblock %}
 
 {% if form %}
-<form style="align-content: center;width: 400px;margin: auto;padding-top: 2em" action="{{ request.get_full_path }}" method="post">
-    <div align="center" style="font-weight: 500;line-height: 1.5em">{% trans 'please only rate clears you have achieved.' %}</div><br>
+<form class="review-form" action="{{ request.get_full_path }}" method="post">
+    <div class="help-text">{% trans 'please only rate clears you have achieved.' %}</div>
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}

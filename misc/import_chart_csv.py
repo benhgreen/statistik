@@ -1,7 +1,11 @@
 import csv
-
+import sys
 import django
 import psycopg2
+from pathlib import Path
+
+root_directory = str(Path(__file__).resolve().parents[1])
+sys.path.append(root_directory)
 
 from statistik.models import Song, Chart
 
@@ -17,9 +21,14 @@ with open('misc/chart.csv', encoding='utf-8') as csvfile:
         except ValueError:
             note_count = None
 
+        try:
+            song = Song.objects.get(music_id = music_id)
+        except:
+            print("error getting song...continuing")
+            continue
 
         chart = Chart(
-            song=Song.objects.get(music_id=music_id),
+            song=song,
             type=type,
             difficulty=difficulty,
             note_count=note_count

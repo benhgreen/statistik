@@ -1,51 +1,64 @@
-{% extends 'chart.html' %}
+{% extends 'chart.html' %} 
 
+{% load bootstrap3 %}
+{% load static %}
 {% load i18n %}
+{% load sass_tags %}
+    
+{% block bootstrap3_extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% sass_src 'css/iidx-table.scss' %}">
+{% endblock %}
 
 {% block reviews_table %}
-
-<table class="sortable" border="1" align="center" style="width:1100px;table-layout: fixed;word-wrap: break-word">
-        <tr style="line-height: 15px;font-size: small;
-        color: #ffffff;font-weight: 600;padding: 10px;text-align: match-parent">
-            <td style="background-color: #3d393f;width: 10%">{% trans 'USER' %}</td>
-            <td style="background-color: #3d393f;width: 9%">{% trans 'PLAYSIDE' %}</td>
-            <td style="background-color: #3d393f;width: 34%">{% trans 'REVIEW TEXT' %}</td>
-            <td style="background-color: #3d393f;width: 11%">{% trans 'RECOMMENDED OPTIONS' %}</td>
-            <td style="background-color: #3d393f;width: 7%">{% trans 'NC RATING ' %}</td>
-            <td style="background-color: #3d393f;width: 7%">{% trans 'HC RATING ' %}</td>
-            <td style="background-color: #3d393f;width: 7%">{% trans 'EXHC RATING ' %}</td>
-            <td style="background-color: #3d393f;width: 7%">{% trans 'SCORE RATING ' %}</td>
-        </tr>
-    {% for review in reviews %}
-        <tr style="line-height: 150%">
-            <td class="username_col"><a style="color: #000;" href="{% url 'users' user_id=review.user_id %}">{{ review.user }}</a></td>
-            <td class="playside_col">{{ review.playside }}</td>
-            <td class="reviewtext_col">
-                {{ review.text }}
-                    {% if review.characteristics %}
+<div class="table-responsive">
+    <table class="table table-bordered sortable">
+        <thead>
+            <tr>
+                <th>{% trans 'USER' %}</th>
+                <th>{% trans 'PLAYSIDE' %}</th>
+                <th>{% trans 'REVIEW TEXT' %}</th>
+                <th>{% trans 'RECOMMENDED OPTIONS' %}</th>
+                <th>{% trans 'NC RATING ' %}</th>
+                <th>{% trans 'HC RATING ' %}</th>
+                <th>{% trans 'EXHC RATING ' %}</th>
+                <th>{% trans 'SCORE RATING ' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in reviews %}
+            <tr>
+                <td class="username">
+                    <a href="{% url 'users' user_id=review.user_id %}">{{ review.user }}</a>
+                </td>
+                <td class="playside">{{ review.playside }}</td>
+                <td class="reviewtext">
+                    {{ review.text }} 
+                    {% if review.characteristics %} 
                         {% if review.text %}
-                            <br>
-                        {% endif %}
-                        {% for item in review.characteristics %}
+                        <br> 
+                        {% endif %} 
+                        {% for item in review.characteristics %} 
                             {% if forloop.first and forloop.last %}
-                                <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
-                            {% elif forloop.last %}
-                                <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b>
+                            <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b> 
+                                {% elif forloop.last %}
+                            <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>)</b> 
                             {% elif forloop.first%}
-                                <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
+                            <b>(</b><b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b> 
                             {% else %}
-                                <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b>
-                            {% endif %}
-                        {% endfor %}
+                            <b style="color: {{ item.1 }}">{{ item.0 }}</b><b>,</b> 
+                            {% endif %} 
+                        {% endfor %} 
                     {% endif %}
-            </td>
-            <td class="options_col">{{ review.recommended_options }}</td>
-            <td class="nc_col">{{ review.clear_rating | default:"--" }}</td>
-            <td class="hc_col">{{ review.hc_rating | default:"--" }}</td>
-            <td class="exhc_col">{{ review.exhc_rating | default:"--" }}</td>
-            <td class="score_col">{{ review.score_rating | default:"--" }}</td>
-        </tr>
-    {% endfor %}
-</table>
-
+                </td>
+                <td class="options">{{ review.recommended_options }}</td>
+                <td class="nc">{{ review.clear_rating | default:"--" }}</td>
+                <td class="hc">{{ review.hc_rating | default:"--" }}</td>
+                <td class="exhc">{{ review.exhc_rating | default:"--" }}</td>
+                <td class="score">{{ review.score_rating | default:"--" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
