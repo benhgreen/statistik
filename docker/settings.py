@@ -20,6 +20,11 @@ BASE_DIR = str(Path(__file__).resolve().parents[1] / 'statistik')
 SECRET_KEY = 'statistic'
 DEBUG = True
 
+# Set these to test in Docker in a prod-like environment before pushing to DigitalOcean
+# DEBUG = False
+# ALLOWED_HOSTS = ['localhost']
+# SASS_PROCESSOR_ENABLED = True
+
 # Application definition
 
 INSTALLED_APPS = (

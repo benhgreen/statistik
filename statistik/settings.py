@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = ['statistik.benhgreen.com']
-
+SASS_PROCESSOR_ENABLED = True
 
 # Application definition
 

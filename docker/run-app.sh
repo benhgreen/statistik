@@ -23,4 +23,6 @@ then
     python3 misc/import_clickagain_ratings.py
 fi
 
+# Need to run this if Debug = True in docker/settings.py for Javascript to get to static folder
+# python3 manage.py collectstatic --noinput --ignore *.scss
 python3 manage.py runserver 0.0.0.0:8000
