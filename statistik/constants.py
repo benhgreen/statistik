@@ -129,7 +129,8 @@ VERSION_CHOICES = {IIDX: [
         (21, 'SPD'),
         (22, 'PEN'),
         (23, 'COP'),
-        (24, 'SIN')],
+        (24, 'SIN'),
+        (25, 'CB')],
     DDR: [
         (101, '1st'),
         (102, '2nd'),
@@ -173,7 +174,8 @@ FULL_VERSION_NAMES = {IIDX: {
         21: 'Spada',
         22: 'Pendual',
         23: 'Copula',
-        24: 'Sinobuz'},
+        24: 'Sinobuz',
+        25: 'Cannon Ballers'},
     DDR: {
         101: '1stMIX',
         102: '2ndMIX',
